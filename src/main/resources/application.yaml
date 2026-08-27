@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: fooddiary
+  modulith:
+    runtime:
+      flyway-enabled: true
+  profiles:
+    active: local
