@@ -72,7 +72,7 @@ public class UserEntity {
         if(!alreadyHas){
             userRoles.add(new UserRoleEntity(this, role));
         }
-    } // addRole
+    }
 
     public void replaceRoles(Set<RoleEntity> roles){
         userRoles.clear();
