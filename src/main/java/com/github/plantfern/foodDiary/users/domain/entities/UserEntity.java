@@ -59,6 +59,11 @@ public class UserEntity {
     private Set<UserRoleEntity> userRoles = new HashSet<>();
 
 
+    private boolean isEnabled(){
+        return deletedAt != null;
+    }
+
+
     protected UserEntity() {} // конструктор для Hibernate
 
     public UserEntity(String email, String hashPassword) {
