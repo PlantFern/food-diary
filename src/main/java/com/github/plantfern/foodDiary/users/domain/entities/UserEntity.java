@@ -43,7 +43,7 @@ public class UserEntity {
             nullable = false,
             length = 60
     )
-    private String hashPassword;
+    private String hashPassword; // user_exemple_pass - пароль для всех аккаунтов
 
 
     @Column(
@@ -64,7 +64,7 @@ public class UserEntity {
     private Set<UserRoleEntity> userRoles = new HashSet<>();
 
 
-    private boolean isEnabled(){
+    public boolean isEnabled(){
         return deletedAt != null;
     }
 
