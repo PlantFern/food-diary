@@ -45,7 +45,12 @@ public class UserEntity {
     )
     private String hashPassword;
 
-    @Column(name = "created_at")
+
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -71,6 +76,7 @@ public class UserEntity {
         this.hashPassword = hashPassword;
     }
 
+
     public void addRole(RoleEntity role){
         boolean alreadyHas = userRoles.stream()
                 .anyMatch(ur -> ur.getRole().getName().equals(role.getName()));
@@ -82,5 +88,27 @@ public class UserEntity {
     public void replaceRoles(Set<RoleEntity> roles){
         userRoles.clear();
         roles.forEach(this::addRole);
+    }
+
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public void softDelete() {
+        if (deletedAt == null) {
+            deletedAt = LocalDateTime.now();
+        }
+    }
+
+    public void restore() {
+        deletedAt = null;
     }
 }
