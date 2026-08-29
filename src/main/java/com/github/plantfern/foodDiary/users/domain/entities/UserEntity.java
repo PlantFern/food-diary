@@ -66,7 +66,7 @@ public class UserEntity {
         this.hashPassword = hashPassword;
     }
 
-    void addRole(RoleEntity role){
+    public void addRole(RoleEntity role){
         boolean alreadyHas = userRoles.stream()
                 .anyMatch(ur -> ur.getRole().getName().equals(role.getName()));
         if(!alreadyHas){
@@ -74,7 +74,7 @@ public class UserEntity {
         }
     } // addRole
 
-    void replaceRoles(Set<RoleEntity> roles){
+    public void replaceRoles(Set<RoleEntity> roles){
         userRoles.clear();
         roles.forEach(this::addRole);
     }
