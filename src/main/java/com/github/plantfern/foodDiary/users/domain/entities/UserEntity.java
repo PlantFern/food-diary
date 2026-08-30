@@ -65,7 +65,7 @@ public class UserEntity {
 
 
     public boolean isEnabled(){
-        return deletedAt != null;
+        return deletedAt == null;
     }
 
 
