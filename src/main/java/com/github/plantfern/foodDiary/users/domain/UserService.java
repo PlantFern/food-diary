@@ -59,7 +59,7 @@ public class UserService implements UserApi {
 
     @Override
     public UserDto register(String email, String password) {
-        if(userRepository.existsByEmailAndDeletedAt(email)){
+        if(userRepository.existsByEmail(email)){
             throw new IllegalArgumentException("Email alreade registered");
         }
 
