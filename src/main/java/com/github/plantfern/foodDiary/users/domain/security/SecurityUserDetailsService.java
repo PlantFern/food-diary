@@ -21,7 +21,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private SecurityUserDetailsService(UserRepository userRepository){
+    public SecurityUserDetailsService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
