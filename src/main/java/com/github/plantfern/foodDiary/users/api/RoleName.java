@@ -6,5 +6,5 @@ public enum RoleName {
     MODERATOR,
     OBSERVER,
     SPECIALIST,
-    ADMIN
+    ADMINISTRATOR
 }
