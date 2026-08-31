@@ -65,6 +65,12 @@ public class UserService implements UserApi {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public boolean existsById (Long userId){
+        return userRepository.existsById(userId);
+    }
+
+    @Override
     public UserDto register(String email, String password) {
         if(userRepository.existsByEmail(email)){
             throw new IllegalArgumentException("Email alreade registered");
