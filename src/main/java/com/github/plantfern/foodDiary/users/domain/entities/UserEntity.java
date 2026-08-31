@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.users.domain.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -110,5 +111,16 @@ public class UserEntity {
 
     public void restore() {
         deletedAt = null;
+    }
+
+
+    public boolean is(Long userId){
+        return this.id != null && this.id.equals(userId);
+    }
+
+    public void ensureIs(Long userId) {
+        if (!is(userId)) {
+            throw new AccessDeniedException("Access denied to user" + this.id);
+        }
     }
 }
