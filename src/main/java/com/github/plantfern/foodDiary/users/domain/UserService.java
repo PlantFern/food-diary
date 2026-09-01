@@ -99,10 +99,17 @@ public class UserService implements UserApi {
     }
 
     @Override
-    public void assignRoles(Long userId, Set<RoleName> roles) {
-        UserEntity user = userRepository
-                .findById(userId)
+    public void assignRoles(Long targetUserId, Set<RoleName> roles) {
+        Long actorUserId = UserContextUtils.getCurrentUserIdOrThrow();
+
+        UserEntity actorUser = userRepository
+                .findById(actorUserId)
+                .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
+        UserEntity targetUser = userRepository
+                .findById(targetUserId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        roleAssignmentPolicy.ensureCanAssign(actorUser, targetUser, roles);
 
         Set<RoleEntity> newRoles = roleRepository.findByNameIn(roles);
         user.replaceRoles(newRoles);
