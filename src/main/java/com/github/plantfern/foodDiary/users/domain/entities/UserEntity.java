@@ -98,6 +98,12 @@ public class UserEntity {
         roles.forEach(this::addRole);
     }
 
+    public Set<RoleName> roleNames() {
+        return userRoles.stream()
+                .map(ur -> ur.getRole().getName())
+                .collect(Collectors.toSet());
+    }
+
 
     @PrePersist
     protected void onCreate() {
