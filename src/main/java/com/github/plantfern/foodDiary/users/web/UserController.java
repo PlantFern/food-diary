@@ -45,4 +45,10 @@ public class UserController {
                         .map(userMapper::toDto).toList()
         );
     }
+
+    @PostMapping("/{targetUserId}/role")
+    public ResponseEntity<Void> addRoleFor(@PathVariable Long targetUserId ,@RequestBody RoleRequest request) {
+        userService.assignRoles(targetUserId, Set.of(request.roleName()));
+        return ResponseEntity.noContent().build();
+    }
 } // UserController
