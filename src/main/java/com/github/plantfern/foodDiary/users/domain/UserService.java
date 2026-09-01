@@ -7,6 +7,8 @@ import com.github.plantfern.foodDiary.users.domain.entities.RoleEntity;
 import com.github.plantfern.foodDiary.users.domain.entities.UserEntity;
 import com.github.plantfern.foodDiary.users.domain.repositories.RoleRepository;
 import com.github.plantfern.foodDiary.users.domain.repositories.UserRepository;
+import com.github.plantfern.foodDiary.users.domain.security.RoleAssignmentPolicy;
+import com.github.plantfern.foodDiary.users.domain.security.UserContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,16 +26,22 @@ public class UserService implements UserApi {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
+    private final RoleAssignmentPolicy roleAssignmentPolicy;
+
     @Autowired
     public UserService(
             UserRepository userRepository,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             UserMapper userMapper){
+            UserMapper userMapper,
+
+            RoleAssignmentPolicy roleAssignmentPolicy){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.roleAssignmentPolicy = roleAssignmentPolicy;
     } // UserService
 
     public void save(UserEntity user){
