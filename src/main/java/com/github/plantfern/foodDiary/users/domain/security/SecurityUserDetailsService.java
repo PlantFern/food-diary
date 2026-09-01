@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.jspecify.annotations.NullMarked;
 
+import java.util.stream.Collectors;
+
 
 @Service
 @NullMarked
@@ -38,13 +40,12 @@ public class SecurityUserDetailsService implements UserDetailsService {
                 .map(
                         ur -> new SimpleGrantedAuthority("ROLE_" + ur.getRole().getName().name())
                 )
-                .toList();
+                .collect(Collectors.toSet());
 
-        return User
-                .withUsername(user.getEmail())
-                .password(user.getHashPassword())
-                .authorities(authorities)
-                .disabled(!user.isEnabled())
-                .build();
+        return new SecurityUser(
+                user.getId(),
+                user.getEmail(),
+                user.getHashPassword(),
+                authorities);
     }
 }
