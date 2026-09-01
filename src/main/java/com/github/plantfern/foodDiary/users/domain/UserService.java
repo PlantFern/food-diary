@@ -112,7 +112,9 @@ public class UserService implements UserApi {
         roleAssignmentPolicy.ensureCanAssign(actorUser, targetUser, roles);
 
         Set<RoleEntity> newRoles = roleRepository.findByNameIn(roles);
-        user.replaceRoles(newRoles);
+
+        targetUser.addRoles(newRoles);
+        userRepository.save(targetUser);
     }
 
     @Override
