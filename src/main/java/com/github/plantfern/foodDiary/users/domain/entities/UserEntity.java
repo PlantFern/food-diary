@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Setter
@@ -83,6 +84,12 @@ public class UserEntity {
                 .anyMatch(ur -> ur.getRole().getName().equals(role.getName()));
         if(!alreadyHas){
             userRoles.add(new UserRoleEntity(this, role));
+        }
+    }
+
+    public void addRoles(Set<RoleEntity> roles) {
+        for (RoleEntity role : roles) {
+            addRole(role); // используем существующий метод
         }
     }
 
