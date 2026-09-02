@@ -29,6 +29,7 @@ public class UserService implements UserApi {
     private final RoleAssignmentPolicy roleAssignmentPolicy;
 
     private final PasswordEncoder passwordEncoder;
+    private final UserGettingPolicy userGettingPolicy;
 
 
     @Autowired
@@ -40,14 +41,15 @@ public class UserService implements UserApi {
             SecurityCurrentUser securityCurrentUser,
             RoleAssignmentPolicy roleAssignmentPolicy,
 
-            PasswordEncoder passwordEncoder
-    ){
+            PasswordEncoder passwordEncoder,
+            UserGettingPolicy userGettingPolicy){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
 
         this.securityCurrentUser = securityCurrentUser;
         this.roleAssignmentPolicy = roleAssignmentPolicy;
+        this.userGettingPolicy = userGettingPolicy;
 
         this.passwordEncoder = passwordEncoder;
     } // UserService
@@ -70,14 +72,39 @@ public class UserService implements UserApi {
         return userRepository
                 .findById(id)
                 .map(userMapper::toDto);
+    public UserDto findById(Long targetUserId) {
+        Long actorUserId = securityCurrentUser.requireId();
+
+        UserEntity actorUser = userRepository
+                .findById(actorUserId)
+                .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
+        UserEntity targetUser = userRepository
+                .findById(targetUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userGettingPolicy.ensureCanGet(actorUser, targetUser);
+
+        return userMapper.toDto(targetUser);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<UserDto> findByEmail(String email) {
         return userRepository
+    public UserDto findByEmail(String email) {
+        Long actorUserId = securityCurrentUser.requireId();
+
+        UserEntity actorUser = userRepository
+                .findById(actorUserId)
+                .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
+        UserEntity targetUser = userRepository
                 .findByEmailIgnoreCase(email)
                 .map(userMapper::toDto);
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userGettingPolicy.ensureCanGet(actorUser, targetUser);
+
+        return userMapper.toDto(targetUser);
     }
 
     @Override
