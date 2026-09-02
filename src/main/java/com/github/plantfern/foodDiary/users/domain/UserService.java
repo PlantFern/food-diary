@@ -8,7 +8,7 @@ import com.github.plantfern.foodDiary.users.domain.entities.UserEntity;
 import com.github.plantfern.foodDiary.users.domain.repositories.RoleRepository;
 import com.github.plantfern.foodDiary.users.domain.repositories.UserRepository;
 import com.github.plantfern.foodDiary.users.domain.security.RoleAssignmentPolicy;
-import com.github.plantfern.foodDiary.users.domain.security.UserContextUtils;
+import com.github.plantfern.foodDiary.users.domain.security.SecurityCurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,25 +23,33 @@ import java.util.Set;
 public class UserService implements UserApi {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
+    private final SecurityCurrentUser securityCurrentUser;
     private final RoleAssignmentPolicy roleAssignmentPolicy;
+
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public UserService(
             UserRepository userRepository,
             RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder,
-            UserMapper userMapper){
             UserMapper userMapper,
 
-            RoleAssignmentPolicy roleAssignmentPolicy){
+            SecurityCurrentUser securityCurrentUser,
+            RoleAssignmentPolicy roleAssignmentPolicy,
+
+            PasswordEncoder passwordEncoder
+    ){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+
+        this.securityCurrentUser = securityCurrentUser;
         this.roleAssignmentPolicy = roleAssignmentPolicy;
+
+        this.passwordEncoder = passwordEncoder;
     } // UserService
 
     public void save(UserEntity user){
@@ -100,7 +108,7 @@ public class UserService implements UserApi {
 
     @Override
     public void assignRoles(Long targetUserId, Set<RoleName> roles) {
-        Long actorUserId = UserContextUtils.getCurrentUserIdOrThrow();
+        Long actorUserId = securityCurrentUser.getCurrentUserIdOrThrow();
 
         UserEntity actorUser = userRepository
                 .findById(actorUserId)

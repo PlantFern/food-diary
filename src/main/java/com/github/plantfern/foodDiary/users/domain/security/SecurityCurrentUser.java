@@ -3,12 +3,15 @@ package com.github.plantfern.foodDiary.users.domain.security;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
-public final class UserContextUtils {
 
-    private UserContextUtils(){}
+@Component
+public class SecurityCurrentUser {
 
-    public static Long getCurrentUserIdOrThrow(){
+    private SecurityCurrentUser(){}
+
+    public Long getCurrentUserIdOrThrow(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null || !(authentication.getPrincipal() instanceof SecurityUser user)){
