@@ -108,7 +108,7 @@ public class UserService implements UserApi {
 
     @Override
     public void assignRoles(Long targetUserId, Set<RoleName> roles) {
-        Long actorUserId = securityCurrentUser.getCurrentUserIdOrThrow();
+        Long actorUserId = securityCurrentUser.requireId();
 
         UserEntity actorUser = userRepository
                 .findById(actorUserId)
