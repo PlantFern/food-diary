@@ -9,14 +9,10 @@ import java.util.Set;
 @Component
 public interface UserApi {
 
-    Optional<UserDto> findById(Long id);
-    Optional<UserDto> findByEmail(String email);
-
-    boolean existsById(Long userId);
+    UserDto findById(Long id);
+    UserDto findByEmail(String email);
 
     UserDto register(String email, String password);
 
     void assignRoles(Long userId, Set<RoleName> roles);
-
-    boolean hasRole(Long userId, RoleName role);
 } // UserApi

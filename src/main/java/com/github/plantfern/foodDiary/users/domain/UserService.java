@@ -65,6 +65,19 @@ public class UserService implements UserApi {
                 .findAllByDeletedAtIsNull();
     }
 
+    @Transactional
+    public boolean hasRole(Long userId, RoleName role) {
+        return userRepository.findById(userId)
+                .map(user -> user.getUserRoles().stream()
+                        .anyMatch(ur -> ur.getRole().getName().equals(role)))
+                .orElse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsById (Long userId){
+        return userRepository.existsById(userId);
+    }
+
 
     // реализация интерфейса
     @Override
@@ -99,12 +112,6 @@ public class UserService implements UserApi {
         userGettingPolicy.ensureCanGet(actorUser, targetUser);
 
         return userMapper.toDto(targetUser);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean existsById (Long userId){
-        return userRepository.existsById(userId);
     }
 
     @Override
@@ -144,13 +151,5 @@ public class UserService implements UserApi {
 
         targetUser.addRoles(newRoles);
         userRepository.save(targetUser);
-    }
-
-    @Override
-    public boolean hasRole(Long userId, RoleName role) {
-        return userRepository.findById(userId)
-                .map(user -> user.getUserRoles().stream()
-                        .anyMatch(ur -> ur.getRole().getName().equals(role)))
-                .orElse(false);
     }
 } // UserService
