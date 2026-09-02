@@ -9,6 +9,7 @@ import com.github.plantfern.foodDiary.users.domain.repositories.RoleRepository;
 import com.github.plantfern.foodDiary.users.domain.repositories.UserRepository;
 import com.github.plantfern.foodDiary.users.domain.security.RoleAssignmentPolicy;
 import com.github.plantfern.foodDiary.users.domain.security.SecurityCurrentUser;
+import com.github.plantfern.foodDiary.users.domain.security.UserGettingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -68,10 +69,6 @@ public class UserService implements UserApi {
     // реализация интерфейса
     @Override
     @Transactional(readOnly = true)
-    public Optional<UserDto> findById(Long id) {
-        return userRepository
-                .findById(id)
-                .map(userMapper::toDto);
     public UserDto findById(Long targetUserId) {
         Long actorUserId = securityCurrentUser.requireId();
 
@@ -89,8 +86,6 @@ public class UserService implements UserApi {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<UserDto> findByEmail(String email) {
-        return userRepository
     public UserDto findByEmail(String email) {
         Long actorUserId = securityCurrentUser.requireId();
 
@@ -99,7 +94,6 @@ public class UserService implements UserApi {
                 .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
         UserEntity targetUser = userRepository
                 .findByEmailIgnoreCase(email)
-                .map(userMapper::toDto);
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         userGettingPolicy.ensureCanGet(actorUser, targetUser);
