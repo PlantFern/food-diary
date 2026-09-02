@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.users.domain.entities;
 
+import com.github.plantfern.foodDiary.users.api.RoleName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
