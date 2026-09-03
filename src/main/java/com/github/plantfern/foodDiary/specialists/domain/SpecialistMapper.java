@@ -1,6 +1,6 @@
 package com.github.plantfern.foodDiary.specialists.domain;
 
-import com.github.plantfern.foodDiary.specialists.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.api.SpecialistDto;
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import org.mapstruct.Mapper;
 

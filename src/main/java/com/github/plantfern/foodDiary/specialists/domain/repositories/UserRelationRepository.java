@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.specialists.domain.repositories;
 
 
-import com.github.plantfern.foodDiary.specialists.domain.RelationType;
+import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationStatusEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
