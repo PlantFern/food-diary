@@ -1,6 +1,8 @@
 package com.github.plantfern.foodDiary.specialists.domain.security;
 
+import com.github.plantfern.foodDiary.specialists.domain.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
+import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -12,28 +14,84 @@ import java.util.Set;
 public class RelationTypePolicy {
 
     public void ensureCanGet(
-            Long actorUserId,
+            CurrentUser currentUser,
             UserRelationEntity targetRelation,
-            Set<RoleName> roles){
-        if(actorUserId.equals(targetRelation.getDiaryProfileId()))
+            Long diaryProfileUserId
+            ){
+        if(currentUser.requireId().equals(diaryProfileUserId))
             return;
 
-        if(actorUserId.equals(targetRelation.getSpecialistId()))
+        if(currentUser.requireId().equals(targetRelation.getSpecialistId()))
             return;
 
-        if(roles.contains(RoleName.MODERATOR))
+        if(currentUser.hasRole(RoleName.MODERATOR)
+        || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
+
+        throw new AccessDeniedException("Only users related to relation or moderators can get");
     }
 
-    public void ensureCanUpdate(
-            Long actorUserId,
+    public void ensureCanActivateOrReject(
+            CurrentUser currentUser,
             UserRelationEntity targetRelation){
-        if(actorUserId.equals(targetRelation.getDiaryProfileId()))
+
+        ensureCanChangeStatus(currentUser, targetRelation);
+
+        if(currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
 
-        if(actorUserId.equals(targetRelation.getSpecialistId()))
+        if(!UserRelationStatus
+                .valueOf(targetRelation.getUserRelationStatusEntity().getCode())
+                .equals(UserRelationStatus.PENDING)){
+            throw new IllegalStateException("User relation status must be pending");
+        }
+    }
+
+    public void ensureCanEnd(
+            CurrentUser currentUser,
+            UserRelationEntity targetRelation){
+
+        ensureCanChangeStatus(currentUser, targetRelation);
+
+        if(currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
 
-        throw new AccessDeniedException("Only users related to relation or moderators can update");
+        if(!UserRelationStatus
+                .valueOf(targetRelation.getUserRelationStatusEntity().getCode())
+                .equals(UserRelationStatus.ACTIVE)){
+            throw new IllegalStateException("User relation status must be pending");
+        }
+    }
+
+    public void ensureCanChangeStatus(
+            CurrentUser currentUser,
+            UserRelationEntity targetRelation){
+
+        if(currentUser.requireId().equals(targetRelation.getSpecialistId()))
+            return;
+
+        if(!UserRelationStatus
+                .valueOf(targetRelation.getUserRelationStatusEntity().getCode())
+                .equals(UserRelationStatus.PENDING)){
+            throw new IllegalStateException("User relation status must be pending");
+        }
+
+        throw new AccessDeniedException("Only specialist or moderator can change status of user relation");
+    }
+
+    public void ensureCanCreate(
+            CurrentUser currentUser,
+            Long diaryProfileUserId,
+            Long specialistId
+    ) {
+        if(currentUser.requireId().equals(specialistId))
+            return;
+
+        if(currentUser.requireId().equals(diaryProfileUserId))
+            return;
+
+        throw new AccessDeniedException("Only the users participating in the relation can create it");
     }
 }
