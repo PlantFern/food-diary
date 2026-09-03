@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.specialists;
+package com.github.plantfern.foodDiary.specialists.api;
 
 
 import org.springframework.stereotype.Component;
