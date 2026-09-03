@@ -4,13 +4,8 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.config.ConfigDataEnvironmentUpdateListener;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -87,16 +82,5 @@ public class DiaryProfileEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-
-    public boolean belongsTo(Long userId) {
-        return this.userId != null && this.userId.equals(userId);
-    }
-
-    public void ensureOwnedBy(Long userId){
-        if(!belongsTo(userId)) {
-            throw new AccessDeniedException("Access denied to diary: " + this.id);
-        }
     }
 }
