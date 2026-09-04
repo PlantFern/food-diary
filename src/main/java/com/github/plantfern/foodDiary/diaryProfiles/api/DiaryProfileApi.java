@@ -9,6 +9,4 @@ import java.util.Optional;
 
 public interface DiaryProfileApi {
     DiaryProfileDto findById(Long id);
-
-    List<DiaryProfileDto> findAllById(Collection<Long> ids);
 }
