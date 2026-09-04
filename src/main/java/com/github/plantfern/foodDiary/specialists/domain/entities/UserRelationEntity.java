@@ -41,6 +41,19 @@ public class UserRelationEntity {
     private UserRelationStatusEntity userRelationStatusEntity;
 
 
+    private UserRelationEntity() {}
+
+    public UserRelationEntity(
+            Long diaryProfileId,
+            Long specialistId,
+            RelationType relationType
+    ) {
+        this.diaryProfileId = diaryProfileId;
+        this.specialistId = specialistId;
+        this.relationType = relationType;
+    }
+
+
     public UserRelationStatus getStatusCode(){
         return  UserRelationStatus.valueOf(
                 this.userRelationStatusEntity.getCode()
