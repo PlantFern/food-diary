@@ -120,13 +120,22 @@ public class DiaryProfileService implements DiaryProfileApi {
         diaryProfileRepository.save(profile);
     }
 
+
+    @Override
     @Transactional(readOnly = true)
     public List<DiaryProfileDto> findAllById(Collection<Long> ids) {
-        return ids.stream()
-                .map(this::findById)
-                .collect(Collectors.toList());
-    }
+        var diaryProfiles = diaryProfileRepository
+                .findAllById(ids)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+        if(diaryProfiles.isEmpty())
+            throw new EntityNotFoundException("Diary profiles not found");
 
+        diaryProfilePolicy.ensureCanGetAll(ids);
+
+        return diaryProfiles;
+    }
 
     @Override
     @Transactional(readOnly = true)
