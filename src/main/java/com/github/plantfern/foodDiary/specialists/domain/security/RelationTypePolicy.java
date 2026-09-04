@@ -33,48 +33,41 @@ public class RelationTypePolicy {
 
     public void ensureCanActivateOrReject(
             CurrentUser currentUser,
-            UserRelationEntity targetRelation){
+            String relationStatus,
+            Long specialistUserId){
 
-        ensureCanChangeStatus(currentUser, targetRelation);
+        ensureCanChangeStatus(currentUser, relationStatus, UserRelationStatus.PENDING, specialistUserId);
 
         if(currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
-
-        if(!UserRelationStatus
-                .valueOf(targetRelation.getUserRelationStatusEntity().getCode())
-                .equals(UserRelationStatus.PENDING)){
-            throw new IllegalStateException("User relation status must be pending");
-        }
     }
 
     public void ensureCanEnd(
             CurrentUser currentUser,
-            UserRelationEntity targetRelation){
+            String relationStatus,
+            Long specialistUserId){
 
-        ensureCanChangeStatus(currentUser, targetRelation);
+        ensureCanChangeStatus(currentUser, relationStatus, UserRelationStatus.ACTIVE, specialistUserId);
 
         if(currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
-
-        if(!UserRelationStatus
-                .valueOf(targetRelation.getUserRelationStatusEntity().getCode())
-                .equals(UserRelationStatus.ACTIVE)){
-            throw new IllegalStateException("User relation status must be pending");
-        }
     }
 
     public void ensureCanChangeStatus(
             CurrentUser currentUser,
-            UserRelationEntity targetRelation){
+            String currentRelationStatus,
+            UserRelationStatus targetRelationStatus,
+            Long specialistUserId
+    ){
 
-        if(currentUser.requireId().equals(targetRelation.getSpecialistId()))
+        if(currentUser.requireId().equals(specialistUserId))
             return;
 
         if(!UserRelationStatus
-                .valueOf(targetRelation.getUserRelationStatusEntity().getCode())
-                .equals(UserRelationStatus.PENDING)){
+                .valueOf(currentRelationStatus)
+                .equals(targetRelationStatus)){
             throw new IllegalStateException("User relation status must be pending");
         }
 
@@ -86,12 +79,6 @@ public class RelationTypePolicy {
             Long diaryProfileUserId,
             Long specialistId
     ) {
-        if(currentUser.requireId().equals(specialistId))
-            return;
-
-        if(currentUser.requireId().equals(diaryProfileUserId))
-            return;
-
         throw new AccessDeniedException("Only the users participating in the relation can create it");
     }
 }

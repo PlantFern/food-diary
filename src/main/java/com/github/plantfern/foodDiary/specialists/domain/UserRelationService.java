@@ -13,6 +13,7 @@ import com.github.plantfern.foodDiary.specialists.domain.security.RelationTypePo
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 
+import jakarta.persistence.EntityExistsException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +66,6 @@ public class UserRelationService implements UserRelationApi {
     @Transactional
     public void create(Long diaryProfileUser, Long specialistId, RelationType relationType) {
 
-
         events.publishEvent(new UserRelationActivated(
                 diaryProfileUser,
                 diaryProfileUser,
@@ -76,9 +76,18 @@ public class UserRelationService implements UserRelationApi {
 
     @Transactional
     public void activate(Long userRelationId) {
-        var userRelation = findById(userRelationId);
+        var userRelation = userRelationRepository
+                .findById(userRelationId)
+                .orElseThrow(
+                        () -> new EntityExistsException("user relation not found")
+                );
+        var specialistId = specialistService.findById(userRelation.getSpecialistId());
 
-        relationTypePolicy.ensureCanActivateOrReject(currentUser, userRelation);
+        relationTypePolicy.ensureCanActivateOrReject(
+                currentUser,
+                userRelation.getUserRelationStatusEntity().getCode(),
+                specialistId.userId()
+        );
 
         userRelation.setUserRelationStatusEntity(
                 userRelationStatusRepository
@@ -90,9 +99,18 @@ public class UserRelationService implements UserRelationApi {
 
     @Transactional
     public void cancel(Long userRelationId) {
-        var userRelation = findById(userRelationId);
+        var userRelation = userRelationRepository
+                .findById(userRelationId)
+                .orElseThrow(
+                        () -> new EntityExistsException("user relation not found")
+                );
+        var specialistId = specialistService.findById(userRelation.getSpecialistId());
 
-        relationTypePolicy.ensureCanActivateOrReject(currentUser, userRelation);
+        relationTypePolicy.ensureCanActivateOrReject(
+                currentUser,
+                userRelation.getUserRelationStatusEntity().getCode(),
+                specialistId.userId()
+        );
 
         userRelation.setUserRelationStatusEntity(
                 userRelationStatusRepository
@@ -104,9 +122,17 @@ public class UserRelationService implements UserRelationApi {
 
     @Transactional
     public void deactivate(Long userRelationId) {
-        var userRelation = findById(userRelationId);
+        var userRelation = userRelationRepository
+                .findById(userRelationId)
+                .orElseThrow(
+                        () -> new EntityExistsException("user relation not found")
+                );
+        var specialistId = specialistService.findById(userRelation.getSpecialistId());
 
-        relationTypePolicy.ensureCanEnd(currentUser, userRelation);
+        relationTypePolicy.ensureCanEnd(
+                currentUser,
+                userRelation.getUserRelationStatusEntity().getCode(),
+                specialistId.userId());
 
         userRelation.setUserRelationStatusEntity(
                 userRelationStatusRepository
