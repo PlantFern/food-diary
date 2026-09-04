@@ -3,6 +3,8 @@ package com.github.plantfern.foodDiary.specialists.domain;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.DiaryProfileApi;
 import com.github.plantfern.foodDiary.specialists.api.RelationType;
+import com.github.plantfern.foodDiary.specialists.api.UserRelationApi;
+import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.api.events.UserRelationActivated;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationRepository;
@@ -131,5 +133,40 @@ public class UserRelationService implements UserRelationApi {
         );
 
         return userRelation;
+    }
+
+    @Override
+    public List<UserRelationDto> findByDiaryProfileId(Long diaryProfileId) {
+        return userRelationRepository
+                .findAllByDiaryProfileId(diaryProfileId)
+                .stream().map(userRelationMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<UserRelationDto> findBySpecialistId(Long specialistId) {
+        return userRelationRepository
+                .findAllByDiaryProfileId(specialistId)
+                .stream().map(userRelationMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<UserRelationDto> findAll() {
+        return userRelationRepository
+                .findAll()
+                .stream()
+                .map(userRelationMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public boolean existsByDiaryProfileIdAndSpecialistId(
+            Long diaryProfileId,
+            Long specialistId
+    ){
+        return userRelationRepository
+                .existsByDiaryProfileIdAndSpecialistId(diaryProfileId, specialistId);
     }
 }
