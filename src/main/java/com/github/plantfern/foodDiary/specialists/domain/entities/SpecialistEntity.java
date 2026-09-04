@@ -29,12 +29,6 @@ public class SpecialistEntity{
     private Long userId;
 
     @Column(
-            name="invite_code",
-            length = 10
-    )
-    private String inviteCode;
-
-    @Column(
             name="is_active"
     )
     private Boolean isActive;
@@ -69,11 +63,6 @@ public class SpecialistEntity{
 
     public SpecialistEntity(Long user_id){
         this.userId = user_id;
-        this.inviteCode = "INV-" + UUID.randomUUID()
-                .toString()
-                .replace("-", "")
-                .substring(0, 6)
-                .toUpperCase();
         this.isActive = true;
     }
 
