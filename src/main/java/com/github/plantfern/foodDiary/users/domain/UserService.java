@@ -30,7 +30,7 @@ public class UserService implements UserApi {
     private final RoleAssignmentPolicy roleAssignmentPolicy;
 
     private final PasswordEncoder passwordEncoder;
-    private final UserGettingPolicy userGettingPolicy;
+    private final UserPolicy userPolicy;
 
 
     @Autowired
@@ -43,14 +43,14 @@ public class UserService implements UserApi {
             RoleAssignmentPolicy roleAssignmentPolicy,
 
             PasswordEncoder passwordEncoder,
-            UserGettingPolicy userGettingPolicy){
+            UserPolicy userPolicy){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
 
         this.securityCurrentUser = securityCurrentUser;
         this.roleAssignmentPolicy = roleAssignmentPolicy;
-        this.userGettingPolicy = userGettingPolicy;
+        this.userPolicy = userPolicy;
 
         this.passwordEncoder = passwordEncoder;
     } // UserService
@@ -92,7 +92,7 @@ public class UserService implements UserApi {
                 .findById(targetUserId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        userGettingPolicy.ensureCanGet(actorUser, targetUser);
+        userPolicy.ensureCanGet(actorUser, targetUser);
 
         return userMapper.toDto(targetUser);
     }
@@ -109,7 +109,7 @@ public class UserService implements UserApi {
                 .findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        userGettingPolicy.ensureCanGet(actorUser, targetUser);
+        userPolicy.ensureCanGet(actorUser, targetUser);
 
         return userMapper.toDto(targetUser);
     }
