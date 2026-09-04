@@ -24,5 +24,5 @@ public interface UserRelationRepository extends JpaRepository<UserRelationEntity
 
     Boolean existsByDiaryProfileIdAndSpecialistId(Long diaryProfileId, Long specialistId);
 
-    List<Integer> countDiaryProfileIdAndSpecialistId(Long specialistId);
+    List<Integer> countByDiaryProfileIdAndSpecialistId(Long diaryProfileId, Long specialistId);
 }
