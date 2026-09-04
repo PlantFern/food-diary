@@ -3,9 +3,11 @@ package com.github.plantfern.foodDiary.specialists.domain;
 
 import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
 import com.github.plantfern.foodDiary.specialists.api.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.SpecialistRepository;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,12 +38,21 @@ public class SpecialistService implements SpecialistApi {
         this.specialistRepository = specialistRepository;
     }
 
+    public void create(){
+        var userId = currentUser.requireId();
+        if(specialistRepository.findByUserId(userId) != null)
+            throw new IllegalStateException("Specialist already exists");
 
-    public void updateActivity(Long targetId, @NotNull Boolean value){
+        specialistRepository.save(new SpecialistEntity(userId));
+    }
+
+    public void updateActivity(){
         var specialist = specialistRepository.findByUserId(currentUser.requireId());
+        if(specialist == null)
+            throw new EntityNotFoundException("Specialist doesn't exist");
 
-        specialist.setIsActive(value);
-        var result = specialistRepository.save(specialist);
+        specialist.setIsActive(!specialist.getIsActive());
+        specialistRepository.save(specialist);
     }
 
 
