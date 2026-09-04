@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 public class DiaryProfileService implements DiaryProfileApi {
 
     private final UserApi userApi;
-    private final SpecialistApi specialistApi;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
 
@@ -60,7 +59,6 @@ public class DiaryProfileService implements DiaryProfileApi {
         this.mapper = mapper;
 
         this.userApi = userApi;
-        this.specialistApi = specialistApi;
         this.currentUser = currentUser;
         this.diaryProfilePolicy = diaryProfilePolicy;
         this.applicationEventPublisher = applicationEventPublisher;

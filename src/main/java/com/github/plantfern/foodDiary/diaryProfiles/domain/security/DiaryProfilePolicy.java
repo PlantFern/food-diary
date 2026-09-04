@@ -6,6 +6,7 @@ import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationApi;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
+import com.github.plantfern.foodDiary.users.api.VisibilityApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.List;
 public class DiaryProfilePolicy {
 
     private final CurrentUser currentUser;
-    private final UserRelationApi userRelationApi;
+    private final VisibilityApi userVisibilityApi;
     private final SpecialistApi specialistApi;
 
     public void ensureCanGet(DiaryProfileEntity diaryProfile) {
@@ -30,8 +31,8 @@ public class DiaryProfilePolicy {
         }
 
         if((currentUser.hasRole(RoleName.OBSERVER) || currentUser.hasRole(RoleName.SPECIALIST))
-            && userRelationApi
-                .existsByDiaryProfileIdAndSpecialistId(
+            && userVisibilityApi
+                .canSee(
                         diaryProfile.getId(),
                         currentUserId
                 )
@@ -58,7 +59,7 @@ public class DiaryProfilePolicy {
         if (currentUser.hasRole(RoleName.OBSERVER)
                 || currentUser.hasRole(RoleName.SPECIALIST)){
             for (var id : ids) {
-                boolean hasAccess = userRelationApi.existsByDiaryProfileIdAndSpecialistId(
+                boolean hasAccess = userVisibilityApi.canSee(
                         id,
                         currentUserId
                 );
@@ -69,6 +70,8 @@ public class DiaryProfilePolicy {
                     );
                 }
             }
+
+            return;
         }
 
         throw new AccessDeniedException("No accessible diary profiles found");
