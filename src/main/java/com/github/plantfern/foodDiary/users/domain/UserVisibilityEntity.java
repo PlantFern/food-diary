@@ -31,5 +31,5 @@ public class UserVisibilityEntity {
             name="relation_type",
             nullable = false
     )
-    private String RelationType;
+    private String relationType;
 }
