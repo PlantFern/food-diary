@@ -150,12 +150,12 @@ public class UserRelationService implements UserRelationApi {
                         () -> new IllegalArgumentException("UserRelation not found")
                 );
 
-        var diaryProfileUserId = diaryProfileApi.findById(userRelation.getDiaryProfileId());
+        var diaryProfileUserId = diaryProfileApi.getOwnerUserId(userRelation.getDiaryProfileId());
 
         relationTypePolicy.ensureCanGet(
                 currentUser,
                 userRelation,
-                diaryProfileUserId.userId()
+                diaryProfileUserId
         );
 
         return userRelation;
