@@ -12,6 +12,7 @@ import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,5 +151,13 @@ public class DiaryProfileService implements DiaryProfileApi {
         diaryProfilePolicy.ensureCanGet(targetDiaryProfile);
 
         return mapper.toDto(targetDiaryProfile);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getOwnerUserId(Long userId){
+        return diaryProfileRepository.findByUserId(userId).orElseThrow(
+                () -> new EntityExistsException("Diary profile with userId: " + userId + " not found")
+        );
     }
 }
