@@ -28,7 +28,7 @@ public class SecurityCurrentUser implements CurrentUser {
         return authentication.getAuthorities()
                 .stream()
                 .anyMatch(
-                        a -> Objects.equals(a.getAuthority(), role.name())
+                        a -> Objects.equals(a.getAuthority(), "ROLE_" + role.name())
                 );
     }
 
