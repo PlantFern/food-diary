@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.users.domain;
 
+import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import com.github.plantfern.foodDiary.users.api.UserDto;
@@ -83,10 +84,10 @@ public class UserService implements UserApi {
     @Override
     @Transactional(readOnly = true)
     public UserDto findById(Long targetUserId) {
-        Long actorUserId = securityCurrentUser.requireId();
+        CurrentUser actorUser = securityCurrentUser;
 
-        UserEntity actorUser = userRepository
-                .findById(actorUserId)
+        userRepository
+                .findById(actorUser.requireId())
                 .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
         UserEntity targetUser = userRepository
                 .findById(targetUserId)
@@ -100,10 +101,10 @@ public class UserService implements UserApi {
     @Override
     @Transactional(readOnly = true)
     public UserDto findByEmail(String email) {
-        Long actorUserId = securityCurrentUser.requireId();
+        var actorUser = securityCurrentUser;
 
-        UserEntity actorUser = userRepository
-                .findById(actorUserId)
+        userRepository
+                .findById(actorUser.requireId())
                 .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
         UserEntity targetUser = userRepository
                 .findByEmailIgnoreCase(email)

@@ -18,20 +18,20 @@ public class UserPolicy {
     private final UserVisibilityRepository visibilityRepository;
 
     public void ensureCanGet(
-            UserEntity actorUser,
+            CurrentUser actorUser,
             UserEntity targetUser
     ){
-        if (targetUser.getId().equals(actorUser.getId()))
+        if (targetUser.getId().equals(actorUser.requireId()))
             return;
 
-        if (currentUser.hasRole(RoleName.ADMINISTRATOR)
-            || currentUser.hasRole(RoleName.MODERATOR))
+        if (actorUser.hasRole(RoleName.ADMINISTRATOR)
+            || actorUser.hasRole(RoleName.MODERATOR))
             return;
 
-        if(currentUser.hasRole(RoleName.SPECIALIST)
-            || (currentUser.hasRole(RoleName.OBSERVER)
+        if((actorUser.hasRole(RoleName.SPECIALIST)
+            || actorUser.hasRole(RoleName.OBSERVER))
             && visibilityRepository
-                .existsByActorUserIdAndTargetUserId(actorUser.getId(), targetUser.getId())))
+                .existsByActorUserIdAndTargetUserId(actorUser.requireId(), targetUser.getId()))
             return;
 
         throw new AccessDeniedException("Only moderator or administrator can get other users data");
