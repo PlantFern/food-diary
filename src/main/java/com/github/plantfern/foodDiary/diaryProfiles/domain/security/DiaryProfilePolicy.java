@@ -31,21 +31,15 @@ public class DiaryProfilePolicy {
         }
 
         if((currentUser.hasRole(RoleName.OBSERVER) || currentUser.hasRole(RoleName.SPECIALIST))
-            && userVisibilityApi
-                .canSee(
-                        diaryProfile.getId(),
-                        currentUserId
-                )
+        && userVisibilityApi.canSee(
+                        diaryProfile.getUserId(),
+                        currentUserId)
         )
             return;
 
         if( currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
-
-        throw new AccessDeniedException(
-                "Only owner, linked specialist/observer, or moderators can get diary profile"
-        );
     }
 
     public void ensureCanGetAll(Collection<Long> ids){
