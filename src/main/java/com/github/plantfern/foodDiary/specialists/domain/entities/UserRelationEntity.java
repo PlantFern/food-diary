@@ -32,6 +32,10 @@ public class UserRelationEntity {
     @Column(name="specialist_id", nullable=false)
     private Long specialistId;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "specialist_id", insertable = false, updatable = false)
+    private SpecialistEntity specialist;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "relation_type", nullable = false, length = 20)
     private RelationType relationType;
@@ -41,7 +45,7 @@ public class UserRelationEntity {
     private UserRelationStatusEntity userRelationStatusEntity;
 
 
-    private UserRelationEntity() {}
+    protected UserRelationEntity() {}
 
     public UserRelationEntity(
             Long diaryProfileId,
