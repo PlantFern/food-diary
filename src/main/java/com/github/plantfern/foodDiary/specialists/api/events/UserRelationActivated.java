@@ -6,5 +6,5 @@ public record UserRelationActivated(
         Long relationId,
         Long diaryProfileUserId,
         Long specialistUserId,
-        RelationType relationType
+        String relationType
 ) { }

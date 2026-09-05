@@ -14,6 +14,7 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 
 import jakarta.persistence.EntityExistsException;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class UserRelationService implements UserRelationApi {
     private final UserRelationStatusRepository userRelationStatusRepository;
 
     private final ApplicationEventPublisher events;
+    @Lazy
     private final DiaryProfileApi diaryProfileApi;
 
     public UserRelationService(
@@ -67,10 +69,9 @@ public class UserRelationService implements UserRelationApi {
     public void create(Long diaryProfileUser, Long specialistId, RelationType relationType) {
 
         events.publishEvent(new UserRelationActivated(
-                diaryProfileUser,
-                diaryProfileUser,
                 specialistId,
-                relationType
+                diaryProfileUser,
+                relationType.toString()
         ));
     }
 
