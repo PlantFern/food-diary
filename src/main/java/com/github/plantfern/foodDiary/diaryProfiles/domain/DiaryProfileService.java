@@ -131,7 +131,7 @@ public class DiaryProfileService implements DiaryProfileApi {
         if(diaryProfiles.isEmpty())
             throw new EntityNotFoundException("Diary profiles not found");
 
-        diaryProfilePolicy.ensureCanGetAll(ids);
+        diaryProfilePolicy.ensureCanGetAll(diaryProfiles.stream().map(DiaryProfileDto::userId).toList());
 
         return diaryProfiles;
     }
