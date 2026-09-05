@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface DiaryProfileRepository extends JpaRepository<DiaryProfileEntity, Long> {
     boolean existsByUserId(Long userId);
-    Optional<Long> findByUserId(Long userId);
+    Long findUserIdById(Long id);
 }
