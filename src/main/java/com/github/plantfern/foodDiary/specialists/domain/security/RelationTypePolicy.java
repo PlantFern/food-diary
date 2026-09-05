@@ -21,7 +21,7 @@ public class RelationTypePolicy {
         if(currentUser.requireId().equals(diaryProfileUserId))
             return;
 
-        if(currentUser.requireId().equals(targetRelation.getSpecialistId()))
+        if(currentUser.requireId().equals(targetRelation.getSpecialist().getUserId()))
             return;
 
         if(currentUser.hasRole(RoleName.MODERATOR)
