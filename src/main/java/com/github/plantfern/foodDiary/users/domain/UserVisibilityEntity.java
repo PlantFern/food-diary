@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="user_visability")
+@Table(name="user_visibility")
 public class UserVisibilityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +31,5 @@ public class UserVisibilityEntity {
             name="relation_type",
             nullable = false
     )
-    private String relationType;
+    private Long relationType;
 }
