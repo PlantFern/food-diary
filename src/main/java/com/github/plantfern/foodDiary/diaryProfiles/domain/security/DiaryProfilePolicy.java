@@ -32,8 +32,7 @@ public class DiaryProfilePolicy {
 
         if((currentUser.hasRole(RoleName.OBSERVER) || currentUser.hasRole(RoleName.SPECIALIST))
         && userVisibilityApi.canSee(
-                        diaryProfile.getUserId(),
-                        currentUserId)
+                        currentUserId, diaryProfile.getUserId())
         )
             return;
 
@@ -54,8 +53,7 @@ public class DiaryProfilePolicy {
                 || currentUser.hasRole(RoleName.SPECIALIST)){
             for (var id : ids) {
                 boolean hasAccess = userVisibilityApi.canSee(
-                        id,
-                        currentUserId
+                        currentUserId, id
                 );
 
                 if (!hasAccess) {
