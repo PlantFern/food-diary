@@ -36,7 +36,7 @@ public class GenderEntity {
 
 
     protected GenderEntity() {}
-    private GenderEntity(String code){
+    public GenderEntity(String code){
         this.code = code;
     }
 }

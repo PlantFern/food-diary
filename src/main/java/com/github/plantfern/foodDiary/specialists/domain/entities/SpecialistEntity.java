@@ -67,6 +67,7 @@ public class SpecialistEntity{
     public SpecialistEntity(Long user_id){
         this.userId = user_id;
         this.isActive = true;
+        this.isApproved = true;
     }
 
 

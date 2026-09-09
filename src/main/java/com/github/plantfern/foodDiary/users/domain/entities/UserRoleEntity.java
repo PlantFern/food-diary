@@ -1,7 +1,9 @@
 package com.github.plantfern.foodDiary.users.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(
@@ -10,6 +12,7 @@ import lombok.Getter;
 )
 public class UserRoleEntity {
 
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +31,7 @@ public class UserRoleEntity {
     // contractors
     protected UserRoleEntity() {}
 
-    UserRoleEntity(UserEntity user, RoleEntity role) {
+    public UserRoleEntity(UserEntity user, RoleEntity role) {
         this.user = user;
         this.role = role;
     }

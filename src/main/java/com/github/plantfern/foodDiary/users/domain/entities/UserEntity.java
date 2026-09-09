@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.users.domain.entities;
 
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 )
 public class UserEntity {
 
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -4,6 +4,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Table(name = "diary_profiles")
 public class DiaryProfileEntity {
 
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -28,7 +28,7 @@ public class UserRelationStatusEntity {
 
     protected UserRelationStatusEntity(){}
 
-    private UserRelationStatusEntity(String code){
+    public UserRelationStatusEntity(String code){
         this.code = code;
     }
 }
