@@ -33,6 +33,9 @@ public class SpecialistEntity{
     )
     private Boolean isActive;
 
+    @Column (name = "is_approved")
+    private Boolean isApproved;
+
     @Column(
             name = "created_at",
             nullable = false,
