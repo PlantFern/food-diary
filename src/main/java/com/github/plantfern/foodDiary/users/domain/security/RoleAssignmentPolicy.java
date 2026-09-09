@@ -32,8 +32,6 @@ public class RoleAssignmentPolicy {
             ensureRequestedAreAllowed(
                     requestedRoles,
                     Set.of(
-                            RoleName.DIARY_PROFILE,
-                            RoleName.OBSERVER,
                             RoleName.SPECIALIST
                     )
             );
@@ -53,18 +51,6 @@ public class RoleAssignmentPolicy {
 
         if (actorUser.roleNames().contains(RoleName.MODERATOR)) {
             throw new AccessDeniedException("Moderator can't assign roles");
-        }
-
-        if (actorUser.roleNames().contains(RoleName.SPECIALIST)) {
-            this.ensureRequestedAreAllowed(
-                    requestedRoles,
-                    Set.of(RoleName.DIARY_PROFILE)
-            );
-            return;
-        }
-
-        if (actorUser.roleNames().contains(RoleName.OBSERVER)) {
-            throw new AccessDeniedException("Observer can't assign roles");
         }
     }
 

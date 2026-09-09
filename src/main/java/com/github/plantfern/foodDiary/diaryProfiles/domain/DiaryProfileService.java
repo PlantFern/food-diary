@@ -105,7 +105,10 @@ public class DiaryProfileService implements DiaryProfileApi {
                         "Diary profile with id: " + id + " doesn't exist"
                         ));
 
-        diaryProfilePolicy.ensureCanUpdate(profile.getUserId());
+        diaryProfilePolicy.ensureCanUpdate(
+                currentUser,
+                profile.getUserId()
+        );
 
         profile.setHeight(height);
         profile.setBirthDate(birthDate);
@@ -121,7 +124,6 @@ public class DiaryProfileService implements DiaryProfileApi {
 
 
     @Override
-    @Transactional(readOnly = true)
     public List<DiaryProfileDto> findAllById(Collection<Long> ids) {
         var diaryProfiles = diaryProfileRepository
                 .findAllById(ids)
@@ -131,13 +133,17 @@ public class DiaryProfileService implements DiaryProfileApi {
         if(diaryProfiles.isEmpty())
             throw new EntityNotFoundException("Diary profiles not found");
 
-        diaryProfilePolicy.ensureCanGetAll(diaryProfiles.stream().map(DiaryProfileDto::userId).toList());
+        diaryProfilePolicy.ensureCanGetAll(
+                currentUser,
+                diaryProfiles
+                        .stream()
+                        .map(DiaryProfileDto::userId)
+                        .toList());
 
         return diaryProfiles;
     }
 
     @Override
-    @Transactional(readOnly = true)
     public DiaryProfileDto findById(Long diaryProfileId) {
 
         var targetDiaryProfile = diaryProfileRepository
@@ -146,7 +152,9 @@ public class DiaryProfileService implements DiaryProfileApi {
                         () -> new IllegalArgumentException("Diary profile not found")
                 );
 
-        diaryProfilePolicy.ensureCanGet(targetDiaryProfile);
+        diaryProfilePolicy.ensureCanGet(
+                currentUser,
+                targetDiaryProfile.getId());
 
         return mapper.toDto(targetDiaryProfile);
     }

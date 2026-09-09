@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserPolicy {
 
-    private final CurrentUser currentUser;
     private final UserVisibilityRepository visibilityRepository;
+
 
     public void ensureCanGet(
             CurrentUser actorUser,
@@ -28,8 +28,7 @@ public class UserPolicy {
             || actorUser.hasRole(RoleName.MODERATOR))
             return;
 
-        if((actorUser.hasRole(RoleName.SPECIALIST)
-            || actorUser.hasRole(RoleName.OBSERVER))
+        if (actorUser.hasRole(RoleName.SPECIALIST)
             && visibilityRepository
                 .existsByActorUserIdAndTargetUserId(actorUser.requireId(), targetUser.getId()))
             return;

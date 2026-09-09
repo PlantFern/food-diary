@@ -19,29 +19,32 @@ import java.util.List;
 @Component
 public class DiaryProfilePolicy {
 
-    private final CurrentUser currentUser;
-    private final VisibilityApi userVisibilityApi;
-    private final SpecialistApi specialistApi;
 
-    public void ensureCanGet(DiaryProfileEntity diaryProfile) {
+    private final VisibilityApi userVisibilityApi;
+
+    public void ensureCanGet(CurrentUser currentUser, Long diaryProfileId) {
         var currentUserId = currentUser.requireId();
 
-        if(currentUserId.equals(diaryProfile.getUserId())){
+        if(currentUserId.equals(diaryProfileId)){
             return;
         }
 
-        if((currentUser.hasRole(RoleName.OBSERVER) || currentUser.hasRole(RoleName.SPECIALIST))
-        && userVisibilityApi.canSee(
-                        currentUserId, diaryProfile.getUserId())
-        )
+        if(currentUser.hasRole(RoleName.SPECIALIST)
+            && userVisibilityApi.canSee(
+                        currentUserId, diaryProfileId))
             return;
 
         if( currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
+
+        throw new AccessDeniedException("Access to diary profile denied");
     }
 
-    public void ensureCanGetAll(Collection<Long> ids){
+    public void ensureCanGetAll(
+            CurrentUser currentUser,
+            Collection<Long> ids
+    ){
         var currentUserId = currentUser.requireId();
 
         if (currentUser.hasRole(RoleName.MODERATOR) ||
@@ -49,8 +52,7 @@ public class DiaryProfilePolicy {
             return;
         }
 
-        if (currentUser.hasRole(RoleName.OBSERVER)
-                || currentUser.hasRole(RoleName.SPECIALIST)){
+        if (currentUser.hasRole(RoleName.SPECIALIST)){
             for (var id : ids) {
                 boolean hasAccess = userVisibilityApi.canSee(
                         currentUserId, id
@@ -70,7 +72,10 @@ public class DiaryProfilePolicy {
     }
 
 
-    public void ensureCanUpdate(Long targetUserId) {
+    public void ensureCanUpdate(
+            CurrentUser currentUser,
+            Long targetUserId
+    ) {
         if(currentUser.requireId().equals(targetUserId)){
             return;
         }

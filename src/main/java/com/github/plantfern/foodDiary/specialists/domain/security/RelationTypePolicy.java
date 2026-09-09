@@ -13,6 +13,7 @@ import java.util.Set;
 @Component
 public class RelationTypePolicy {
 
+
     public void ensureCanGet(
             CurrentUser currentUser,
             UserRelationEntity targetRelation,
@@ -79,6 +80,11 @@ public class RelationTypePolicy {
             Long diaryProfileUserId,
             Long specialistId
     ) {
+        var currentId = currentUser.requireId();
+
+        if(currentId.equals(diaryProfileUserId) || currentId.equals(specialistId))
+            return;
+
         throw new AccessDeniedException("Only the users participating in the relation can create it");
     }
 }
