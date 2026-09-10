@@ -1,38 +1,32 @@
-package com.github.plantfern.foodDiary.diaryProfiles.domain;
+package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.DiaryProfileApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileCreated;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfileEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.DiaryProfileRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GenderRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
-import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
+
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
-import com.github.plantfern.foodDiary.users.api.RoleName;
-import com.github.plantfern.foodDiary.users.api.UserApi;
-import jakarta.persistence.EntityExistsException;
+
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class DiaryProfileService implements DiaryProfileApi {
 
-    private final UserApi userApi;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
 
@@ -48,7 +42,6 @@ public class DiaryProfileService implements DiaryProfileApi {
             GenderRepository genderRepository,
             DiaryProfileMapper mapper,
 
-            UserApi userApi, SpecialistApi specialistApi,
             CurrentUser currentUser,
             DiaryProfilePolicy diaryProfilePolicy,
 
@@ -58,7 +51,6 @@ public class DiaryProfileService implements DiaryProfileApi {
         this.genderRepository = genderRepository;
         this.mapper = mapper;
 
-        this.userApi = userApi;
         this.currentUser = currentUser;
         this.diaryProfilePolicy = diaryProfilePolicy;
         this.applicationEventPublisher = applicationEventPublisher;
