@@ -9,6 +9,8 @@ import java.util.Set;
 @Component
 public interface UserApi {
 
+    boolean existsById(Long id);
+
     UserDto findById(Long id);
     UserDto findByEmail(String email);
 

@@ -74,6 +74,7 @@ public class UserService implements UserApi {
                 .orElse(false);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public boolean existsById (Long userId){
         return userRepository.existsById(userId);
