@@ -19,19 +19,21 @@ import java.util.List;
 @Component
 public class DiaryProfilePolicy {
 
-
     private final VisibilityApi userVisibilityApi;
 
-    public void ensureCanGet(CurrentUser currentUser, Long diaryProfileId) {
+    public void ensureCanGet(
+            CurrentUser currentUser,
+            Long diaryProfileUserId
+    ) {
         var currentUserId = currentUser.requireId();
 
-        if(currentUserId.equals(diaryProfileId)){
+        if(currentUserId.equals(diaryProfileUserId)){
             return;
         }
 
         if(currentUser.hasRole(RoleName.SPECIALIST)
             && userVisibilityApi.canSee(
-                        currentUserId, diaryProfileId))
+                        currentUserId, diaryProfileUserId))
             return;
 
         if( currentUser.hasRole(RoleName.MODERATOR)
@@ -43,7 +45,7 @@ public class DiaryProfilePolicy {
 
     public void ensureCanGetAll(
             CurrentUser currentUser,
-            Collection<Long> ids
+            Collection<Long> diaryProfileUserIds
     ){
         var currentUserId = currentUser.requireId();
 
@@ -53,7 +55,7 @@ public class DiaryProfilePolicy {
         }
 
         if (currentUser.hasRole(RoleName.SPECIALIST)){
-            for (var id : ids) {
+            for (var id : diaryProfileUserIds) {
                 boolean hasAccess = userVisibilityApi.canSee(
                         currentUserId, id
                 );
@@ -74,9 +76,9 @@ public class DiaryProfilePolicy {
 
     public void ensureCanUpdate(
             CurrentUser currentUser,
-            Long targetUserId
+            Long diaryProfileUserId
     ) {
-        if(currentUser.requireId().equals(targetUserId)){
+        if(currentUser.requireId().equals(diaryProfileUserId)){
             return;
         }
 
