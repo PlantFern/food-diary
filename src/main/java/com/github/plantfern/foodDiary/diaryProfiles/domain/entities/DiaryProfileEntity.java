@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Setter
@@ -53,6 +54,13 @@ public class DiaryProfileEntity {
     )
     @JoinColumn(name = "gender_id")
     private GenderEntity gender;
+
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "diaryProfileEntity"
+    )
+    private List<ProfileFeatureSettingsEntity> profileFeatureSettingsEntityList;
 
 
     protected DiaryProfileEntity(){ }
