@@ -153,6 +153,12 @@ public class DiaryProfileService implements DiaryProfileApi {
 
     @Override
     @Transactional(readOnly = true)
+    public boolean existsById(Long id) {
+        return diaryProfileRepository.existsById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Long getOwnerUserId(Long userId){
         Long res = diaryProfileRepository.findUserIdById(userId);
         if (res == null)

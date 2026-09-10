@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface DiaryProfileApi {
     DiaryProfileDto findById(Long id);
+    boolean existsById(Long id);
+
     Collection<DiaryProfileDto> findAllById(Collection<Long> ids);
     Long getOwnerUserId(Long diaryProfileId);
 }
