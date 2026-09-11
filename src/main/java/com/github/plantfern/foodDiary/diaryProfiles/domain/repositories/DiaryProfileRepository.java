@@ -20,7 +20,7 @@ public interface DiaryProfileRepository extends JpaRepository<DiaryProfileEntity
         from DiaryProfileEntity dp
         where dp.id = :id
         """)
-    Long findUserIdById(@Param("id") Long id);
+    Optional<Long> findUserIdById(@Param("id") Long id);
 
     @Query("""
     select dp.userId

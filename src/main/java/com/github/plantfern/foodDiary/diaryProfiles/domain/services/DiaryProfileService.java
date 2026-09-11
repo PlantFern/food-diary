@@ -159,10 +159,14 @@ public class DiaryProfileService implements DiaryProfileApi {
 
     @Override
     @Transactional(readOnly = true)
-    public Long getOwnerUserId(Long userId){
-        Long res = diaryProfileRepository.findUserIdById(userId);
-        if (res == null)
-            throw new EntityNotFoundException("");
+    public Long getOwnerUserId(Long diaryProfileId){
+
+        return diaryProfileRepository
+                .findUserIdById(diaryProfileId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Dairy profile with such id not found")
+                );
+    }
 
     List<Long> getOwnerUserIdList(List<Long> diaryProfileIds){
 
