@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web;
 
+import com.github.plantfern.foodDiary.diaryProfiles.domain.ProfileFeatureSettingsMapper;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatureSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,48 +17,58 @@ import java.util.List;
 public class ProfileFeatureSettingsController {
 
     private final ProfileFeatureSettingsService profileFeatureSettingsService;
+    private final ProfileFeatureSettingsMapper mapper;
 
     @Autowired
     public ProfileFeatureSettingsController(
-            ProfileFeatureSettingsService profileFeatureSettingsService
-    ) {
+            ProfileFeatureSettingsService profileFeatureSettingsService,
+            ProfileFeatureSettingsMapper mapper) {
         this.profileFeatureSettingsService = profileFeatureSettingsService;
+        this.mapper = mapper;
     }
 
     /** Актуальные (последние по createdAt) настройки профиля */
     @GetMapping("/diary-profile/{diaryProfileId}/latest")
-    public ResponseEntity<ProfileFeatureSettingsEntity> getLatestByDiaryProfileId(
+    public ResponseEntity<ProfileFeatureSettingsDto> getLatestByDiaryProfileId(
             @PathVariable Long diaryProfileId
     ) {
         return ResponseEntity.ok(
+                mapper.toDto(
                 profileFeatureSettingsService
                         .getFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                )
         );
     }
 
     /** Все настройки по diary profile */
     @GetMapping("/diary-profile/{diaryProfileId}")
-    public ResponseEntity<List<ProfileFeatureSettingsEntity>> getAllByDiaryProfileId(
+    public ResponseEntity<List<ProfileFeatureSettingsDto>> getAllByDiaryProfileId(
             @PathVariable Long diaryProfileId
     ) {
         return ResponseEntity.ok(
                 profileFeatureSettingsService.getAllByDiaryProfileId(diaryProfileId)
+                        .stream()
+                        .map(mapper::toDto)
+                        .toList()
         );
     }
 
     /** Все настройки, созданные пользователем */
     @GetMapping("/created-by/{userId}")
-    public ResponseEntity<List<ProfileFeatureSettingsEntity>> getAllByCreatedById(
+    public ResponseEntity<List<ProfileFeatureSettingsDto>> getAllByCreatedById(
             @PathVariable Long userId
     ) {
         return ResponseEntity.ok(
                 profileFeatureSettingsService.getAllByCreatedById(userId)
+                        .stream()
+                        .map(mapper::toDto)
+                        .toList()
         );
     }
 
     /** По создателю и diary profile */
     @GetMapping
-    public ResponseEntity<List<ProfileFeatureSettingsEntity>> findAllByCreatedByIdAndDiaryProfileId(
+    public ResponseEntity<List<ProfileFeatureSettingsDto>> findAllByCreatedByIdAndDiaryProfileId(
             @RequestParam Long createdById,
             @RequestParam Long diaryProfileId
     ) {
@@ -65,6 +77,9 @@ public class ProfileFeatureSettingsController {
                         createdById,
                         diaryProfileId
                 )
+                        .stream()
+                        .map(mapper::toDto)
+                        .toList()
         );
     }
 
@@ -73,7 +88,7 @@ public class ProfileFeatureSettingsController {
      * (expiredAt >= lowerBound OR createdAt < upperBound — как в сервисе/репозитории)
      */
     @GetMapping("/diary-profile/{diaryProfileId}/by-period")
-    public ResponseEntity<List<ProfileFeatureSettingsEntity>> getAllByPeriodAndDiaryProfileId(
+    public ResponseEntity<List<ProfileFeatureSettingsDto>> getAllByPeriodAndDiaryProfileId(
             @PathVariable Long diaryProfileId,
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -89,6 +104,9 @@ public class ProfileFeatureSettingsController {
                                 upperBound,
                                 diaryProfileId
                         )
+                        .stream()
+                        .map(mapper::toDto)
+                        .toList()
         );
     }
 }
