@@ -164,6 +164,10 @@ public class DiaryProfileService implements DiaryProfileApi {
         if (res == null)
             throw new EntityNotFoundException("");
 
-        return res;
+    List<Long> getOwnerUserIdList(List<Long> diaryProfileIds){
+
+        return diaryProfileRepository.findAllUserIdsByIdIn(diaryProfileIds)
+                .stream()
+                .toList();
     }
 }

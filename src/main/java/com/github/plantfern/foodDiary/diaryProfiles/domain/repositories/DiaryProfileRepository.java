@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.List;
 
 
 @Repository
@@ -19,4 +21,11 @@ public interface DiaryProfileRepository extends JpaRepository<DiaryProfileEntity
         where dp.id = :id
         """)
     Long findUserIdById(@Param("id") Long id);
+
+    @Query("""
+    select dp.userId
+    from DiaryProfileEntity dp
+    where dp.id in :ids
+    """)
+    List<Long> findAllUserIdsByIdIn(@Param("ids") Collection<Long> ids);
 }
