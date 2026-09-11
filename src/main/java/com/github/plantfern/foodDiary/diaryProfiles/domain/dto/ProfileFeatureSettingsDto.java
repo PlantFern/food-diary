@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.dto;
 
+import java.time.LocalDateTime;
+
 public record ProfileFeatureSettingsDto(
         Long id,
         Long diaryProfileId,
@@ -8,6 +10,8 @@ public record ProfileFeatureSettingsDto(
         Boolean showWeight,
         Boolean showWeightLogs,
         Boolean showAllergensWarning,
-        Long createdById
+        Long createdById,
+        LocalDateTime createdAt,
+        LocalDateTime expiredAt
 ) {
 }
