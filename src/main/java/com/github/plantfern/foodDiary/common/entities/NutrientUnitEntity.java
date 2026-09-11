@@ -24,12 +24,6 @@ public class NutrientUnitEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "nutrientUnit"
-    )
-    List<NutrientEntity> nutrientEntityList;
-
     protected NutrientUnitEntity() {}
 
     public NutrientUnitEntity(String code) {
