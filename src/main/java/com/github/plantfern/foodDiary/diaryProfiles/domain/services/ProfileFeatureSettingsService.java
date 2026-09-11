@@ -7,6 +7,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfile
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 
 @Service
+@AllArgsConstructor
 public class ProfileFeatureSettingsService {
 
     private final DiaryProfileService diaryProfileService;
@@ -24,17 +26,20 @@ public class ProfileFeatureSettingsService {
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
 
-    @Autowired
-    public ProfileFeatureSettingsService(
-            DiaryProfileService diaryProfileService,
-            ProfileFeatureSettingsRepository profileFeatureSettingsRepository,
-            UserApi userApi,
-            CurrentUser currentUser, DiaryProfilePolicy diaryProfilePolicy) {
-        this.diaryProfileService = diaryProfileService;
-        this.profileFeatureSettingsRepository = profileFeatureSettingsRepository;
-        this.userApi = userApi;
-        this.currentUser = currentUser;
-        this.diaryProfilePolicy = diaryProfilePolicy;
+
+    public ProfileFeatureSettingsEntity getById(Long id) {
+
+        var settings = profileFeatureSettingsRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("No ProfileFeatureSettings with such id")
+                );
+
+        var diaryProfile = diaryProfileService.findById(settings.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
+
+        return settings;
     }
 
     public ProfileFeatureSettingsEntity getFirstByDiaryProfileIdOrderByCreatedAtDesc(
