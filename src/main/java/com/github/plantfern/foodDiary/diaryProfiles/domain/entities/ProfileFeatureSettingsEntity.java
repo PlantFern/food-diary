@@ -28,6 +28,12 @@ public class ProfileFeatureSettingsEntity {
     @JoinColumn( name = "diary_profile_id", nullable = false )
     private DiaryProfileEntity diaryProfileEntity;
 
+    @Column(name = "diary_profile_id",
+            nullable = false,
+            insertable=false,
+            updatable=false)
+    private Long diaryProfileId;
+
     @Column(
             name = "show_sleep",
             nullable=false
@@ -62,7 +68,7 @@ public class ProfileFeatureSettingsEntity {
             name = "created_by",
             nullable = false
     )
-    private Long createdBy;
+    private Long createdById;
 
     @Column(
             name = "created_at",
@@ -94,7 +100,7 @@ public class ProfileFeatureSettingsEntity {
             Boolean showWeight,
             Boolean showWeightLogs,
             Boolean showAllergensWarning,
-            Long createdBy
+            Long createdById
             ) {
         this.diaryProfileEntity = diaryProfileEntity;
         this.showSleep = showSleep;
@@ -102,7 +108,7 @@ public class ProfileFeatureSettingsEntity {
         this.showWeight = showWeight;
         this.showWeightLogs = showWeightLogs;
         this.showAllergensWarning = showAllergensWarning;
-        this.createdBy = createdBy;
+        this.createdById = createdById;
     }
 
 

@@ -19,7 +19,15 @@ public class ProfileHiddenNutrientEntity {
 
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "profile_feature_setting_id" )
-    private ProfileFeatureSettingsEntity profileFeatureSetting;
+    private ProfileFeatureSettingsEntity profileFeatureSettings;
+
+    @Column(
+            name = "profile_feature_setting_id",
+            nullable = false,
+            insertable=false,
+            updatable=false
+    )
+    private Long profileFeatureSettingId;
 
     @Column( name = "nutrient_id" )
     private Long nutrientId;
@@ -31,7 +39,7 @@ public class ProfileHiddenNutrientEntity {
         ProfileFeatureSettingsEntity profileFeatureSetting,
         Long nutrientId
     ) {
-        this.profileFeatureSetting = profileFeatureSetting;
+        this.profileFeatureSettings = profileFeatureSetting;
         this.nutrientId = nutrientId;
     }
 }
