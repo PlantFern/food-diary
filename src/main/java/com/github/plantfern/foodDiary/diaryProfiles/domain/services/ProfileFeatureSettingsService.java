@@ -98,7 +98,7 @@ public class ProfileFeatureSettingsService {
         if(!userApi.existsById(userId))
             throw new EntityNotFoundException("No user with such id");
 
-        var settings = profileFeatureSettingsRepository.findAllByCreatedById(userId);
+        var settings = profileFeatureSettingsRepository.findAllByCreatedByIdAndDiaryProfileId(userId, diaryProfileId);
         if (settings.isEmpty()) {
             return List.of();
         }
