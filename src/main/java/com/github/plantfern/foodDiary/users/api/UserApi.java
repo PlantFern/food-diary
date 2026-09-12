@@ -2,19 +2,16 @@ package com.github.plantfern.foodDiary.users.api;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.Set;
 
 
 @Component
 public interface UserApi {
 
-    boolean existsById(Long id);
+    boolean existsByIdInternal(Long id);
 
-    UserDto findById(Long id);
-    UserDto findByEmail(String email);
+    UserDto findByIdInternal(Long id);
+    UserDto findByEmailInternal(String email);
 
-    UserDto register(String email, String password);
-
-    void assignRoles(Long userId, Set<RoleName> roles);
+    void assignRolesInternal(Long userId, Set<RoleName> roles);
 } // UserApi

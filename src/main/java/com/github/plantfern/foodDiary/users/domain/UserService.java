@@ -1,6 +1,5 @@
 package com.github.plantfern.foodDiary.users.domain;
 
-import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import com.github.plantfern.foodDiary.users.api.UserDto;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -27,7 +25,7 @@ public class UserService implements UserApi {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
-    private final SecurityCurrentUser securityCurrentUser;
+    private final SecurityCurrentUser currentUser;
     private final RoleAssignmentPolicy roleAssignmentPolicy;
 
     private final PasswordEncoder passwordEncoder;
@@ -40,7 +38,7 @@ public class UserService implements UserApi {
             RoleRepository roleRepository,
             UserMapper userMapper,
 
-            SecurityCurrentUser securityCurrentUser,
+            SecurityCurrentUser currentUser,
             RoleAssignmentPolicy roleAssignmentPolicy,
 
             PasswordEncoder passwordEncoder,
@@ -49,16 +47,18 @@ public class UserService implements UserApi {
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
 
-        this.securityCurrentUser = securityCurrentUser;
+        this.currentUser = currentUser;
         this.roleAssignmentPolicy = roleAssignmentPolicy;
         this.userPolicy = userPolicy;
 
         this.passwordEncoder = passwordEncoder;
     } // UserService
 
+
     public void save(UserEntity user){
         userRepository.save(user);
     }
+
 
     @Transactional(readOnly = true)
     public List<UserEntity> getAll() {
@@ -67,59 +67,35 @@ public class UserService implements UserApi {
     }
 
     @Transactional
-    public boolean hasRole(Long userId, RoleName role) {
+    public boolean hasRole(java.lang.Long userId, RoleName role) {
         return userRepository.findById(userId)
                 .map(user -> user.getUserRoles().stream()
                         .anyMatch(ur -> ur.getRole().getName().equals(role)))
                 .orElse(false);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public boolean existsById (Long userId){
-        return userRepository.existsById(userId);
-    }
-
-
-    // реализация интерфейса
-    @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto findById(Long targetUserId) {
-        CurrentUser actorUser = securityCurrentUser;
+        var targetUser = this.findByIdInternal(targetUserId);
 
-        userRepository
-                .findById(actorUser.requireId())
-                .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
-        UserEntity targetUser = userRepository
-                .findById(targetUserId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userPolicy.ensureCanGet(currentUser, targetUser.id());
 
-        userPolicy.ensureCanGet(actorUser, targetUser);
-
-        return userMapper.toDto(targetUser);
+        return targetUser;
     }
 
-    @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto findByEmail(String email) {
-        var actorUser = securityCurrentUser;
 
-        userRepository
-                .findById(actorUser.requireId())
-                .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
-        UserEntity targetUser = userRepository
-                .findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        var targetUser = findByEmailInternal(email);
 
-        userPolicy.ensureCanGet(actorUser, targetUser);
+        userPolicy.ensureCanGet(currentUser, targetUser.id());
 
-        return userMapper.toDto(targetUser);
+        return targetUser;
     }
 
-    @Override
-    public UserDto register(String email, String password) {
+    public void registerInternal(String email, String password) {
         if(userRepository.existsByEmail(email)){
-            throw new IllegalArgumentException("Email alreade registered");
+            throw new IllegalArgumentException("Email already registered");
         }
 
         UserEntity user = new UserEntity(
@@ -127,31 +103,61 @@ public class UserService implements UserApi {
                 passwordEncoder.encode(password)
         );
 
-        RoleEntity defaultRole = roleRepository
-                .findByName(RoleName.USER)
-                .orElseThrow(() -> new IllegalStateException("Role user is missing"));
-        user.addRole(defaultRole);
+        userRepository.save(user);
+    }
 
-        UserEntity saved = userRepository.save(user);
-        return userMapper.toDto(saved);
+    @Transactional
+    public void assignRoles(Long targetUserId, Set<RoleName> roles){
+
+        var actorUserId = currentUser.requireId();
+
+        roleAssignmentPolicy.ensureCanAssign(currentUser, targetUserId, roles);
+
+        assignRolesInternal(targetUserId, roles);
+    }
+
+
+    //region internal methods
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByIdInternal(java.lang.Long userId){
+        return userRepository.existsById(userId);
     }
 
     @Override
-    public void assignRoles(Long targetUserId, Set<RoleName> roles) {
-        Long actorUserId = securityCurrentUser.requireId();
+    @Transactional(readOnly = true)
+    public UserDto findByIdInternal(Long targetUserId) {
 
-        UserEntity actorUser = userRepository
-                .findById(actorUserId)
-                .orElseThrow(() -> new IllegalArgumentException("Actor not found"));
         UserEntity targetUser = userRepository
                 .findById(targetUserId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        roleAssignmentPolicy.ensureCanAssign(actorUser, targetUser, roles);
+        return userMapper.toDto(targetUser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto findByEmailInternal(String email) {
+
+        return userMapper.toDto(
+                userRepository
+                    .findByEmailIgnoreCase(email)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"))
+        );
+    }
+
+    @Override
+    public void assignRolesInternal(Long targetUserId, Set<RoleName> roles) {
+
+        UserEntity targetUser = userRepository
+                .findById(targetUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Set<RoleEntity> newRoles = roleRepository.findByNameIn(roles);
 
         targetUser.addRoles(newRoles);
         userRepository.save(targetUser);
     }
+    //endregion
 } // UserService

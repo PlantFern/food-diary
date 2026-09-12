@@ -4,7 +4,6 @@ package com.github.plantfern.foodDiary.users.domain.security;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.domain.UserVisibilityRepository;
-import com.github.plantfern.foodDiary.users.domain.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -19,9 +18,9 @@ public class UserPolicy {
 
     public void ensureCanGet(
             CurrentUser actorUser,
-            UserEntity targetUser
+            Long targetUserId
     ){
-        if (targetUser.getId().equals(actorUser.requireId()))
+        if (targetUserId.equals(actorUser.requireId()))
             return;
 
         if (actorUser.hasRole(RoleName.ADMINISTRATOR)
@@ -30,7 +29,7 @@ public class UserPolicy {
 
         if (actorUser.hasRole(RoleName.SPECIALIST)
             && visibilityRepository
-                .existsByActorUserIdAndTargetUserId(actorUser.requireId(), targetUser.getId()))
+                .existsByActorUserIdAndTargetUserId(actorUser.requireId(), targetUserId))
             return;
 
         throw new AccessDeniedException("Only moderator or administrator can get other users data");

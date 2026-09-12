@@ -1,15 +1,13 @@
 package com.github.plantfern.foodDiary.users.domain.security;
 
 
+import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.domain.entities.UserEntity;
-import com.github.plantfern.foodDiary.users.domain.entities.UserRoleEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -17,8 +15,8 @@ public class RoleAssignmentPolicy {
 
 
     public void ensureCanAssign(
-            UserEntity actorUser,
-            UserEntity targetUser,
+            CurrentUser actorUser,
+            Long targetUserId,
             Set<RoleName> requestedRoles
     ){
 
@@ -26,9 +24,7 @@ public class RoleAssignmentPolicy {
             throw new IllegalArgumentException("Roles can't be null or empty");
         }
 
-        Set<RoleName> actorUserRoles = actorUser.roleNames();
-
-        if(actorUser.getId().equals(targetUser.getId())) {
+        if(actorUser.requireId().equals(targetUserId)) {
             ensureRequestedAreAllowed(
                     requestedRoles,
                     Set.of(
@@ -38,7 +34,7 @@ public class RoleAssignmentPolicy {
             return;
         }
 
-        if (actorUser.roleNames().contains(RoleName.ADMINISTRATOR)) {
+        if ( actorUser.hasRole(RoleName.ADMINISTRATOR)) {
             this.ensureRequestedAreAllowed(
                     requestedRoles,
                     Set.of(
@@ -49,7 +45,7 @@ public class RoleAssignmentPolicy {
             return;
         }
 
-        if (actorUser.roleNames().contains(RoleName.MODERATOR)) {
+        if ( actorUser.hasRole(RoleName.MODERATOR)) {
             throw new AccessDeniedException("Moderator can't assign roles");
         }
     }

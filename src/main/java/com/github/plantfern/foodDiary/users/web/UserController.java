@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getById(@PathVariable Long userId){
-        return ResponseEntity.ok(this.userService.findById(userId));
+        return ResponseEntity.ok(this.userService.findByIdInternal(userId));
     }
 
     @PreAuthorize("hasAnyRole('MODERATOR', 'ADMINISTRATOR')")
@@ -43,7 +43,7 @@ public class UserController {
 
     @PostMapping("/{targetUserId}/role")
     public ResponseEntity<Void> addRoleFor(@PathVariable Long targetUserId ,@RequestBody RoleRequest request) {
-        userService.assignRoles(targetUserId, Set.of(request.roleName()));
+        userService.assignRolesInternal(targetUserId, Set.of(request.roleName()));
         return ResponseEntity.noContent().build();
     }
 } // UserController
