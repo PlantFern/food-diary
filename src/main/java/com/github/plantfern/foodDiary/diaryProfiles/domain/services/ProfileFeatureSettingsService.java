@@ -1,6 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
+import com.github.plantfern.foodDiary.diaryProfiles.api.ProfileFeatureSettingsApi;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.ProfileFeatureSettingsMapper;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.ProfileFeatureSettingsRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
@@ -9,6 +12,7 @@ import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,35 +20,33 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ProfileFeatureSettingsService {
+public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi {
 
     private final DiaryProfileService diaryProfileService;
     private final ProfileFeatureSettingsRepository profileFeatureSettingsRepository;
     private final UserApi userApi;
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
+    private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
 
 
-    public ProfileFeatureSettingsEntity getById(Long id) {
+    @Transactional(readOnly = true)
+    public ProfileFeatureSettingsDto getById(Long id) {
 
-        var settings = profileFeatureSettingsRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("No ProfileFeatureSettings with such id")
-                );
-
-        var diaryProfile = diaryProfileService.findById(settings.getDiaryProfileId());
+        var settings = getById(id);
+        var diaryProfile = diaryProfileService.findByIdInternal(settings.diaryProfileId());
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 
         return settings;
     }
 
+    @Transactional(readOnly = true)
     public ProfileFeatureSettingsEntity getFirstByDiaryProfileIdOrderByCreatedAtDesc(
             Long diaryProfileId
     ) {
 
-        var diaryProfile = diaryProfileService.findById(diaryProfileId);
+        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 
@@ -55,11 +57,12 @@ public class ProfileFeatureSettingsService {
                 );
     }
 
+    @Transactional(readOnly = true)
     public List<ProfileFeatureSettingsEntity> getAllByDiaryProfileId(
             Long diaryProfileId
     ) {
 
-        var diaryProfile = diaryProfileService.findById(diaryProfileId);
+        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 
@@ -69,6 +72,7 @@ public class ProfileFeatureSettingsService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ProfileFeatureSettingsEntity> getAllByCreatedById(
             Long userId
     ) {
@@ -93,6 +97,7 @@ public class ProfileFeatureSettingsService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ProfileFeatureSettingsEntity> findAllByCreatedByIdAndDiaryProfileId(
             Long userId,
             Long diaryProfileId
@@ -119,6 +124,7 @@ public class ProfileFeatureSettingsService {
         return settings;
     }
 
+    @Transactional(readOnly = true)
     public List<ProfileFeatureSettingsEntity> getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileId(
             LocalDateTime lowerBound,
             LocalDateTime upperBound,
@@ -129,7 +135,7 @@ public class ProfileFeatureSettingsService {
                     "Lower bound can't be greater than upper bound"
             );
 
-        var diaryProfile = diaryProfileService.findById(diaryProfileId);
+        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 
