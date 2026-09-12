@@ -113,7 +113,10 @@ public class UserRelationService implements UserRelationApi {
 
         events.publishEvent(new UserRelationActivated(
                 specialist.userId(),
-                diaryProfileOwnerId
+                diaryProfileOwnerId,
+                userRelation
+                        .getRelationType()
+                        .equals(RelationType.specialist)
         ));
     }
 
