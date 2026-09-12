@@ -9,7 +9,7 @@ import com.github.plantfern.foodDiary.specialists.api.events.UserRelationActivat
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationRepository;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationStatusRepository;
-import com.github.plantfern.foodDiary.specialists.domain.security.RelationTypePolicy;
+import com.github.plantfern.foodDiary.specialists.domain.security.UserRelationPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 
@@ -28,7 +28,7 @@ public class UserRelationService implements UserRelationApi {
 
     private final CurrentUser currentUser;
     private final UserApi userApi;
-    private final RelationTypePolicy relationTypePolicy;
+    private final UserRelationPolicy userRelationPolicy;
 
     private final UserRelationMapper userRelationMapper;
     private final UserRelationRepository userRelationRepository;
@@ -39,10 +39,11 @@ public class UserRelationService implements UserRelationApi {
     @Lazy
     private final DiaryProfileApi diaryProfileApi;
 
+
     public UserRelationService(
             CurrentUser currentUser,
             UserApi userApi,
-            RelationTypePolicy relationTypePolicy,
+            UserRelationPolicy userRelationPolicy,
 
             UserRelationMapper userRelationMapper,
             UserRelationRepository userRelationRepository,
@@ -53,7 +54,7 @@ public class UserRelationService implements UserRelationApi {
             DiaryProfileApi diaryProfileApi) {
         this.currentUser = currentUser;
         this.userApi = userApi;
-        this.relationTypePolicy = relationTypePolicy;
+        this.userRelationPolicy = userRelationPolicy;
 
         this.userRelationMapper = userRelationMapper;
         this.userRelationRepository = userRelationRepository;
@@ -66,12 +67,21 @@ public class UserRelationService implements UserRelationApi {
 
 
     @Transactional
-    public void create(Long diaryProfileUser, Long specialistId, RelationType relationType) {
+    public void create(Long diaryProfileId, Long specialistId, RelationType relationType) {
 
-        events.publishEvent(new UserRelationActivated(
+        var specialist = specialistService.findById(specialistId);
+        var diaryProfileOwnerId = diaryProfileApi.getOwnerUserId(diaryProfileId);
+
+        userRelationPolicy.ensureCanCreate(
+                currentUser,
+                diaryProfileOwnerId,
+                specialist.userId()
+        );
+
+        userRelationRepository.save(new UserRelationEntity(
+                diaryProfileId,
                 specialistId,
-                diaryProfileUser,
-                relationType.toString()
+                relationType
         ));
     }
 
@@ -82,12 +92,16 @@ public class UserRelationService implements UserRelationApi {
                 .orElseThrow(
                         () -> new EntityExistsException("user relation not found")
                 );
-        var specialistId = specialistService.findById(userRelation.getSpecialistId());
 
-        relationTypePolicy.ensureCanActivateOrReject(
+        var specialist = specialistService
+                .findById(userRelation.getSpecialistId());
+        var diaryProfileOwnerId = diaryProfileApi.
+                getOwnerUserId(userRelation.getDiaryProfileId());
+
+        userRelationPolicy.ensureCanActivateOrReject(
                 currentUser,
                 userRelation.getUserRelationStatusEntity().getCode(),
-                specialistId.userId()
+                specialist.userId()
         );
 
         userRelation.setUserRelationStatusEntity(
@@ -96,6 +110,11 @@ public class UserRelationService implements UserRelationApi {
         );
 
         userRelationRepository.save(userRelation);
+
+        events.publishEvent(new UserRelationActivated(
+                specialist.userId(),
+                diaryProfileOwnerId
+        ));
     }
 
     @Transactional
@@ -107,7 +126,7 @@ public class UserRelationService implements UserRelationApi {
                 );
         var specialistId = specialistService.findById(userRelation.getSpecialistId());
 
-        relationTypePolicy.ensureCanActivateOrReject(
+        userRelationPolicy.ensureCanActivateOrReject(
                 currentUser,
                 userRelation.getUserRelationStatusEntity().getCode(),
                 specialistId.userId()
@@ -130,7 +149,7 @@ public class UserRelationService implements UserRelationApi {
                 );
         var specialistId = specialistService.findById(userRelation.getSpecialistId());
 
-        relationTypePolicy.ensureCanEnd(
+        userRelationPolicy.ensureCanEnd(
                 currentUser,
                 userRelation.getUserRelationStatusEntity().getCode(),
                 specialistId.userId());
@@ -153,7 +172,7 @@ public class UserRelationService implements UserRelationApi {
 
         var diaryProfileUserId = diaryProfileApi.getOwnerUserId(userRelation.getDiaryProfileId());
 
-        relationTypePolicy.ensureCanGet(
+        userRelationPolicy.ensureCanGet(
                 currentUser,
                 userRelation,
                 diaryProfileUserId
