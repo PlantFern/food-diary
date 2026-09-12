@@ -2,7 +2,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.web;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.domain.DiaryProfileMapper;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.DiaryProfileService;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.services.DiaryProfileService;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileDataRequest;
 import org.springframework.beans.factory.annotation.Autowired;
