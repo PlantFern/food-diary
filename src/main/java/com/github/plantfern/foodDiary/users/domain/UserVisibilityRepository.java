@@ -10,4 +10,8 @@ public interface UserVisibilityRepository extends JpaRepository<UserVisibilityEn
     boolean existsByActorUserIdAndTargetUserId(Long actorUserId, Long targetUserId);
 
     void deleteByActorUserIdAndTargetUserId(Long actorUserId, Long targetUserId);
+
+    boolean existsByIsExtendedTrueAndActorUserIdAndTargetUserId(
+            Long actorUserId,
+            Long targetUserId);
 }

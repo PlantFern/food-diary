@@ -18,4 +18,13 @@ class UserVisibilityService implements VisibilityApi {
     public boolean canSee(Long actorUserId, Long targetUserId) {
         return repository.existsByActorUserIdAndTargetUserId(actorUserId, targetUserId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isExtended(Long actorUserId, Long targetUserId) {
+        return repository.existsByIsExtendedTrueAndActorUserIdAndTargetUserId(
+                actorUserId,
+                targetUserId
+        );
+    }
 }
