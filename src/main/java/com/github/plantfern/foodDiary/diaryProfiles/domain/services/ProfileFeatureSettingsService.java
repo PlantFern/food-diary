@@ -142,4 +142,20 @@ public class ProfileFeatureSettingsService {
                 .stream()
                 .toList();
     }
+
+    //region Internal methods
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProfileFeatureSettingsDto getByIdInternal(Long id) {
+
+        var settings = profileFeatureSettingsRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("No ProfileFeatureSettings with such id")
+                );
+
+        return profileFeatureSettingsMapper.toDto(settings);
+    }
+    //endregion
 }
