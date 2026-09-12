@@ -48,6 +48,8 @@ public class RoleAssignmentPolicy {
         if ( actorUser.hasRole(RoleName.MODERATOR)) {
             throw new AccessDeniedException("Moderator can't assign roles");
         }
+
+        throw new AccessDeniedException("User without cannot assign passed roles");
     }
 
 
