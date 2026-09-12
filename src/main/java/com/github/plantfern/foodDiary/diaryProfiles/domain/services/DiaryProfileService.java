@@ -97,7 +97,7 @@ public class DiaryProfileService implements DiaryProfileApi {
                         "Diary profile with id: " + id + " doesn't exist"
                         ));
 
-        diaryProfilePolicy.ensureCanUpdate(
+        diaryProfilePolicy.ensureIsOwner(
                 currentUser,
                 profile.getUserId()
         );

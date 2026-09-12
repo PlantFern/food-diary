@@ -1,9 +1,6 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.security;
 
 
-import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfileEntity;
-import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
-import com.github.plantfern.foodDiary.specialists.api.UserRelationApi;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.VisibilityApi;
@@ -12,7 +9,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -40,7 +36,9 @@ public class DiaryProfilePolicy {
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
 
-        throw new AccessDeniedException("Access to diary profile denied");
+        throw new AccessDeniedException(
+                "Access to diary profile resource denied"
+        );
     }
 
     public void ensureCanGetAll(
@@ -70,18 +68,52 @@ public class DiaryProfilePolicy {
             return;
         }
 
-        throw new AccessDeniedException("No accessible diary profiles found");
+        throw new AccessDeniedException(
+                "Access to diary profile resources denied"
+        );
     }
 
 
-    public void ensureCanUpdate(
-            CurrentUser currentUser,
-            Long diaryProfileUserId
-    ) {
-        if(currentUser.requireId().equals(diaryProfileUserId)){
+    public void ensureIsOwner(CurrentUser currentUser, Long ownerId){
+
+        if(currentUser.requireId().equals(ownerId))
+            return;
+
+        throw new AccessDeniedException("Only owner has access");
+    }
+
+    public void ensureCanWrite(CurrentUser currentUser, Long diaryProfileOwnerUserId) {
+        var currentId = currentUser.requireId();
+        boolean owner = currentId.equals(diaryProfileOwnerUserId);
+
+        if (owner) {
+            if (userVisibilityApi.hasExtended(diaryProfileOwnerUserId)) {
+                throw new AccessDeniedException(
+                        "Diary profile owner cannot modify resources while an extended specialist relation is active"
+                );
+            }
             return;
         }
 
-        throw new AccessDeniedException("Only diary profile owner can update");
+        if (currentUser.hasRole(RoleName.SPECIALIST)
+                && userVisibilityApi.canSee(currentId, diaryProfileOwnerUserId)
+                && userVisibilityApi.isExtended(currentId, diaryProfileOwnerUserId)) {
+            return;
+        }
+
+        throw new AccessDeniedException(
+                "Only the diary owner (without an extended specialist) or their extended specialist can modify this resource"
+        );
+    }
+
+    public void ensureCreatedBy(
+            CurrentUser currentUser,
+            Long createdById
+    ) {
+
+        if(currentUser.requireId().equals(createdById))
+            return;
+
+        throw new AccessDeniedException("No access to parent record");
     }
 }
