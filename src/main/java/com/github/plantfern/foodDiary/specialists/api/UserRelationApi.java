@@ -7,10 +7,12 @@ import java.util.List;
 
 @Component
 public interface UserRelationApi {
-    List<UserRelationDto> findByDiaryProfileId(Long diaryProfileId);
-    List<UserRelationDto> findBySpecialistId(Long specialistId);
+    List<UserRelationDto> findByDiaryProfileIdInternal(Long diaryProfileId);
+    List<UserRelationDto> findBySpecialistIdInternal(Long specialistId);
 
-    List<UserRelationDto> findAll();
+    List<UserRelationDto> findAllInternal();
 
-    boolean existsByDiaryProfileIdAndSpecialistId(Long diaryProfileId, Long specialistId);
+    boolean existsByDiaryProfileIdAndSpecialistIdInternal
+            (Long diaryProfileId,
+             Long specialistId);
 }

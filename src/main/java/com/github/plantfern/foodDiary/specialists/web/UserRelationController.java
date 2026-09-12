@@ -1,10 +1,8 @@
 package com.github.plantfern.foodDiary.specialists.web;
 
-import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.UserRelationMapper;
 import com.github.plantfern.foodDiary.specialists.domain.UserRelationService;
-import com.github.plantfern.foodDiary.specialists.web.requests.UserRelationCreateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +28,7 @@ public class UserRelationController {
 
     @GetMapping("/getAll")
     public ResponseEntity<List<UserRelationDto>> getUserRelations(){
-        return ResponseEntity.ok(userRelationService.findAll());
+        return ResponseEntity.ok(userRelationService.findAllInternal());
     }
 
     @PostMapping("/activate")

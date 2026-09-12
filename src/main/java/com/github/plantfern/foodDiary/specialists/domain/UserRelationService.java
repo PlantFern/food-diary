@@ -184,8 +184,11 @@ public class UserRelationService implements UserRelationApi {
         return userRelation;
     }
 
+
+    //region Internal methods
+
     @Override
-    public List<UserRelationDto> findByDiaryProfileId(Long diaryProfileId) {
+    public List<UserRelationDto> findByDiaryProfileIdInternal(Long diaryProfileId) {
         return userRelationRepository
                 .findAllByDiaryProfileId(diaryProfileId)
                 .stream().map(userRelationMapper::toDto)
@@ -193,7 +196,7 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Override
-    public List<UserRelationDto> findBySpecialistId(Long specialistId) {
+    public List<UserRelationDto> findBySpecialistIdInternal(Long specialistId) {
         return userRelationRepository
                 .findAllByDiaryProfileId(specialistId)
                 .stream().map(userRelationMapper::toDto)
@@ -201,7 +204,7 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Override
-    public List<UserRelationDto> findAll() {
+    public List<UserRelationDto> findAllInternal() {
         return userRelationRepository
                 .findAll()
                 .stream()
@@ -211,11 +214,12 @@ public class UserRelationService implements UserRelationApi {
 
     @Override
     @Transactional
-    public boolean existsByDiaryProfileIdAndSpecialistId(
+    public boolean existsByDiaryProfileIdAndSpecialistIdInternal(
             Long diaryProfileId,
             Long specialistId
     ){
         return userRelationRepository
                 .existsByDiaryProfileIdAndSpecialistId(diaryProfileId, specialistId);
     }
+    //endregion
 }
