@@ -9,6 +9,5 @@ public interface DiaryProfileApi {
     DiaryProfileDto findByIdInternal(Long id);
     boolean existsByIdInternal(Long id);
 
-    Collection<DiaryProfileDto> findAllById(Collection<Long> ids);
     Long getOwnerUserIdInternal(Long diaryProfileId);
 }

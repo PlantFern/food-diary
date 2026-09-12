@@ -114,6 +114,7 @@ public class DiaryProfileService implements DiaryProfileApi {
         diaryProfileRepository.save(profile);
     }
 
+    @Transactional(readOnly = true)
     List<Long> getOwnerUserIdList(List<Long> diaryProfileIds){
 
         return diaryProfileRepository.findAllUserIdsByIdIn(diaryProfileIds)
@@ -121,19 +122,25 @@ public class DiaryProfileService implements DiaryProfileApi {
                 .toList();
     }
 
-    public List<DiaryProfileDto> findAllById(Collection<Long> ids) {
-        var diaryProfiles = findAllByIdInternal(ids);
+    @Transactional(readOnly = true)
+    public List<DiaryProfileEntity> findAllById(Collection<Long> ids) {
+
+        var diaryProfiles = diaryProfileRepository
+                .findAllById(ids)
+                .stream()
+                .toList();
 
         diaryProfilePolicy.ensureCanGetAll(
                 currentUser,
                 diaryProfiles
                         .stream()
-                        .map(DiaryProfileDto::userId)
+                        .map(DiaryProfileEntity::getUserId)
                         .toList());
 
         return diaryProfiles;
     }
 
+    @Transactional(readOnly = true)
     public DiaryProfileDto findById(Long diaryProfileId) {
 
         var targetDiaryProfile = findById(diaryProfileId);
@@ -147,19 +154,9 @@ public class DiaryProfileService implements DiaryProfileApi {
 
 
     //region Internal methods
-    public List<DiaryProfileDto> findAllByIdInternal(Collection<Long> ids) {
-        var diaryProfiles = diaryProfileRepository
-                .findAllById(ids)
-                .stream()
-                .map(mapper::toDto)
-                .toList();
-        if(diaryProfiles.isEmpty())
-            throw new EntityNotFoundException("Diary profiles not found");
-
-        return diaryProfiles;
-    }
 
     @Override
+    @Transactional(readOnly = true)
     public DiaryProfileDto findByIdInternal(Long diaryProfileId) {
 
         var targetDiaryProfile = diaryProfileRepository
