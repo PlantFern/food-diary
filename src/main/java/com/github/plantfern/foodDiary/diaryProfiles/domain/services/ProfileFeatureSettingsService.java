@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.ProfileFeatureSettingsApi;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
@@ -28,6 +29,100 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
+    private final DiaryProfileMapper diaryProfileMapper;
+
+
+    @Transactional
+    public void create(
+            Long diaryProfileId,
+            Boolean showSleep,
+            Boolean showSleepLogs,
+            Boolean showWeight,
+            Boolean showWeightLogs,
+            Boolean showAllergensWarning
+    ) {
+        var currentUserId = currentUser.requireId();
+        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+
+        diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
+
+        var lastSettings = this.getFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId);
+        if(lastSettings.getExpiredAt() == null) {
+            lastSettings.setExpiredDate();
+            profileFeatureSettingsRepository.save(lastSettings);
+        }
+
+        profileFeatureSettingsRepository.save(
+                new ProfileFeatureSettingsEntity(
+                        diaryProfileMapper.toEntity(diaryProfile),
+                        showSleep,
+                        showSleepLogs,
+                        showWeight,
+                        showWeightLogs,
+                        showAllergensWarning,
+                        currentUserId
+                )
+        );
+    }
+
+    @Transactional
+    public void update(
+            Long profileFeatureSettingsId,
+            Boolean showSleep,
+            Boolean showSleepLogs,
+            Boolean showWeight,
+            Boolean showWeightLogs,
+            Boolean showAllergensWarning
+    ) {
+
+        var profileFeatureSettings =
+                profileFeatureSettingsRepository
+                        .findById(profileFeatureSettingsId)
+                        .orElseThrow(
+                                () -> new EntityNotFoundException("No profile feature settings with such id")
+                        );
+
+        diaryProfilePolicy.ensureCreatedBy(
+                currentUser,
+                profileFeatureSettings.getCreatedById()
+        );
+
+        profileFeatureSettings.setShowSleep(showSleep);
+        profileFeatureSettings.setShowSleepLogs(showSleepLogs);
+        profileFeatureSettings.setShowWeight(showWeight);
+        profileFeatureSettings.setShowWeightLogs(showWeightLogs);
+        profileFeatureSettings.setShowAllergensWarning(showAllergensWarning);
+
+        profileFeatureSettingsRepository
+                .save(profileFeatureSettings);
+    }
+
+    @Transactional
+    public void remove(
+            Long profileFeatureSettingsId
+    ) {
+
+        var currentUserId = currentUser.requireId();
+        var profileFeatureSettings =
+                profileFeatureSettingsRepository
+                        .findById(profileFeatureSettingsId)
+                        .orElseThrow(
+                                () -> new EntityNotFoundException("No profile feature settings with such id")
+                        );
+        var diaryProfile = diaryProfileService
+                .findByIdInternal(profileFeatureSettings.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanWrite(
+                currentUser,
+                diaryProfile.userId()
+        );
+
+        profileFeatureSettings.setExpiredDate();
+
+        profileFeatureSettingsRepository.save(
+                profileFeatureSettings
+        );
+    }
 
 
     @Transactional(readOnly = true)
