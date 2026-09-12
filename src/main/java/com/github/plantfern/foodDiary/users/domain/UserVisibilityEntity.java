@@ -26,10 +26,4 @@ public class UserVisibilityEntity {
             nullable = false
     )
     private Long targetUserId;
-
-    @Column(
-            name="relation_type",
-            nullable = false
-    )
-    private String relationType;
 }

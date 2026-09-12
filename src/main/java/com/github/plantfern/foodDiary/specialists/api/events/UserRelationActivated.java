@@ -4,6 +4,5 @@ import com.github.plantfern.foodDiary.specialists.api.RelationType;
 
 public record UserRelationActivated(
         Long diaryProfileUserId,
-        Long specialistUserId,
-        String relationType
+        Long specialistUserId
 ) { }
