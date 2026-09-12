@@ -70,7 +70,7 @@ public class UserRelationService implements UserRelationApi {
     public void create(Long diaryProfileId, Long specialistId, RelationType relationType) {
 
         var specialist = specialistService.findById(specialistId);
-        var diaryProfileOwnerId = diaryProfileApi.getOwnerUserId(diaryProfileId);
+        var diaryProfileOwnerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
 
         userRelationPolicy.ensureCanCreate(
                 currentUser,
@@ -96,7 +96,7 @@ public class UserRelationService implements UserRelationApi {
         var specialist = specialistService
                 .findById(userRelation.getSpecialistId());
         var diaryProfileOwnerId = diaryProfileApi.
-                getOwnerUserId(userRelation.getDiaryProfileId());
+                getOwnerUserIdInternal(userRelation.getDiaryProfileId());
 
         userRelationPolicy.ensureCanActivateOrReject(
                 currentUser,
@@ -173,7 +173,7 @@ public class UserRelationService implements UserRelationApi {
                         () -> new IllegalArgumentException("UserRelation not found")
                 );
 
-        var diaryProfileUserId = diaryProfileApi.getOwnerUserId(userRelation.getDiaryProfileId());
+        var diaryProfileUserId = diaryProfileApi.getOwnerUserIdInternal(userRelation.getDiaryProfileId());
 
         userRelationPolicy.ensureCanGet(
                 currentUser,
