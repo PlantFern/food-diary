@@ -8,10 +8,8 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -75,7 +73,7 @@ public class ProfileFeatureSettingsService {
             Long userId
     ) {
 
-        if(!userApi.existsById(userId))
+        if(!userApi.existsByIdInternal(userId))
             throw new EntityNotFoundException("No user with such id");
 
         var diaryProfileIdList = profileFeatureSettingsRepository
@@ -100,7 +98,7 @@ public class ProfileFeatureSettingsService {
             Long diaryProfileId
     ) {
 
-        if(!userApi.existsById(userId))
+        if(!userApi.existsByIdInternal(userId))
             throw new EntityNotFoundException("No user with such id");
 
         var settings = profileFeatureSettingsRepository.findAllByCreatedByIdAndDiaryProfileId(userId, diaryProfileId);
