@@ -11,12 +11,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserRelationPolicy {
 
+    public void ensureCanGetAll(
+            CurrentUser currentUser
+    ){
+
+        if(currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR))
+            return;
+
+        throw new AccessDeniedException("Only moderators can get");
+    }
 
     public void ensureCanGet(
             CurrentUser currentUser,
             UserRelationEntity targetRelation,
             Long diaryProfileUserId
-            ){
+    ){
         if(currentUser.requireId().equals(diaryProfileUserId))
             return;
 

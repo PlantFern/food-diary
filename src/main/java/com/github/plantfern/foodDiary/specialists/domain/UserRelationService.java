@@ -185,6 +185,9 @@ public class UserRelationService implements UserRelationApi {
     }
 
     public List<UserRelationDto> findAll() {
+
+        userRelationPolicy.ensureCanGetAll(currentUser);
+
         return userRelationRepository
                 .findAll()
                 .stream()
