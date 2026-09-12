@@ -184,6 +184,14 @@ public class UserRelationService implements UserRelationApi {
         return userRelation;
     }
 
+    public List<UserRelationDto> findAll() {
+        return userRelationRepository
+                .findAll()
+                .stream()
+                .map(userRelationMapper::toDto)
+                .toList();
+    }
+
 
     //region Internal methods
 
@@ -200,15 +208,6 @@ public class UserRelationService implements UserRelationApi {
         return userRelationRepository
                 .findAllByDiaryProfileId(specialistId)
                 .stream().map(userRelationMapper::toDto)
-                .toList();
-    }
-
-    @Override
-    public List<UserRelationDto> findAllInternal() {
-        return userRelationRepository
-                .findAll()
-                .stream()
-                .map(userRelationMapper::toDto)
                 .toList();
     }
 

@@ -10,8 +10,6 @@ public interface UserRelationApi {
     List<UserRelationDto> findByDiaryProfileIdInternal(Long diaryProfileId);
     List<UserRelationDto> findBySpecialistIdInternal(Long specialistId);
 
-    List<UserRelationDto> findAllInternal();
-
     boolean existsByDiaryProfileIdAndSpecialistIdInternal
             (Long diaryProfileId,
              Long specialistId);

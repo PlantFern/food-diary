@@ -28,7 +28,7 @@ public class UserRelationController {
 
     @GetMapping("/getAll")
     public ResponseEntity<List<UserRelationDto>> getUserRelations(){
-        return ResponseEntity.ok(userRelationService.findAllInternal());
+        return ResponseEntity.ok(userRelationService.findAll());
     }
 
     @PostMapping("/activate")
