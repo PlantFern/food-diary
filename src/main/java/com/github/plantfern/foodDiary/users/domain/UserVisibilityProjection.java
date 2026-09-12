@@ -26,6 +26,7 @@ class UserVisibilityProjection {
             var visibility = new UserVisibilityEntity();
             visibility.setActorUserId(event.specialistUserId());
             visibility.setTargetUserId(event.diaryProfileUserId());
+            visibility.setIsExtended(event.isExtended());
 
             userVisibilityRepository.save(visibility);
         }

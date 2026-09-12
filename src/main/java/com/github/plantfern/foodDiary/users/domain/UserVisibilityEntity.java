@@ -26,4 +26,10 @@ public class UserVisibilityEntity {
             nullable = false
     )
     private Long targetUserId;
+
+    @Column(
+            name="is_extended",
+            nullable=false
+    )
+    private Boolean isExtended;
 }
