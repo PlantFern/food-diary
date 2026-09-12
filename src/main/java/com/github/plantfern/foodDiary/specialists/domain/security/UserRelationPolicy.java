@@ -7,11 +7,9 @@ import com.github.plantfern.foodDiary.users.api.RoleName;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 
 @Component
-public class RelationTypePolicy {
+public class UserRelationPolicy {
 
 
     public void ensureCanGet(
@@ -78,12 +76,15 @@ public class RelationTypePolicy {
     public void ensureCanCreate(
             CurrentUser currentUser,
             Long diaryProfileUserId,
-            Long specialistId
+            Long specialistUserId
     ) {
         var currentId = currentUser.requireId();
 
-        if(currentId.equals(diaryProfileUserId) || currentId.equals(specialistId))
+        if(currentId.equals(diaryProfileUserId) || currentId.equals(specialistUserId))
             return;
+
+        if(diaryProfileUserId.equals(specialistUserId))
+            throw new IllegalStateException("User cannot create relations with themselves");
 
         throw new AccessDeniedException("Only the users participating in the relation can create it");
     }
