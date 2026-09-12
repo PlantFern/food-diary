@@ -4,13 +4,11 @@ package com.github.plantfern.foodDiary.diaryProfiles.api;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.DiaryProfileDto;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 public interface DiaryProfileApi {
-    DiaryProfileDto findById(Long id);
-    boolean existsById(Long id);
+    DiaryProfileDto findByIdInternal(Long id);
+    boolean existsByIdInternal(Long id);
 
     Collection<DiaryProfileDto> findAllById(Collection<Long> ids);
-    Long getOwnerUserId(Long diaryProfileId);
+    Long getOwnerUserIdInternal(Long diaryProfileId);
 }

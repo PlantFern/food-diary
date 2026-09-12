@@ -114,16 +114,15 @@ public class DiaryProfileService implements DiaryProfileApi {
         diaryProfileRepository.save(profile);
     }
 
+    List<Long> getOwnerUserIdList(List<Long> diaryProfileIds){
 
-    @Override
-    public List<DiaryProfileDto> findAllById(Collection<Long> ids) {
-        var diaryProfiles = diaryProfileRepository
-                .findAllById(ids)
+        return diaryProfileRepository.findAllUserIdsByIdIn(diaryProfileIds)
                 .stream()
-                .map(mapper::toDto)
                 .toList();
-        if(diaryProfiles.isEmpty())
-            throw new EntityNotFoundException("Diary profiles not found");
+    }
+
+    public List<DiaryProfileDto> findAllById(Collection<Long> ids) {
+        var diaryProfiles = findAllByIdInternal(ids);
 
         diaryProfilePolicy.ensureCanGetAll(
                 currentUser,
@@ -135,8 +134,33 @@ public class DiaryProfileService implements DiaryProfileApi {
         return diaryProfiles;
     }
 
-    @Override
     public DiaryProfileDto findById(Long diaryProfileId) {
+
+        var targetDiaryProfile = findById(diaryProfileId);
+
+        diaryProfilePolicy.ensureCanGet(
+                currentUser,
+                targetDiaryProfile.userId());
+
+        return targetDiaryProfile;
+    }
+
+
+    //region Internal methods
+    public List<DiaryProfileDto> findAllByIdInternal(Collection<Long> ids) {
+        var diaryProfiles = diaryProfileRepository
+                .findAllById(ids)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+        if(diaryProfiles.isEmpty())
+            throw new EntityNotFoundException("Diary profiles not found");
+
+        return diaryProfiles;
+    }
+
+    @Override
+    public DiaryProfileDto findByIdInternal(Long diaryProfileId) {
 
         var targetDiaryProfile = diaryProfileRepository
                 .findById(diaryProfileId)
@@ -144,22 +168,18 @@ public class DiaryProfileService implements DiaryProfileApi {
                         () -> new IllegalArgumentException("Diary profile not found")
                 );
 
-        diaryProfilePolicy.ensureCanGet(
-                currentUser,
-                targetDiaryProfile.getUserId());
-
         return mapper.toDto(targetDiaryProfile);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existsById(Long id) {
+    public boolean existsByIdInternal(Long id) {
         return diaryProfileRepository.existsById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Long getOwnerUserId(Long diaryProfileId){
+    public Long getOwnerUserIdInternal(Long diaryProfileId){
 
         return diaryProfileRepository
                 .findUserIdById(diaryProfileId)
@@ -167,11 +187,5 @@ public class DiaryProfileService implements DiaryProfileApi {
                         () -> new EntityNotFoundException("Dairy profile with such id not found")
                 );
     }
-
-    List<Long> getOwnerUserIdList(List<Long> diaryProfileIds){
-
-        return diaryProfileRepository.findAllUserIdsByIdIn(diaryProfileIds)
-                .stream()
-                .toList();
-    }
+    //endregion
 }
