@@ -206,7 +206,7 @@ public class UserRelationService implements UserRelationApi {
     @Override
     public List<UserRelationDto> findBySpecialistIdInternal(Long specialistId) {
         return userRelationRepository
-                .findAllByDiaryProfileId(specialistId)
+                .findAllBySpecialistId(specialistId)
                 .stream().map(userRelationMapper::toDto)
                 .toList();
     }
