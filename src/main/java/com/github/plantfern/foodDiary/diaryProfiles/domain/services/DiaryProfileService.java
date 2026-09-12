@@ -146,7 +146,7 @@ public class DiaryProfileService implements DiaryProfileApi {
 
         diaryProfilePolicy.ensureCanGet(
                 currentUser,
-                targetDiaryProfile.getId());
+                targetDiaryProfile.getUserId());
 
         return mapper.toDto(targetDiaryProfile);
     }
