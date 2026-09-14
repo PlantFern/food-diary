@@ -20,14 +20,16 @@ public class GoalNutrientEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goal_id", nullable = false)
+    @JoinColumn(
+            name = "goal_id",
+            insertable = false,
+            updatable = false
+    )
     private GoalEntity goal;
 
     @Column(
             name = "goal_id",
-            nullable = false,
-            insertable = false,
-            updatable = false
+            nullable = false
     )
     private Long goalId;
 
@@ -41,11 +43,11 @@ public class GoalNutrientEntity {
     protected GoalNutrientEntity() {}
 
     public GoalNutrientEntity(
-            GoalEntity goal,
+            Long goalId,
             Long nutrientId,
             Float amount
     ) {
-        this.goal = goal;
+        this.goalId = goalId;
         this.nutrientId = nutrientId;
         this.amount = amount;
     }

@@ -26,14 +26,16 @@ public class DiaryCommentEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_profile_id")
+    @JoinColumn(
+            name = "diary_profile_id",
+            insertable = false,
+            updatable = false
+    )
     private DiaryProfileEntity diaryProfile;
 
     @Column(
             name = "diary_profile_id",
-            nullable = false,
-            insertable = false,
-            updatable = false
+            nullable = false
     )
     private Long diaryProfileId;
 

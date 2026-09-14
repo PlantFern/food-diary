@@ -62,6 +62,18 @@ public class DiaryProfileEntity {
     )
     private List<ProfileFeatureSettingsEntity> profileFeatureSettingsEntityList;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "diaryProfile"
+    )
+    private List<GoalEntity> goalList;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "diaryProfile"
+    )
+    private List<DiaryCommentEntity> diaryCommentList;
+
 
     protected DiaryProfileEntity(){ }
 

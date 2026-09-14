@@ -25,13 +25,17 @@ public class ProfileFeatureSettingsEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "diary_profile_id", nullable = false )
-    private DiaryProfileEntity diaryProfileEntity;
+    @JoinColumn(
+            name = "diary_profile_id",
+            insertable = false,
+            updatable = false
+    )
+    private DiaryProfileEntity diaryProfile;
 
-    @Column(name = "diary_profile_id",
-            nullable = false,
-            insertable=false,
-            updatable=false)
+    @Column(
+            name = "diary_profile_id",
+            nullable = false
+    )
     private Long diaryProfileId;
 
     @Column(
@@ -94,7 +98,7 @@ public class ProfileFeatureSettingsEntity {
     protected ProfileFeatureSettingsEntity() {}
 
     public ProfileFeatureSettingsEntity(
-            DiaryProfileEntity diaryProfileEntity,
+            Long diaryProfileId,
             Boolean showSleep,
             Boolean showSleepLogs,
             Boolean showWeight,
@@ -102,7 +106,7 @@ public class ProfileFeatureSettingsEntity {
             Boolean showAllergensWarning,
             Long createdById
             ) {
-        this.diaryProfileEntity = diaryProfileEntity;
+        this.diaryProfileId = diaryProfileId;
         this.showSleep = showSleep;
         this.showSleepLogs = showSleepLogs;
         this.showWeight = showWeight;

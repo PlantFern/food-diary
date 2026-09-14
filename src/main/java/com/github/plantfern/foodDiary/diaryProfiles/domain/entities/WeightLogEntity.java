@@ -21,14 +21,16 @@ public class WeightLogEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_profile_id")
+    @JoinColumn(
+            name = "diary_profile_id",
+            insertable = false,
+            updatable = false
+    )
     private DiaryProfileEntity diaryProfile;
 
     @Column(
             name = "diary_profile_id",
-            nullable = false,
-            insertable = false,
-            updatable = false
+            nullable = false
     )
     private Long diaryProfileId;
 
@@ -45,8 +47,8 @@ public class WeightLogEntity {
 
     protected WeightLogEntity() {}
 
-    public WeightLogEntity(DiaryProfileEntity diaryProfile, Float weight) {
-        this.diaryProfile = diaryProfile;
+    public WeightLogEntity(Long diaryProfileId, Float weight) {
+        this.diaryProfileId = diaryProfileId;
         this.weight = weight;
     }
 

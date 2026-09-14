@@ -24,14 +24,16 @@ public class SleepLogEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_profile_id")
+    @JoinColumn(
+            name = "diary_profile_id",
+            insertable = false,
+            updatable = false
+    )
     private DiaryProfileEntity diaryProfile;
 
     @Column(
             name = "diary_profile_id",
-            nullable = false,
-            insertable = false,
-            updatable = false
+            nullable = false
     )
     private Long diaryProfileId;
 
@@ -51,8 +53,12 @@ public class SleepLogEntity {
 
     protected SleepLogEntity() {}
 
-    public SleepLogEntity(DiaryProfileEntity diaryProfile, LocalDateTime beganAt, LocalDateTime endedAt) {
-        this.diaryProfile = diaryProfile;
+    public SleepLogEntity(
+            Long diaryProfileId,
+            LocalDateTime beganAt,
+            LocalDateTime endedAt
+    ) {
+        this.diaryProfileId = diaryProfileId;
         this.beganAt = beganAt;
         this.endedAt = endedAt;
     }

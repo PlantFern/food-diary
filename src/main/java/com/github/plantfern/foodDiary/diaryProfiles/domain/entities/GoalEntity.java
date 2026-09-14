@@ -23,15 +23,17 @@ public class GoalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "diary_profile_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "diary_profile_id",
+            insertable = false,
+            updatable = false
+    )
     private DiaryProfileEntity diaryProfile;
 
     @Column(
             name = "diary_profile_id",
-            nullable = false,
-            updatable = false,
-            insertable = false
+            nullable = false
     )
     private Long diaryProfileId;
 
