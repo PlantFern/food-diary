@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.diaryProfiles.domain;
+package com.github.plantfern.foodDiary.diaryProfiles.domain.mappers;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;

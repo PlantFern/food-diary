@@ -3,7 +3,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.DiaryProfileApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileCreated;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.DiaryProfileMapper;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfileEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.DiaryProfileRepository;

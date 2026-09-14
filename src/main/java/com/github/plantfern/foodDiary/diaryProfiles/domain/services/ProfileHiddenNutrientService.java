@@ -1,16 +1,14 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
-import com.github.plantfern.foodDiary.diaryProfiles.domain.ProfileFeatureSettingsMapper;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileHiddenNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.ProfileHiddenNutrientRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
