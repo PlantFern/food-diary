@@ -5,7 +5,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfile
 import java.time.LocalDateTime;
 
 public record SleepLogDto(
-        DiaryProfileEntity diaryProfile,
+        Long diaryProfile,
         LocalDateTime beganAt,
         LocalDateTime endedAt
 ) { }

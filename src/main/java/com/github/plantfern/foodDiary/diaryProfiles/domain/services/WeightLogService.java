@@ -4,24 +4,92 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.WeightLogApi;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.WeightLogRepository;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
+import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 
+@AllArgsConstructor
 @Service
 public class WeightLogService implements WeightLogApi {
 
     private final WeightLogRepository weightLogRepository;
+    private final DiaryProfileService diaryProfileService;
+    private final DiaryProfilePolicy diaryProfilePolicy;
+    private final CurrentUser currentUser;
 
-    public WeightLogService(WeightLogRepository weightLogRepository) {
-        this.weightLogRepository = weightLogRepository;
+
+    @Transactional
+    public void create(
+            Long diaryProfileId,
+            Float weight
+    ) {
+
+        if(weight <= 0)
+            throw new IllegalArgumentException("Weight cannot be less than or equal to 0");
+
+        var diaryProfile = diaryProfileService
+                .findByIdInternal(diaryProfileId);
+
+        diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.userId());
+
+        weightLogRepository.save(
+                new WeightLogEntity(
+                        diaryProfileId,
+                        weight
+                )
+        );
     }
 
+    @Transactional
+    public void update(
+            Long weightLogId,
+            Long diaryProfileId,
+            Float weight
+    ) {
+
+        if(weight <= 0)
+            throw new IllegalArgumentException("Weight cannot be less than or equal to 0");
+
+        var diaryProfile = diaryProfileService.findById(diaryProfileId);
+
+        var weightLog = weightLogRepository.findById(weightLogId).orElseThrow(
+                () -> new EntityNotFoundException("Weight log with such id not found")
+        );
+
+        diaryProfilePolicy.ensureIsOwner(
+                currentUser,
+                weightLog.getDiaryProfile().getUserId()
+        );
+
+        weightLog.setDiaryProfileId(diaryProfile.id());
+        weightLog.setWeight(weight);
+
+        weightLogRepository.save(weightLog);
+    }
+
+    @Transactional
+    public void delete(Long weightLogId) {
+
+        var weightLog = weightLogRepository.findById(weightLogId).orElseThrow(
+                () -> new EntityNotFoundException("Weight log with such id not found")
+        );
+
+        diaryProfilePolicy.ensureIsOwner(
+                currentUser,
+                weightLog.getDiaryProfile().getUserId()
+        );
+
+        weightLogRepository.delete(weightLog);
+    }
+
+
+    @Transactional
     public WeightLogEntity getLatestByDiaryProfileId(Long diaryProfileId) {
         return weightLogRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
