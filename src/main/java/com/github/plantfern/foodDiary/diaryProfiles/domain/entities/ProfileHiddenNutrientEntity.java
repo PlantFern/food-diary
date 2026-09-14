@@ -8,6 +8,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
+
 @Entity
 @Table( name = "profile_hidden_nutrients" )
 public class ProfileHiddenNutrientEntity {

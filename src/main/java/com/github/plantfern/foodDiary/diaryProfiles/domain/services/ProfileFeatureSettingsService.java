@@ -2,7 +2,6 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.ProfileFeatureSettingsApi;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
@@ -29,7 +28,6 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
-    private final DiaryProfileMapper diaryProfileMapper;
 
 
     @Transactional
@@ -54,7 +52,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         profileFeatureSettingsRepository.save(
                 new ProfileFeatureSettingsEntity(
-                        diaryProfileMapper.toEntity(diaryProfile),
+                        diaryProfile.id(),
                         showSleep,
                         showSleepLogs,
                         showWeight,
@@ -126,12 +124,15 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
 
     @Transactional(readOnly = true)
-    public ProfileFeatureSettingsDto getById(Long id) {
+    public ProfileFeatureSettingsEntity getById(Long id) {
 
-        var settings = getById(id);
-        var diaryProfile = diaryProfileService.findByIdInternal(settings.diaryProfileId());
+        var settings = profileFeatureSettingsRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Profile feature setting eith such id not found")
+                );
 
-        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
+        diaryProfilePolicy.ensureCanGet(currentUser, settings.getDiaryProfile().getUserId());
 
         return settings;
     }
