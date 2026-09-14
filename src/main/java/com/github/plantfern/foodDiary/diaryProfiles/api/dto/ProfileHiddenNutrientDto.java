@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.diaryProfiles.domain.dto;
+package com.github.plantfern.foodDiary.diaryProfiles.api.dto;
 
 
 public record ProfileHiddenNutrientDto(

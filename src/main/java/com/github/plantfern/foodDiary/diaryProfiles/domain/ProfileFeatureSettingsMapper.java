@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain;
 
 
-import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.ProfileFeatureSettingsDto;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
 import org.mapstruct.Mapper;
 

@@ -1,9 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.api;
 
 
-import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.DiaryProfileDto;
-
-import java.util.Collection;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 
 public interface DiaryProfileApi {
     DiaryProfileDto findByIdInternal(Long id);

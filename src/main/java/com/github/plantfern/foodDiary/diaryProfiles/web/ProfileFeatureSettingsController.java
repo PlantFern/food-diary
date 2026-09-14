@@ -1,8 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web;
 
 import com.github.plantfern.foodDiary.diaryProfiles.domain.ProfileFeatureSettingsMapper;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.ProfileFeatureSettingsDto;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatureSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

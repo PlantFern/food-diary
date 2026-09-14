@@ -4,7 +4,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 import com.github.plantfern.foodDiary.diaryProfiles.api.ProfileFeatureSettingsApi;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.ProfileFeatureSettingsMapper;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.dto.ProfileFeatureSettingsDto;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.ProfileFeatureSettingsRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
