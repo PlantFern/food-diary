@@ -41,6 +41,27 @@ public class DiaryProfilePolicy {
         );
     }
 
+    public void ensureHasRelationsWithProfile(
+            CurrentUser currentUser,
+            Long diaryProfileUserId
+    ) {
+
+        var currentUserId = currentUser.requireId();
+
+        if(currentUserId.equals(diaryProfileUserId)){
+            return;
+        }
+
+        if(currentUser.hasRole(RoleName.SPECIALIST)
+                && userVisibilityApi.canSee(
+                currentUserId, diaryProfileUserId))
+            return;
+
+        throw new AccessDeniedException(
+                "Access to diary profile resources denied"
+        );
+    }
+
     public void ensureCanGetAll(
             CurrentUser currentUser,
             Collection<Long> diaryProfileUserIds
