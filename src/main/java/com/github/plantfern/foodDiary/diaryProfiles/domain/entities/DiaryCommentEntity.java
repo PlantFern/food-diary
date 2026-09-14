@@ -73,14 +73,14 @@ public class DiaryCommentEntity {
 
     public DiaryCommentEntity
             (
-                    DiaryProfileEntity diaryProfile,
+                    Long diaryProfileId,
                     CommentableType commentableType,
                     Long commentableId,
                     String body,
                     LocalDate commentDate,
                     Long createdById
             ) {
-        this.diaryProfile = diaryProfile;
+        this.diaryProfileId = diaryProfileId;
         this.commentableType = commentableType;
         this.commentableId = commentableId;
         this.body = body;

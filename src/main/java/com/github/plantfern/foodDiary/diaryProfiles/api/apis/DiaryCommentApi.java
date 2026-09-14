@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface DiaryCommentApi {
 
-    List<DiaryCommentDto> getByDiaryProfileAndCommentableType
+    List<DiaryCommentDto> getByDiaryProfileAndCommentableTypeInternal
             (Long diaryProfileId, CommentableType type);
 
-    List<DiaryCommentDto> getByDiaryProfileAndCommentDate
+    List<DiaryCommentDto> getByDiaryProfileAndCommentDateInternal
             (Long diaryProfileId, LocalDate commentDate);
 
-    DiaryCommentDto getById(Long id);
+    DiaryCommentDto getByIdInternal(Long id);
 }
