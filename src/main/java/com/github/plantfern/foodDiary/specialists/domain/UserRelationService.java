@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.specialists.domain;
 
 
-import com.github.plantfern.foodDiary.diaryProfiles.api.DiaryProfileApi;
+import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationApi;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
@@ -116,7 +116,7 @@ public class UserRelationService implements UserRelationApi {
                 diaryProfileOwnerId,
                 userRelation
                         .getRelationType()
-                        .equals(RelationType.specialist)
+                        .equals(RelationType.SPECIALIST)
         ));
     }
 
