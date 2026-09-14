@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.diaryProfiles.api;
+package com.github.plantfern.foodDiary.diaryProfiles.api.apis;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
