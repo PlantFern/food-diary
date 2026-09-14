@@ -74,17 +74,15 @@ public class GoalEntity {
     protected GoalEntity() {}
 
     public GoalEntity(
-            DiaryProfileEntity diaryProfile,
+            Long diaryProfileId,
             Long plannedWeight,
             LocalDate startDate,
-            LocalDate actualEndDate,
             LocalDate plannedEndDate,
             Long createdById
     ) {
-        this.diaryProfile = diaryProfile;
+        this.diaryProfileId = diaryProfileId;
         this.plannedWeight = plannedWeight;
         this.startDate = startDate;
-        this.actualEndDate = actualEndDate;
         this.plannedEndDate = plannedEndDate;
         this.createdById = createdById;
     }

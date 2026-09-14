@@ -2,12 +2,17 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.GoalApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.GoalMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepository;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
+import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -15,12 +20,83 @@ import java.util.List;
 @Service
 public class GoalService implements GoalApi {
 
-
     private final GoalRepository goalRepository;
     private final GoalMapper goalMapper;
+    private final DiaryProfileService diaryProfileService;
+    private final DiaryProfilePolicy diaryProfilePolicy;
+    private final CurrentUser currentUser;
 
+
+    @Transactional
+    public void create(
+            Long diaryProfileId,
+            Long plannedWeight,
+            LocalDate startDate,
+            LocalDate plannedEndDate
+    ) {
+
+        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+
+        diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
+
+        goalRepository.save(
+                new GoalEntity(
+                        diaryProfileId,
+                        plannedWeight,
+                        startDate,
+                        plannedEndDate,
+                        currentUser.requireId()
+                )
+        );
+    }
+
+    @Transactional
+    public void update(
+            Long goalId,
+            Long diaryProfileId,
+            Long plannedWeight,
+            LocalDate startDate,
+            LocalDate plannedEndDate
+    ) {
+
+        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+
+        var goal = goalRepository
+                .findById(goalId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Goal with such id not found")
+                );
+
+        diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
+
+        goal.setDiaryProfileId(diaryProfile.id());
+        goal.setPlannedWeight(plannedWeight);
+        goal.setStartDate(startDate);
+        goal.setPlannedEndDate(plannedEndDate);
+
+        goalRepository.save(goal);
+    }
+
+    @Transactional
+    public void delete(
+            Long goalId
+    ) {
+
+        var goal = goalRepository
+                .findById(goalId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Goal with such id not found")
+                );
+
+        diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
+
+        goalRepository.delete(goal);
+    }
+
+
+    @Transactional(readOnly = true)
     @Override
-    public GoalDto getActiveByDiaryProfile(Long diaryDiaryProfileId) {
+    public GoalDto getActiveByDiaryProfileInternal(Long diaryDiaryProfileId) {
         var goal = goalRepository
                     .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
                 .orElseThrow(
@@ -32,8 +108,9 @@ public class GoalService implements GoalApi {
         return null;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public GoalDto getById(Long id) {
+    public GoalDto getByIdInternal(Long id) {
         return goalRepository
                 .findById(id)
                 .map(goalMapper::toDto)

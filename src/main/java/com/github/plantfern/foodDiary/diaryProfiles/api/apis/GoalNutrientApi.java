@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GoalNutrientApi {
 
-    List<GoalNutrientDto> getAllByGoalId(Long goalId);
+    List<GoalNutrientDto> getAllByGoalIdInternal(Long goalId);
 }

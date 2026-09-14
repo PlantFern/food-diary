@@ -2,11 +2,9 @@ package com.github.plantfern.foodDiary.diaryProfiles.api.apis;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
 
-import java.util.List;
-
 public interface GoalApi {
 
-    GoalDto getActiveByDiaryProfile(Long diaryDiaryProfile);
+    GoalDto getActiveByDiaryProfileInternal(Long diaryDiaryProfile);
 
-    GoalDto getById(Long id);
+    GoalDto getByIdInternal(Long id);
 }
