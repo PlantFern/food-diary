@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.specialists.domain.mappers;
 
 
-import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
+import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationStatusEntity;
 import org.mapstruct.Mapper;

@@ -1,6 +1,6 @@
 package com.github.plantfern.foodDiary.specialists.web;
 
-import com.github.plantfern.foodDiary.specialists.api.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
 import com.github.plantfern.foodDiary.specialists.domain.services.SpecialistService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

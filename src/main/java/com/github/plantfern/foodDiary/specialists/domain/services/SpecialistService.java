@@ -1,8 +1,8 @@
 package com.github.plantfern.foodDiary.specialists.domain.services;
 
 
-import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
-import com.github.plantfern.foodDiary.specialists.api.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.api.apis.SpecialistApi;
+import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMapper;
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.SpecialistRepository;

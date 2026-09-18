@@ -1,6 +1,7 @@
-package com.github.plantfern.foodDiary.specialists.api;
+package com.github.plantfern.foodDiary.specialists.api.apis;
 
 
+import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

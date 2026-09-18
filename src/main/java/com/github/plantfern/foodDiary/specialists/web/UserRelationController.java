@@ -1,6 +1,6 @@
 package com.github.plantfern.foodDiary.specialists.web;
 
-import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
+import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
 import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
 import org.springframework.http.ResponseEntity;
