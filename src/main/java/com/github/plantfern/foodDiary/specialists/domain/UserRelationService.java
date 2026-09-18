@@ -159,7 +159,7 @@ public class UserRelationService implements UserRelationApi {
 
         userRelation.setUserRelationStatusEntity(
                 userRelationStatusRepository
-                        .getByCode(UserRelationStatus.CANCELED.toString())
+                        .getByCode(UserRelationStatus.ENDED.toString())
         );
 
         userRelationRepository.save(userRelation);
