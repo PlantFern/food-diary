@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.specialists.domain;
+package com.github.plantfern.foodDiary.specialists.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
@@ -6,6 +6,8 @@ import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationApi;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.api.events.UserRelationActivated;
+import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
+import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationRepository;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationStatusRepository;

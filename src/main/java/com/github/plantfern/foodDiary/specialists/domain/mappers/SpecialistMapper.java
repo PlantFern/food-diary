@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.specialists.domain;
+package com.github.plantfern.foodDiary.specialists.domain.mappers;
 
 import com.github.plantfern.foodDiary.specialists.api.SpecialistDto;
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;

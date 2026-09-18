@@ -1,8 +1,8 @@
 package com.github.plantfern.foodDiary.specialists.web;
 
 import com.github.plantfern.foodDiary.specialists.api.UserRelationDto;
-import com.github.plantfern.foodDiary.specialists.domain.UserRelationMapper;
-import com.github.plantfern.foodDiary.specialists.domain.UserRelationService;
+import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
+import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

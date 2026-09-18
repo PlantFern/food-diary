@@ -2,7 +2,7 @@ package com.github.plantfern.foodDiary.specialists.domain.entities;
 
 
 import com.github.plantfern.foodDiary.specialists.api.RelationType;
-import com.github.plantfern.foodDiary.specialists.domain.UserRelationStatus;
+import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

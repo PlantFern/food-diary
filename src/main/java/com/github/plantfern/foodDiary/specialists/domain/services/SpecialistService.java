@@ -1,14 +1,14 @@
-package com.github.plantfern.foodDiary.specialists.domain;
+package com.github.plantfern.foodDiary.specialists.domain.services;
 
 
 import com.github.plantfern.foodDiary.specialists.api.SpecialistApi;
 import com.github.plantfern.foodDiary.specialists.api.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMapper;
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.SpecialistRepository;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

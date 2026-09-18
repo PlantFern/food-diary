@@ -1,6 +1,6 @@
 package com.github.plantfern.foodDiary.specialists.domain.security;
 
-import com.github.plantfern.foodDiary.specialists.domain.UserRelationStatus;
+import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
