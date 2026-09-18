@@ -26,7 +26,18 @@ public class ClientAccessController {
         this.userRelationMapper = userRelationMapper;
     }
 
+    @GetMapping("/{diaryProfileId}")
+    public ResponseEntity<List<UserRelationDto>> getAllRelations(@PathVariable Long diaryProfileId) {
 
+        return ResponseEntity.ok(userRelationService.findBySpecialistId(diaryProfileId));
+    }
+
+    @PutMapping("/initiate")
+    public ResponseEntity<Void> activate(@RequestParam Long id){
+
+        userRelationService.activate(id);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/end")
     public ResponseEntity<Void> end(@RequestParam Long id){
