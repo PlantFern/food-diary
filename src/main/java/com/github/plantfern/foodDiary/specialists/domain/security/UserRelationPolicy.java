@@ -43,9 +43,17 @@ public class UserRelationPolicy {
     public void ensureCanActivateOrReject(
             CurrentUser currentUser,
             String relationStatus,
-            Long specialistUserId){
+            Long specialistUserId
+    ) {
 
-        ensureCanChangeStatus(currentUser, relationStatus, UserRelationStatus.PENDING, specialistUserId);
+        if(currentUser.requireId().equals(specialistUserId))
+            return;
+
+        if(!UserRelationStatus
+                .valueOf(relationStatus)
+                .equals(UserRelationStatus.PENDING)){
+            throw new IllegalStateException("User relation status must be pending");
+        }
 
         if(currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
@@ -55,13 +63,20 @@ public class UserRelationPolicy {
     public void ensureCanEnd(
             CurrentUser currentUser,
             String relationStatus,
-            Long specialistUserId){
+            Long specialistUserId,
+            Long diaryProfileUserId
+    ) {
 
-        ensureCanChangeStatus(currentUser, relationStatus, UserRelationStatus.ACTIVE, specialistUserId);
+        var currentId = currentUser.requireId();
 
-        if(currentUser.hasRole(RoleName.MODERATOR)
-                || currentUser.hasRole(RoleName.ADMINISTRATOR))
+        if(currentId.equals(diaryProfileUserId) || currentId.equals(specialistUserId))
             return;
+
+        if(!UserRelationStatus
+                .valueOf(relationStatus)
+                .equals(UserRelationStatus.ACTIVE)){
+            throw new IllegalStateException("User relation status must be pending");
+        }
 
         throw new AccessDeniedException("Only users related to user relation can access");
     }
@@ -84,7 +99,7 @@ public class UserRelationPolicy {
 
         throw new AccessDeniedException("Only specialist or moderator can change status of user relation");
     }
-    
+
     public void ensureSpecialistAccess(
             CurrentUser currentUser,
             Long specialistUserId

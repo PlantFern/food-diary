@@ -157,7 +157,8 @@ public class UserRelationService implements UserRelationApi {
         userRelationPolicy.ensureCanEnd(
                 currentUser,
                 userRelation.getUserRelationStatusEntity().getCode(),
-                specialistId.userId());
+                specialistId.userId(),
+                userRelation.getDiaryProfileId());
 
         userRelation.setUserRelationStatusEntity(
                 userRelationStatusRepository
