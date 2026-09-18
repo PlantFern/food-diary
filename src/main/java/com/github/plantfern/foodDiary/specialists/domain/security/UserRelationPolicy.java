@@ -62,6 +62,8 @@ public class UserRelationPolicy {
         if(currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
+
+        throw new AccessDeniedException("Only users related to user relation can access");
     }
 
     public void ensureCanChangeStatus(
