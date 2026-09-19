@@ -31,7 +31,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
 
     @Transactional
-    public void create(
+    public ProfileFeatureSettingsDto create(
             Long diaryProfileId,
             Boolean showSleep,
             Boolean showSleepLogs,
@@ -50,21 +50,23 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             profileFeatureSettingsRepository.save(lastSettings);
         }
 
-        profileFeatureSettingsRepository.save(
-                new ProfileFeatureSettingsEntity(
-                        diaryProfile.id(),
-                        showSleep,
-                        showSleepLogs,
-                        showWeight,
-                        showWeightLogs,
-                        showAllergensWarning,
-                        currentUserId
-                )
+        return profileFeatureSettingsMapper.toDto(
+                    profileFeatureSettingsRepository.save(
+                    new ProfileFeatureSettingsEntity(
+                            diaryProfile.id(),
+                            showSleep,
+                            showSleepLogs,
+                            showWeight,
+                            showWeightLogs,
+                            showAllergensWarning,
+                            currentUserId
+                    )
+            )
         );
     }
 
     @Transactional
-    public void update(
+    public ProfileFeatureSettingsDto update(
             Long profileFeatureSettingsId,
             Boolean showSleep,
             Boolean showSleepLogs,
@@ -91,14 +93,14 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         profileFeatureSettings.setShowWeightLogs(showWeightLogs);
         profileFeatureSettings.setShowAllergensWarning(showAllergensWarning);
 
-        profileFeatureSettingsRepository
-                .save(profileFeatureSettings);
+        return profileFeatureSettingsMapper.toDto(
+            profileFeatureSettingsRepository
+                    .save(profileFeatureSettings)
+        );
     }
 
     @Transactional
-    public void remove(
-            Long profileFeatureSettingsId
-    ) {
+    public ProfileFeatureSettingsDto complete( Long profileFeatureSettingsId) {
 
         var currentUserId = currentUser.requireId();
         var profileFeatureSettings =
@@ -117,7 +119,32 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         profileFeatureSettings.setExpiredDate();
 
-        profileFeatureSettingsRepository.save(
+        return profileFeatureSettingsMapper.toDto(
+                profileFeatureSettingsRepository.save(
+                    profileFeatureSettings
+            )
+        );
+    }
+
+    @Transactional
+    public void delete( Long profileFeatureSettingsId) {
+
+        var currentUserId = currentUser.requireId();
+        var profileFeatureSettings =
+                profileFeatureSettingsRepository
+                        .findById(profileFeatureSettingsId)
+                        .orElseThrow(
+                                () -> new EntityNotFoundException("No profile feature settings with such id")
+                        );
+        var diaryProfile = diaryProfileService
+                .findByIdInternal(profileFeatureSettings.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanWrite(
+                currentUser,
+                diaryProfile.userId()
+        );
+
+        profileFeatureSettingsRepository.delete(
                 profileFeatureSettings
         );
     }
