@@ -35,7 +35,7 @@ public class DiaryProfileController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<DiaryProfileDto> updateDiary(
             @PathVariable Long id,
             @RequestParam ProfileDataRequest profileDataRequest){

@@ -25,7 +25,7 @@ public class GoalController {
     }
 
 
-    @PutMapping ("/{diaryProfileId}")
+    @PostMapping ("/{diaryProfileId}")
     public ResponseEntity<GoalDto> create(
             @PathVariable Long diaryProfileId,
             @RequestBody GoalRequest request
@@ -50,7 +50,7 @@ public class GoalController {
         );
     }
 
-    @PostMapping ("/{diaryProfileId}")
+    @PutMapping ("/{diaryProfileId}")
     public ResponseEntity<GoalDto> update(
             @PathVariable Long diaryProfileId,
             @RequestBody GoalRequest request

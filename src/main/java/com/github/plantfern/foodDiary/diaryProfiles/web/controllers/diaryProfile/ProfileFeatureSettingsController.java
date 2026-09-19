@@ -31,7 +31,7 @@ public class ProfileFeatureSettingsController {
     }
 
 
-    @PutMapping("/{diaryProfileId}")
+    @PostMapping("/{diaryProfileId}")
     public ResponseEntity<ProfileFeatureSettingsDto> create(
             @PathVariable Long diaryProfileId,
             @RequestParam ProfileFeatureSettingsRequest request
@@ -50,7 +50,7 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @PostMapping("/{profileFeatureSettingsId}")
+    @PutMapping("/{profileFeatureSettingsId}")
     public ResponseEntity<ProfileFeatureSettingsDto> update(
             @PathVariable Long profileFeatureSettingsId,
             @RequestParam ProfileFeatureSettingsRequest request
