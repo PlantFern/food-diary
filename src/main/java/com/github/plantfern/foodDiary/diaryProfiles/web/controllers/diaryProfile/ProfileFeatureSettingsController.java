@@ -7,8 +7,6 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatu
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DateTimePeriodRequest;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileFeatureSettingsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +33,7 @@ public class ProfileFeatureSettingsController {
     @PostMapping("/{diaryProfileId}")
     public ResponseEntity<ProfileFeatureSettingsDto> create(
             @PathVariable Long diaryProfileId,
-            @RequestParam ProfileFeatureSettingsRequest request
+            @RequestBody ProfileFeatureSettingsRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -54,7 +52,7 @@ public class ProfileFeatureSettingsController {
     @PutMapping("/{profileFeatureSettingsId}")
     public ResponseEntity<ProfileFeatureSettingsDto> update(
             @PathVariable Long profileFeatureSettingsId,
-            @RequestParam ProfileFeatureSettingsRequest request
+            @RequestBody ProfileFeatureSettingsRequest request
     ) {
 
         return ResponseEntity.ok(
