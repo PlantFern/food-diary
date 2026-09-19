@@ -42,6 +42,15 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
 
+        goalRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .ifPresent(
+                        goal -> {
+                            goal.setActualEndedDay();
+                            goalRepository.save(goal);
+                        }
+                );
+
         var goal = goalRepository.save(
                 new GoalEntity(
                         diaryProfileId,
