@@ -49,13 +49,11 @@ public class ClientGoalController {
         );
     }
 
-    @PostMapping ("/{diaryProfileId}")
+    @PostMapping ("/{goalId}")
     public ResponseEntity<GoalDto> update(
-            @PathVariable Long diaryProfileId,
+            @PathVariable Long goalId,
             @RequestBody GoalRequest request
     ) {
-
-
 
         List<GoalNutrientDto> goalNutrientDtoList = new ArrayList<>();
         for(var goalNutrient : request.nutrientGoals()){
@@ -66,9 +64,8 @@ public class ClientGoalController {
             ));
         }
 
-        return ResponseEntity.ok(goalService.create(
-                        diaryProfileId,
         return ResponseEntity.ok(goalService.update(
+                        goalId,
                         request.plannedWeight(),
                         request.startDate(),
                         request.plannedEndDate(),
@@ -80,10 +77,10 @@ public class ClientGoalController {
     @DeleteMapping("/{diaryProfileId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
-            @PathVariable Long diaryProfileId
+            @PathVariable Long goalId
     ) {
 
-        goalService.delete(diaryProfileId);
+        goalService.delete(goalId);
     }
 
     @GetMapping("/{diaryProfileId}")
