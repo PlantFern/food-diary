@@ -19,7 +19,7 @@ public interface ProfileFeatureSettingsRepository extends JpaRepository<ProfileF
     List<ProfileFeatureSettingsEntity> findAllByDiaryProfileId(Long diaryProfileId);
 
     @Query("""
-        select profile_feature_settings.diaryProfileId as DiaryProfileId
+        select profile_feature_settings.diaryProfileId
         from ProfileFeatureSettingsEntity profile_feature_settings
         where profile_feature_settings.createdById = :userId
     """)
