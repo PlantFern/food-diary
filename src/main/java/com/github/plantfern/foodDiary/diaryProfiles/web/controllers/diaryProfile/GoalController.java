@@ -4,10 +4,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfil
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.GoalService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +27,21 @@ public class GoalController {
     ) {
 
         return  ResponseEntity.ok(goalService.getAllByDiaryProfile(diaryProfileId));
+    }
+
+    @GetMapping("/latest/{diaryProfileId}")
+    public ResponseEntity<GoalDto> getLatest(
+            @PathVariable Long diaryProfileId
+    ) {
+
+        return  ResponseEntity.ok(goalService.getLatestByDiaryProfile(diaryProfileId));
+    }
+
+    @GetMapping("/active/{diaryProfileId}")
+    public ResponseEntity<GoalDto> getActive(
+            @PathVariable Long diaryProfileId
+    ) {
+
+        return  ResponseEntity.ok(goalService.getActiveByDiaryProfile(diaryProfileId));
     }
 }

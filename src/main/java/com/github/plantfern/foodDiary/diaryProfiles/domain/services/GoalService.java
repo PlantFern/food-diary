@@ -108,6 +108,32 @@ public class GoalService implements GoalApi {
     }
 
     @Transactional(readOnly = true)
+    public GoalDto getLatestByDiaryProfile(Long diaryDiaryProfileId) {
+        var goal = goalRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Any goal not found")
+                );
+
+        return goalMapper.toDto(goal);
+    }
+
+    @Transactional(readOnly = true)
+    public GoalDto getActiveByDiaryProfile(Long diaryDiaryProfileId) {
+
+        var goal = goalRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Any goal not found")
+                );
+
+        diaryProfilePolicy.ensureCanGet(currentUser, goal.getDiaryProfile().getUserId() );
+
+        return goalMapper.toDto(goal);
+    }
+
+
+    @Transactional(readOnly = true)
     @Override
     public GoalDto getActiveByDiaryProfileInternal(Long diaryDiaryProfileId) {
         var goal = goalRepository
