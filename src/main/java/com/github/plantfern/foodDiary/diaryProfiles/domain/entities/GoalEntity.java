@@ -67,7 +67,7 @@ public class GoalEntity {
 
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "goalNutrient",
+            mappedBy = "goal",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<GoalNutrientEntity> goalNutrientList;
