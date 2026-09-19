@@ -50,9 +50,9 @@ public class GoalController {
         );
     }
 
-    @PutMapping ("/{diaryProfileId}")
+    @PutMapping ("/{goalId}")
     public ResponseEntity<GoalDto> update(
-            @PathVariable Long diaryProfileId,
+            @PathVariable Long goalId,
             @RequestBody GoalRequest request
     ) {
 
@@ -66,7 +66,7 @@ public class GoalController {
         }
 
         return ResponseEntity.ok(goalService.update(
-                        diaryProfileId,
+                        goalId,
                         request.plannedWeight(),
                         request.startDate(),
                         request.plannedEndDate(),
@@ -75,13 +75,13 @@ public class GoalController {
         );
     }
 
-    @DeleteMapping("/{diaryProfileId}")
+    @DeleteMapping("/{goalId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
-            @PathVariable Long diaryProfileId
+            @PathVariable Long goalId
     ) {
 
-        goalService.delete(diaryProfileId);
+        goalService.delete(goalId);
     }
 
     @GetMapping("/{diaryProfileId}")
