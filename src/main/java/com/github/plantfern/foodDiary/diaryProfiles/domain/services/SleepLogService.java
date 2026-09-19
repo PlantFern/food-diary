@@ -109,7 +109,7 @@ public class SleepLogService implements SleepLogApi {
         var localDateTimeEarlier = LocalDateTime.of(date, LocalTime.MIN);
         var localDateTimeLater = localDateTimeEarlier.plusDays(1);
 
-        return sleepLogRepository
+        var foundSleepLogList = sleepLogRepository
                 .findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter(
                         diaryProfileId,
                         localDateTimeLater,
@@ -117,14 +117,24 @@ public class SleepLogService implements SleepLogApi {
                 )
                 .stream()
                 .toList();
+
+        diaryProfilePolicy.ensureCanGet(currentUser, foundSleepLogList.getFirst().getDiaryProfile().getUserId());
+
+        return foundSleepLogList;
     }
 
-    List<SleepLogEntity> getByDiaryProfile(Long diaryProfileId) {
-        return sleepLogRepository
     public List<SleepLogEntity> getByDiaryProfile(Long diaryProfileId) {
 
+        var foundSleepLog = sleepLogRepository
                 .findByDiaryProfileId(diaryProfileId)
                 .stream()
                 .toList();
+
+        diaryProfilePolicy.ensureCanGet(
+                currentUser,
+                foundSleepLog.getFirst().getDiaryProfile().getUserId()
+        );
+
+        return foundSleepLog;
     }
 }
