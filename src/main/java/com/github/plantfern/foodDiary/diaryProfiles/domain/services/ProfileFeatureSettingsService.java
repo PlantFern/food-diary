@@ -47,11 +47,14 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
 
-        var lastSettings = this.getFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId);
-        if(lastSettings.getExpiredAt() == null) {
-            lastSettings.setExpiredDate();
-            profileFeatureSettingsRepository.save(lastSettings);
-        }
+        profileFeatureSettingsRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .ifPresent(
+                        lastSettings -> {
+                            lastSettings.setExpiredDate();
+                            profileFeatureSettingsRepository.save(lastSettings);
+                        }
+                );
 
         var profileFeatureSettings = profileFeatureSettingsRepository.save(
                 new ProfileFeatureSettingsEntity(
