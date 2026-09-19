@@ -39,7 +39,7 @@ public class DiaryCommentService implements DiaryCommentApi {
     ) {
 
         var foundDiaryProfile = diaryProfileService
-                .findByIdInternal(diaryProfileId);
+                .getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureHasRelationsWithProfile(currentUser, foundDiaryProfile.userId());
 
@@ -103,7 +103,7 @@ public class DiaryCommentService implements DiaryCommentApi {
     @Transactional(readOnly = true)
     public List<DiaryCommentDto> getByDiaryProfileAndCommentableType(Long diaryProfileId, CommentableType type) {
         var foundDiaryProfile = diaryProfileService
-                .findByIdInternal(diaryProfileId);
+                .getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureHasRelationsWithProfile(currentUser, foundDiaryProfile.userId());
 
@@ -114,7 +114,7 @@ public class DiaryCommentService implements DiaryCommentApi {
     public List<DiaryCommentDto> getByDiaryProfileAndCommentDate(Long diaryProfileId, LocalDate commentDate) {
 
         var foundDiaryProfile = diaryProfileService
-                .findByIdInternal(diaryProfileId);
+                .getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureHasRelationsWithProfile(currentUser, foundDiaryProfile.userId());
 
@@ -127,7 +127,7 @@ public class DiaryCommentService implements DiaryCommentApi {
         var diaryComment = this.getByIdInternal(id);
 
         var foundDiaryProfile = diaryProfileService
-                .findByIdInternal(diaryComment.diaryProfileId());
+                .getByIdInternal(diaryComment.diaryProfileId());
 
         diaryProfilePolicy.ensureHasRelationsWithProfile(currentUser, foundDiaryProfile.userId());
 

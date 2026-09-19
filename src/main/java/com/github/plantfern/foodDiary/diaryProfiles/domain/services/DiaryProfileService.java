@@ -123,7 +123,7 @@ public class DiaryProfileService implements DiaryProfileApi {
     }
 
     @Transactional(readOnly = true)
-    public List<DiaryProfileEntity> findAllById(Collection<Long> ids) {
+    public List<DiaryProfileEntity> getAllById(Collection<Long> ids) {
 
         var diaryProfiles = diaryProfileRepository
                 .findAllById(ids)
@@ -141,9 +141,9 @@ public class DiaryProfileService implements DiaryProfileApi {
     }
 
     @Transactional(readOnly = true)
-    public DiaryProfileDto findById(Long diaryProfileId) {
+    public DiaryProfileDto getById(Long diaryProfileId) {
 
-        var targetDiaryProfile = findById(diaryProfileId);
+        var targetDiaryProfile = getById(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(
                 currentUser,
@@ -157,7 +157,7 @@ public class DiaryProfileService implements DiaryProfileApi {
 
     @Override
     @Transactional(readOnly = true)
-    public DiaryProfileDto findByIdInternal(Long diaryProfileId) {
+    public DiaryProfileDto getByIdInternal(Long diaryProfileId) {
 
         var targetDiaryProfile = diaryProfileRepository
                 .findById(diaryProfileId)

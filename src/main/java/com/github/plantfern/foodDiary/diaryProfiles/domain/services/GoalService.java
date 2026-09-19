@@ -38,7 +38,7 @@ public class GoalService implements GoalApi {
             List<GoalNutrientDto> goalNutrientList
     ) {
 
-        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+        var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
 
@@ -140,7 +140,7 @@ public class GoalService implements GoalApi {
     @Transactional(readOnly = true)
     public List<GoalDto> getAllByDiaryProfile(Long diaryProfile) {
 
-        var diaryProfileUserId = diaryProfileService.findById(diaryProfile).userId();
+        var diaryProfileUserId = diaryProfileService.getById(diaryProfile).userId();
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 

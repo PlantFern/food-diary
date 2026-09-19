@@ -42,7 +42,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             List<Long> hiddenNutrients
     ) {
         var currentUserId = currentUser.requireId();
-        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+        var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
 
@@ -131,7 +131,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                                 () -> new EntityNotFoundException("No profile feature settings with such id")
                         );
         var diaryProfile = diaryProfileService
-                .findByIdInternal(profileFeatureSettings.getDiaryProfileId());
+                .getByIdInternal(profileFeatureSettings.getDiaryProfileId());
 
         diaryProfilePolicy.ensureCanWrite(
                 currentUser,
@@ -158,7 +158,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                                 () -> new EntityNotFoundException("No profile feature settings with such id")
                         );
         var diaryProfile = diaryProfileService
-                .findByIdInternal(profileFeatureSettings.getDiaryProfileId());
+                .getByIdInternal(profileFeatureSettings.getDiaryProfileId());
 
         diaryProfilePolicy.ensureCanWrite(
                 currentUser,
@@ -192,7 +192,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Long diaryProfileId
     ) {
 
-        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+        var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 
@@ -208,7 +208,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Long diaryProfileId
     ) {
 
-        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+        var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 
@@ -244,7 +244,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     }
 
     @Transactional(readOnly = true)
-    public List<ProfileFeatureSettingsEntity> findAllByCreatedByIdAndDiaryProfileId(
+    public List<ProfileFeatureSettingsEntity> getAllByCreatedByIdAndDiaryProfileId(
             Long userId,
             Long diaryProfileId
     ) {
@@ -281,7 +281,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                     "Lower bound can't be greater than upper bound"
             );
 
-        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
+        var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfile.userId());
 

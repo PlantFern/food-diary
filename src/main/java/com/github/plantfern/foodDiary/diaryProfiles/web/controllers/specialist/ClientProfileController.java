@@ -30,14 +30,14 @@ public class ClientProfileController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DiaryProfileDto> findDiary(@PathVariable Long id){
-        var response = diaryProfileService.findById( id );
+        var response = diaryProfileService.getById( id );
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<DiaryProfileDto>> findDiaries(@RequestBody Collection<Long> ids){
-        var response = diaryProfileService.findAllById(ids);
+        var response = diaryProfileService.getAllById(ids);
 
         return ResponseEntity.ok(response.stream().map(diaryProfileMapper::toDto).toList());
     }

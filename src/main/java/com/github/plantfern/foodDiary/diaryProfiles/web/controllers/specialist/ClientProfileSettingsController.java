@@ -81,7 +81,7 @@ public class ClientProfileSettingsController {
             @RequestParam Long diaryProfileId
     ) {
         return ResponseEntity.ok(
-                profileFeatureSettingsService.findAllByCreatedByIdAndDiaryProfileId(
+                profileFeatureSettingsService.getAllByCreatedByIdAndDiaryProfileId(
                                 createdById,
                                 diaryProfileId
                         )

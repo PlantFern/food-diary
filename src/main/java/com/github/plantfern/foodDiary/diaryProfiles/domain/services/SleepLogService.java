@@ -40,7 +40,7 @@ public class SleepLogService implements SleepLogApi {
         if(beganAt.isAfter(endedAt))
             throw new IllegalArgumentException("Sleep start cannot be after sleep end");
 
-        var diaryProfile = diaryProfileService.findById(diaryProfileId);
+        var diaryProfile = diaryProfileService.getById(diaryProfileId);
 
         diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 

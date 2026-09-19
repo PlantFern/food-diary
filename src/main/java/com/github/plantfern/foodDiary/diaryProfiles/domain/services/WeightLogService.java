@@ -34,7 +34,7 @@ public class WeightLogService implements WeightLogApi {
             throw new IllegalArgumentException("Weight cannot be less than or equal to 0");
 
         var diaryProfile = diaryProfileService
-                .findByIdInternal(diaryProfileId);
+                .getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
@@ -56,7 +56,7 @@ public class WeightLogService implements WeightLogApi {
         if(weight <= 0)
             throw new IllegalArgumentException("Weight cannot be less than or equal to 0");
 
-        var diaryProfile = diaryProfileService.findById(diaryProfileId);
+        var diaryProfile = diaryProfileService.getById(diaryProfileId);
 
         var weightLog = weightLogRepository.findById(weightLogId).orElseThrow(
                 () -> new EntityNotFoundException("Weight log with such id not found")
