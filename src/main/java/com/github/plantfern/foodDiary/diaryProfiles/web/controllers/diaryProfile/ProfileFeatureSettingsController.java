@@ -4,8 +4,10 @@ package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfil
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatureSettingsService;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileFeatureSettingsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,62 @@ public class ProfileFeatureSettingsController {
             ProfileFeatureSettingsMapper mapper) {
         this.profileFeatureSettingsService = profileFeatureSettingsService;
         this.mapper = mapper;
+    }
+
+
+    @PutMapping("/{diaryProfileId}")
+    public ResponseEntity<ProfileFeatureSettingsDto> create(
+            @PathVariable Long diaryProfileId,
+            @RequestParam ProfileFeatureSettingsRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.create(
+                        diaryProfileId,
+                        request.showSleep(),
+                        request.showSleepLogs(),
+                        request.showWeight(),
+                        request.showSleepLogs(),
+                        request.showAllergensWarning(),
+                        request.hiddenNutrients()
+                )
+        );
+    }
+
+    @PostMapping("/{profileFeatureSettingsId}")
+    public ResponseEntity<ProfileFeatureSettingsDto> update(
+            @PathVariable Long profileFeatureSettingsId,
+            @RequestParam ProfileFeatureSettingsRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.update(
+                        profileFeatureSettingsId,
+                        request.showSleep(),
+                        request.showSleepLogs(),
+                        request.showWeight(),
+                        request.showSleepLogs(),
+                        request.showAllergensWarning(),
+                        request.hiddenNutrients()
+                )
+        );
+    }
+
+    @PatchMapping("/complete/{profileFeatureSettingsId}")
+    public ResponseEntity<ProfileFeatureSettingsDto> complete(
+            @PathVariable Long profileFeatureSettingsId
+    ) {
+
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.complete(profileFeatureSettingsId)
+        );
+    }
+
+    @DeleteMapping("/{profileFeatureSettingsId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long profileFeatureSettingsId) {
+
+        profileFeatureSettingsService.delete(profileFeatureSettingsId);
     }
 
 
