@@ -42,12 +42,12 @@ public class SleepLogService implements SleepLogApi {
 
         var diaryProfile = diaryProfileService.getById(diaryProfileId);
 
-        diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.userId());
+        diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.detUserId());
 
         return sleepLogMapper.toDto(
                 sleepLogRepository.save(
                         new SleepLogEntity(
-                                diaryProfile.id(),
+                                diaryProfile.getId(),
                                 beganAt,
                                 endedAt
                         )

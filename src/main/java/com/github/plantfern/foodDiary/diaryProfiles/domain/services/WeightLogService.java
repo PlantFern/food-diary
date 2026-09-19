@@ -67,7 +67,7 @@ public class WeightLogService implements WeightLogApi {
                 weightLog.getDiaryProfile().getUserId()
         );
 
-        weightLog.setDiaryProfileId(diaryProfile.id());
+        weightLog.setDiaryProfileId(diaryProfile.getId());
         weightLog.setWeight(weight);
 
         weightLogRepository.save(weightLog);
