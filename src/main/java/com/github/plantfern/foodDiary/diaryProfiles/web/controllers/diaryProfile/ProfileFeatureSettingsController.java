@@ -70,12 +70,12 @@ public class ProfileFeatureSettingsController {
     }
 
     @PatchMapping("/complete/{profileFeatureSettingsId}")
-    public ResponseEntity<ProfileFeatureSettingsDto> complete(
+    public ResponseEntity<ProfileFeatureSettingsDto> reset(
             @PathVariable Long profileFeatureSettingsId
     ) {
 
         return ResponseEntity.ok(
-                profileFeatureSettingsService.complete(profileFeatureSettingsId)
+                profileFeatureSettingsService.reset(profileFeatureSettingsId)
         );
     }
 

@@ -121,7 +121,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     }
 
     @Transactional
-    public ProfileFeatureSettingsDto complete( Long profileFeatureSettingsId) {
+    public ProfileFeatureSettingsDto reset(Long profileFeatureSettingsId) {
 
         var currentUserId = currentUser.requireId();
         var profileFeatureSettings =
