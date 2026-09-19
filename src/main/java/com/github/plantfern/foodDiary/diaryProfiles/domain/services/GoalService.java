@@ -134,7 +134,7 @@ public class GoalService implements GoalApi {
 
         goal.setDeletedDate();
 
-        goalRepository.delete(goal);
+        goalRepository.save(goal);
     }
 
     @Transactional(readOnly = true)
