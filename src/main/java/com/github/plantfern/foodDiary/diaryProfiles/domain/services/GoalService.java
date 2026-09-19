@@ -2,7 +2,9 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.GoalApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.GoalMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
@@ -28,7 +30,7 @@ public class GoalService implements GoalApi {
 
 
     @Transactional
-    public void create(
+    public GoalDto create(
             Long diaryProfileId,
             Long plannedWeight,
             LocalDate startDate,
@@ -48,10 +50,11 @@ public class GoalService implements GoalApi {
                         currentUser.requireId()
                 )
         );
+        return goalMapper.toDto(goal);
     }
 
     @Transactional
-    public void update(
+    public GoalDto update(
             Long goalId,
             Long diaryProfileId,
             Long plannedWeight,
@@ -74,7 +77,7 @@ public class GoalService implements GoalApi {
         goal.setStartDate(startDate);
         goal.setPlannedEndDate(plannedEndDate);
 
-        goalRepository.save(goal);
+        return goalMapper.toDto(goalRepository.save(goal));
     }
 
     @Transactional
