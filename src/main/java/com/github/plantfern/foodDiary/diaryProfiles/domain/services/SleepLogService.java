@@ -53,7 +53,6 @@ public class SleepLogService implements SleepLogApi {
     @Transactional
     public void update(
             Long sleepLogId,
-            Long diaryProfileId,
             LocalDateTime beganAt,
             LocalDateTime endedAt
     ) {
