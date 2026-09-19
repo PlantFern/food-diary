@@ -29,7 +29,6 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
-    private final ProfileHiddenNutrientService profileHiddenNutrientService;
 
 
     @Transactional
@@ -297,6 +296,18 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     }
 
     //region Internal methods
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProfileFeatureSettingsDto getActiveByDiaryProfileInternal(Long diaryProfileId) {
+
+        return profileFeatureSettingsRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .map(profileFeatureSettingsMapper::toDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("settings with such diary profile id not found")
+                );
+    }
 
     @Override
     @Transactional(readOnly = true)
