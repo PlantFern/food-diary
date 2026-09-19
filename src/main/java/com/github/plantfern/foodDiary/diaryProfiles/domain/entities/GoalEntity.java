@@ -53,16 +53,16 @@ public class GoalEntity {
     private Long createdById;
 
     @Column(
-            name = "createdAt",
+            name = "created_at",
             nullable = false,
             updatable = false
     )
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deletedAt")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
 
