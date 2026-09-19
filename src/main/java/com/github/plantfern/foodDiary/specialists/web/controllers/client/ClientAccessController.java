@@ -33,7 +33,7 @@ public class ClientAccessController {
     }
 
     @PutMapping("/initiate")
-    public ResponseEntity<Void> activate(@RequestParam Long id){
+    public ResponseEntity<Void> initiate(@RequestParam Long id){
 
         userRelationService.activate(id);
         return ResponseEntity.ok().build();
