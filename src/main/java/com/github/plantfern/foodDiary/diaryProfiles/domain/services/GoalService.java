@@ -78,14 +78,11 @@ public class GoalService implements GoalApi {
     @Transactional
     public GoalDto update(
             Long goalId,
-            Long diaryProfileId,
             Long plannedWeight,
             LocalDate startDate,
             LocalDate plannedEndDate,
             List<GoalNutrientDto> goalNutrientDtos
     ) {
-
-        var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
 
         var goal = goalRepository
                 .findById(goalId)
@@ -95,7 +92,6 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
 
-        goal.setDiaryProfileId(diaryProfile.id());
         goal.setPlannedWeight(plannedWeight);
         goal.setStartDate(startDate);
         goal.setPlannedEndDate(plannedEndDate);
