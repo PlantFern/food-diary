@@ -104,7 +104,8 @@ public class SleepLogService implements SleepLogApi {
 
 
     @Transactional
-    List<SleepLogEntity> getByDiaryProfileIdAndDate(Long diaryProfileId, LocalDate date) {
+    public List<SleepLogEntity> getByDiaryProfileIdAndDate(Long diaryProfileId, LocalDate date) {
+
         var localDateTimeEarlier = LocalDateTime.of(date, LocalTime.MIN);
         var localDateTimeLater = localDateTimeEarlier.plusDays(1);
 
@@ -120,6 +121,8 @@ public class SleepLogService implements SleepLogApi {
 
     List<SleepLogEntity> getByDiaryProfile(Long diaryProfileId) {
         return sleepLogRepository
+    public List<SleepLogEntity> getByDiaryProfile(Long diaryProfileId) {
+
                 .findByDiaryProfileId(diaryProfileId)
                 .stream()
                 .toList();
