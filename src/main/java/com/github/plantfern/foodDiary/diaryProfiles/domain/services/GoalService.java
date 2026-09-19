@@ -156,7 +156,7 @@ public class GoalService implements GoalApi {
 
         var foundDiaryDiaryProfile = diaryProfileService.getById(diaryDiaryProfileId);
 
-        diaryProfilePolicy.ensureCanGet(currentUser, foundDiaryDiaryProfile.userId());
+        diaryProfilePolicy.ensureCanGet(currentUser, foundDiaryDiaryProfile.getUserId());
 
         var goal = goalRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
