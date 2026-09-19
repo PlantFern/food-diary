@@ -72,7 +72,8 @@ public class GoalService implements GoalApi {
             Long diaryProfileId,
             Long plannedWeight,
             LocalDate startDate,
-            LocalDate plannedEndDate
+            LocalDate plannedEndDate,
+            List<GoalNutrientDto> goalNutrientDtos
     ) {
 
         var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
@@ -89,6 +90,17 @@ public class GoalService implements GoalApi {
         goal.setPlannedWeight(plannedWeight);
         goal.setStartDate(startDate);
         goal.setPlannedEndDate(plannedEndDate);
+
+        var currentGoalId = goal.getId();
+        for( var goalNutrient : goalNutrientDtos ) {
+            goal.getGoalNutrientList().add(
+                    new GoalNutrientEntity(
+                            currentGoalId,
+                            goalNutrient.nutrientId(),
+                            goalNutrient.amount()
+                    )
+            );
+        }
 
         return goalMapper.toDto(goalRepository.save(goal));
     }
