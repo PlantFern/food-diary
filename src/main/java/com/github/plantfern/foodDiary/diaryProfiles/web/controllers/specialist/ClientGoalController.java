@@ -68,6 +68,7 @@ public class ClientGoalController {
 
         return ResponseEntity.ok(goalService.create(
                         diaryProfileId,
+        return ResponseEntity.ok(goalService.update(
                         request.plannedWeight(),
                         request.startDate(),
                         request.plannedEndDate(),
