@@ -23,7 +23,7 @@ public class SleepLogController {
         this.sleepLogService = sleepLogService;
     }
 
-    @PutMapping("/{diaryProfileId}")
+    @PostMapping("/{diaryProfileId}")
     public ResponseEntity<SleepLogDto> create(
             @PathVariable Long diaryProfileId,
             @ModelAttribute DateTimePeriodRequest request
