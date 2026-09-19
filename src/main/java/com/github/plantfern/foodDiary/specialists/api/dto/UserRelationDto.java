@@ -5,6 +5,7 @@ import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 
 public record UserRelationDto(
+        Long id,
         Long diaryProfileId,
         Long specialistId,
         RelationType relationType,
