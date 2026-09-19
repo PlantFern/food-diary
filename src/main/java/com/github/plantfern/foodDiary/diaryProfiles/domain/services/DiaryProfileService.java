@@ -141,13 +141,17 @@ public class DiaryProfileService implements DiaryProfileApi {
     }
 
     @Transactional(readOnly = true)
-    public DiaryProfileDto getById(Long diaryProfileId) {
+    DiaryProfileEntity getById(Long diaryProfileId) {
 
-        var targetDiaryProfile = getById(diaryProfileId);
+        var targetDiaryProfile = diaryProfileRepository
+                .findById(diaryProfileId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Diary profile not found")
+                );
 
         diaryProfilePolicy.ensureCanGet(
                 currentUser,
-                targetDiaryProfile.userId());
+                targetDiaryProfile.getUserId());
 
         return targetDiaryProfile;
     }

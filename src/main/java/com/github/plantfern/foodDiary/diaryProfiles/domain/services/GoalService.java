@@ -140,7 +140,7 @@ public class GoalService implements GoalApi {
     @Transactional(readOnly = true)
     public List<GoalDto> getAllByDiaryProfile(Long diaryProfile) {
 
-        var diaryProfileUserId = diaryProfileService.getById(diaryProfile).userId();
+        var diaryProfileUserId = diaryProfileService.getById(diaryProfile).getUserId();
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
