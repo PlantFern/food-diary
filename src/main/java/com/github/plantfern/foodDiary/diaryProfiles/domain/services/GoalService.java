@@ -84,21 +84,30 @@ public class GoalService implements GoalApi {
             List<GoalNutrientDto> goalNutrientDtos
     ) {
 
-        var goal = goalRepository
+        var oldGoal = goalRepository
                 .findById(goalId)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Goal with such id not found")
                 );
 
-        diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
+        diaryProfilePolicy.ensureCreatedBy(currentUser, oldGoal.getCreatedById());
 
-        goal.setPlannedWeight(plannedWeight);
-        goal.setStartDate(startDate);
-        goal.setPlannedEndDate(plannedEndDate);
+        oldGoal.setDeletedDate();
+        goalRepository.save(oldGoal);
 
-        var currentGoalId = goal.getId();
+        var newGoal = goalRepository.save(
+                new GoalEntity(
+                        oldGoal.getDiaryProfileId(),
+                        plannedWeight,
+                        startDate,
+                        plannedEndDate,
+                        oldGoal.getCreatedById()
+                )
+        );
+
+        var currentGoalId = newGoal.getId();
         for( var goalNutrient : goalNutrientDtos ) {
-            goal.getGoalNutrientList().add(
+            newGoal.getGoalNutrientList().add(
                     new GoalNutrientEntity(
                             currentGoalId,
                             goalNutrient.nutrientId(),
@@ -107,7 +116,7 @@ public class GoalService implements GoalApi {
             );
         }
 
-        return goalMapper.toDto(goalRepository.save(goal));
+        return goalMapper.toDto(goalRepository.save(newGoal));
     }
 
     @Transactional
@@ -123,7 +132,7 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
 
-        goal.getGoalNutrientList().clear();
+        goal.setDeletedDate();
 
         goalRepository.delete(goal);
     }
