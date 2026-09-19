@@ -197,6 +197,16 @@ public class UserRelationService implements UserRelationApi {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<UserRelationDto> findByDiaryProfileId(Long diaryProfileId) {
+
+        var diaryProfileUserId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
+
+        userRelationPolicy.ensureClientAccess(currentUser, diaryProfileUserId);
+
+        return findByDiaryProfileIdInternal(diaryProfileId);
+    }
+
 
     //region Internal methods
 

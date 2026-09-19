@@ -34,4 +34,10 @@ public class RelationModerationController {
 
         return ResponseEntity.ok(userRelationService.findAll());
     }
+
+    @GetMapping("/by-diary-profile/{diaryProfileId}")
+    public ResponseEntity<List<UserRelationDto>> getAllByDiaryProfile(@PathVariable Long diaryProfileId) {
+
+        return ResponseEntity.ok(userRelationService.findBySpecialistId(diaryProfileId));
+    }
 }

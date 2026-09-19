@@ -26,10 +26,10 @@ public class ClientAccessController {
         this.userRelationMapper = userRelationMapper;
     }
 
-    @GetMapping("/{diaryProfileId}")
+    @GetMapping("{diaryProfileId}")
     public ResponseEntity<List<UserRelationDto>> getAllRelations(@PathVariable Long diaryProfileId) {
 
-        return ResponseEntity.ok(userRelationService.findBySpecialistId(diaryProfileId));
+        return ResponseEntity.ok(userRelationService.findByDiaryProfileId(diaryProfileId));
     }
 
     @PutMapping("/initiate")

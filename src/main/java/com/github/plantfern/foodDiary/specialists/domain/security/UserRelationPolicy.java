@@ -85,6 +85,23 @@ public class UserRelationPolicy {
         throw new AccessDeniedException("Only specialist or moderator can change status of user relation");
     }
 
+    public void ensureClientAccess(
+            CurrentUser currentUser,
+            Long diaryProfileUserId
+    ) {
+
+        var currentId = currentUser.requireId();
+
+        if(currentId.equals(diaryProfileUserId))
+            return;
+
+        if(currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR))
+            return;
+
+        throw new AccessDeniedException("Only diary profile user or moderators can get");
+    }
+
     public void ensureCanCreate(
             CurrentUser currentUser,
             Long diaryProfileUserId,
