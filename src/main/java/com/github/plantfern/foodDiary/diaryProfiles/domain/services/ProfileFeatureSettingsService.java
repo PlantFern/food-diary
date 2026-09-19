@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.ProfileFeatureSettingsApi;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileHiddenNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
@@ -28,6 +29,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
+    private final ProfileHiddenNutrientService profileHiddenNutrientService;
 
 
     @Transactional
@@ -37,7 +39,8 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Boolean showSleepLogs,
             Boolean showWeight,
             Boolean showWeightLogs,
-            Boolean showAllergensWarning
+            Boolean showAllergensWarning,
+            List<Long> hiddenNutrients
     ) {
         var currentUserId = currentUser.requireId();
         var diaryProfile = diaryProfileService.findByIdInternal(diaryProfileId);
@@ -50,19 +53,26 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             profileFeatureSettingsRepository.save(lastSettings);
         }
 
-        return profileFeatureSettingsMapper.toDto(
-                    profileFeatureSettingsRepository.save(
-                    new ProfileFeatureSettingsEntity(
-                            diaryProfile.id(),
-                            showSleep,
-                            showSleepLogs,
-                            showWeight,
-                            showWeightLogs,
-                            showAllergensWarning,
-                            currentUserId
-                    )
-            )
+        var profileFeatureSettings = profileFeatureSettingsRepository.save(
+                new ProfileFeatureSettingsEntity(
+                        diaryProfile.id(),
+                        showSleep,
+                        showSleepLogs,
+                        showWeight,
+                        showWeightLogs,
+                        showAllergensWarning,
+                        currentUserId
+                )
         );
+
+        var profileFeatureSettingsId = profileFeatureSettings.getId();
+        for(Long nutrientId : hiddenNutrients) {
+            profileFeatureSettings.getProfileHiddenNutrientEntityList().add(
+                    new ProfileHiddenNutrientEntity(profileFeatureSettingsId, nutrientId)
+            );
+        }
+
+        return profileFeatureSettingsMapper.toDto(profileFeatureSettings);
     }
 
     @Transactional
@@ -72,7 +82,8 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Boolean showSleepLogs,
             Boolean showWeight,
             Boolean showWeightLogs,
-            Boolean showAllergensWarning
+            Boolean showAllergensWarning,
+            List<Long> hiddenNutrients
     ) {
 
         var profileFeatureSettings =
@@ -92,6 +103,14 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         profileFeatureSettings.setShowWeight(showWeight);
         profileFeatureSettings.setShowWeightLogs(showWeightLogs);
         profileFeatureSettings.setShowAllergensWarning(showAllergensWarning);
+
+        profileFeatureSettings.getProfileHiddenNutrientEntityList().clear();
+
+        for(Long nutrientId : hiddenNutrients) {
+            profileFeatureSettings.getProfileHiddenNutrientEntityList().add(
+                    new ProfileHiddenNutrientEntity(profileFeatureSettings.getId(), nutrientId)
+            );
+        }
 
         return profileFeatureSettingsMapper.toDto(
             profileFeatureSettingsRepository
@@ -143,6 +162,8 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                 currentUser,
                 diaryProfile.userId()
         );
+
+        profileFeatureSettings.getProfileHiddenNutrientEntityList().clear();
 
         profileFeatureSettingsRepository.delete(
                 profileFeatureSettings
