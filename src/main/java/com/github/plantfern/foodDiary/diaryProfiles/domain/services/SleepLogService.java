@@ -2,7 +2,9 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.SleepLogApi;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.SleepLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.SleepLogEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.SleepLogMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.SleepLogRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
@@ -25,10 +27,11 @@ public class SleepLogService implements SleepLogApi {
     private final DiaryProfileService diaryProfileService;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
+    private final SleepLogMapper sleepLogMapper;
 
 
     @Transactional
-    public void create(
+    public SleepLogDto create(
             Long diaryProfileId,
             LocalDateTime beganAt,
             LocalDateTime endedAt
@@ -41,17 +44,19 @@ public class SleepLogService implements SleepLogApi {
 
         diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
-        sleepLogRepository.save(
-                new SleepLogEntity(
-                        diaryProfile.id(),
-                        beganAt,
-                        endedAt
+        return sleepLogMapper.toDto(
+                sleepLogRepository.save(
+                        new SleepLogEntity(
+                                diaryProfile.id(),
+                                beganAt,
+                                endedAt
+                        )
                 )
         );
     }
 
     @Transactional
-    public void update(
+    public SleepLogDto update(
             Long sleepLogId,
             LocalDateTime beganAt,
             LocalDateTime endedAt
@@ -74,7 +79,11 @@ public class SleepLogService implements SleepLogApi {
         sleepLog.setEndedAt(endedAt);
         sleepLog.setDiaryProfileId(diaryProfile.getId());
 
-        sleepLogRepository.save(sleepLog);
+        return sleepLogMapper.toDto(
+                sleepLogRepository.save(
+                        sleepLog
+                )
+        );
     }
 
     @Transactional
