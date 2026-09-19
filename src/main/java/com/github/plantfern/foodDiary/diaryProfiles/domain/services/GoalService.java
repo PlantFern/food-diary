@@ -93,6 +93,19 @@ public class GoalService implements GoalApi {
         goalRepository.delete(goal);
     }
 
+    @Transactional(readOnly = true)
+    public List<GoalDto> getAllByDiaryProfile(Long diaryProfile) {
+
+        var diaryProfileUserId = diaryProfileService.findById(diaryProfile).userId();
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
+
+        return goalRepository
+                .findAllByDiaryProfileId(diaryProfile)
+                .stream()
+                .map(goalMapper::toDto)
+                .toList();
+    }
 
     @Transactional(readOnly = true)
     @Override
