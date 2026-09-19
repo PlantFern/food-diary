@@ -1,7 +1,5 @@
 package com.github.plantfern.foodDiary.diaryProfiles.api.dto;
 
-import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfileEntity;
-
 import java.time.LocalDate;
 
 public record GoalDto(
