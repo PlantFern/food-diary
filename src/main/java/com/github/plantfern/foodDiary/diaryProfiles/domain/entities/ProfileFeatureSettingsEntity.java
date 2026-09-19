@@ -90,7 +90,9 @@ public class ProfileFeatureSettingsEntity {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            mappedBy = "profileFeatureSettings"
+            mappedBy = "profileFeatureSettings",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<ProfileHiddenNutrientEntity> profileHiddenNutrientEntityList;
 
