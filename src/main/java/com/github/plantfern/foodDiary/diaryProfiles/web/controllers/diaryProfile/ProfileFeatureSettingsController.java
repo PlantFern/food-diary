@@ -149,4 +149,16 @@ public class ProfileFeatureSettingsController {
                         .toList()
         );
     }
+
+    @GetMapping
+    public ResponseEntity<ProfileFeatureSettingsDto> getById(
+            @RequestParam Long profileFeatureSettings
+    ) {
+        return ResponseEntity.ok(mapper.toDto(
+                        profileFeatureSettingsService.getById(
+                                profileFeatureSettings
+                                )
+                )
+        );
+    }
 }
