@@ -6,6 +6,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfile
 import java.time.LocalDate;
 
 public record DiaryCommentDto (
+        Long id,
         Long diaryProfileId,
         CommentableType commentableType,
         Long commentableId,

@@ -5,6 +5,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfile
 import java.time.LocalDate;
 
 public record GoalDto(
+        Long id,
         Long diaryProfileId,
         Long plannedWeight,
         LocalDate startDate,
