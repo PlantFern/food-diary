@@ -4,6 +4,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfil
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatureSettingsService;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DateTimePeriodRequest;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileFeatureSettingsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -106,18 +107,13 @@ public class ProfileFeatureSettingsController {
     @GetMapping("/diary-profile/{diaryProfileId}/by-period")
     public ResponseEntity<List<ProfileFeatureSettingsDto>> getAllByPeriodAndDiaryProfileId(
             @PathVariable Long diaryProfileId,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime lowerBound,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime upperBound
+            @ModelAttribute DateTimePeriodRequest request
     ) {
         return ResponseEntity.ok(
                 profileFeatureSettingsService
                         .getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileId(
-                                lowerBound,
-                                upperBound,
+                                request.startPeriod(),
+                                request.endPeriod(),
                                 diaryProfileId
                         )
                         .stream()
