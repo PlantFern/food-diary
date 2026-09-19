@@ -18,5 +18,11 @@ public interface SleepLogRepository extends JpaRepository<SleepLogEntity, Long> 
     Optional<SleepLogEntity> findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter
             (Long diaryProfileId, LocalDateTime beganAt, LocalDateTime endedAt);
 
+    List<SleepLogEntity> findAllByDiaryProfileIdAndBeganAtLessThanEqualAndEndedAtGreaterThanEqual(
+            Long diaryProfileId,
+            LocalDateTime beganAt,
+            LocalDateTime endedAt
+    );
+
     List<SleepLogEntity> findByDiaryProfileId(Long diaryProfileId);
 }

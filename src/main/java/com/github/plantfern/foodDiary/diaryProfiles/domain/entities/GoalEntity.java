@@ -106,4 +106,10 @@ public class GoalEntity {
             deletedAt = LocalDateTime.now();
         }
     }
+
+    public void setActualEndedDay() {
+        if (actualEndDate == null) {
+            actualEndDate = LocalDate.now();
+        }
+    }
 }

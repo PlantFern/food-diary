@@ -156,4 +156,28 @@ public class SleepLogService implements SleepLogApi {
                 .map(sleepLogMapper::toDto)
                 .toList();
     }
+
+    public List<SleepLogDto> getByDiaryProfileAndPeriod(
+            Long diaryProfileId,
+            LocalDateTime startPeriod,
+            LocalDateTime endPeriod
+    ) {
+
+        var foundSleepLogList = sleepLogRepository
+                .findAllByDiaryProfileIdAndBeganAtLessThanEqualAndEndedAtGreaterThanEqual(
+                        diaryProfileId,
+                        startPeriod,
+                        endPeriod
+                );
+
+        diaryProfilePolicy.ensureCanGet(
+                currentUser
+                , foundSleepLogList.getFirst().getDiaryProfile().getUserId()
+        );
+
+        return foundSleepLogList
+                .stream()
+                .map(sleepLogMapper::toDto)
+                .toList();
+    }
 }

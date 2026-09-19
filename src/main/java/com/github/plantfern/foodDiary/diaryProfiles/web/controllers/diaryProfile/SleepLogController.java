@@ -3,7 +3,6 @@ package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfil
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.SleepLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.SleepLogService;
-import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DatePeriodRequest;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DateTimePeriodRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,4 +75,34 @@ public class SleepLogController {
         );
     }
 
+    @GetMapping("/{diaryProfile}/{selectedDay}")
+    public ResponseEntity<List<SleepLogDto>> getForSelectedDay(
+            @PathVariable Long diaryProfile,
+            @PathVariable LocalDate selectedDay
+    ){
+
+        return  ResponseEntity.ok(
+                sleepLogService
+                        .getByDiaryProfileIdAndDate(
+                                diaryProfile,
+                                selectedDay
+                        )
+        );
+    }
+
+    @GetMapping("/{diaryProfileId}/for-a-period")
+    public ResponseEntity<List<SleepLogDto>> getForSelectedPeriod(
+            @PathVariable Long diaryProfileId,
+            @ModelAttribute DateTimePeriodRequest request
+    ){
+
+        return ResponseEntity.ok(
+                sleepLogService
+                        .getByDiaryProfileAndPeriod(
+                                diaryProfileId,
+                                request.startPeriod(),
+                                request.endPeriod()
+                        )
+        );
+    }
 }
