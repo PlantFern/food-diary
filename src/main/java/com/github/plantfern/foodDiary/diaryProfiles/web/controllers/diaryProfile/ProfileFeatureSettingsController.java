@@ -42,7 +42,7 @@ public class ProfileFeatureSettingsController {
                         request.showSleep(),
                         request.showSleepLogs(),
                         request.showWeight(),
-                        request.showSleepLogs(),
+                        request.showWeightLogs(),
                         request.showAllergensWarning(),
                         request.hiddenNutrients()
                 )
@@ -61,7 +61,7 @@ public class ProfileFeatureSettingsController {
                         request.showSleep(),
                         request.showSleepLogs(),
                         request.showWeight(),
-                        request.showSleepLogs(),
+                        request.showWeightLogs(),
                         request.showAllergensWarning(),
                         request.hiddenNutrients()
                 )
