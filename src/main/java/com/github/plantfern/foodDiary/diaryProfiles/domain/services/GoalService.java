@@ -153,6 +153,11 @@ public class GoalService implements GoalApi {
 
     @Transactional(readOnly = true)
     public GoalDto getLatestByDiaryProfile(Long diaryDiaryProfileId) {
+
+        var foundDiaryDiaryProfile = diaryProfileService.getById(diaryDiaryProfileId);
+
+        diaryProfilePolicy.ensureCanGet(currentUser, foundDiaryDiaryProfile.userId());
+
         var goal = goalRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
                 .orElseThrow(
