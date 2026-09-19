@@ -25,7 +25,7 @@ public class DiaryProfileController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DiaryProfileDto> findDiary(@PathVariable Long id){
-        var response = diaryProfileService.getById( id );
+        var response = diaryProfileService.getByIdWithPolicy( id );
 
         return ResponseEntity.ok(response);
     }
