@@ -147,31 +147,6 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         );
     }
 
-    @Transactional
-    public void delete( Long profileFeatureSettingsId) {
-
-        var currentUserId = currentUser.requireId();
-        var profileFeatureSettings =
-                profileFeatureSettingsRepository
-                        .findById(profileFeatureSettingsId)
-                        .orElseThrow(
-                                () -> new EntityNotFoundException("No profile feature settings with such id")
-                        );
-        var diaryProfile = diaryProfileService
-                .getByIdInternal(profileFeatureSettings.getDiaryProfileId());
-
-        diaryProfilePolicy.ensureCanWrite(
-                currentUser,
-                diaryProfile.userId()
-        );
-
-        profileFeatureSettings.getProfileHiddenNutrientEntityList().clear();
-
-        profileFeatureSettingsRepository.delete(
-                profileFeatureSettings
-        );
-    }
-
 
     @Transactional(readOnly = true)
     public ProfileFeatureSettingsEntity getById(Long id) {

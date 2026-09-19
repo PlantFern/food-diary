@@ -79,14 +79,6 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @DeleteMapping("/{profileFeatureSettingsId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long profileFeatureSettingsId) {
-
-        profileFeatureSettingsService.delete(profileFeatureSettingsId);
-    }
-
-
     @GetMapping("/diary-profile/{diaryProfileId}/latest")
     public ResponseEntity<ProfileFeatureSettingsDto> getLatestByDiaryProfileId(
             @PathVariable Long diaryProfileId
