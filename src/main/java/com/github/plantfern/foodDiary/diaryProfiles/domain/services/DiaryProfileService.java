@@ -149,10 +149,6 @@ public class DiaryProfileService implements DiaryProfileApi {
                         () -> new IllegalArgumentException("Diary profile not found")
                 );
 
-        diaryProfilePolicy.ensureCanGet(
-                currentUser,
-                targetDiaryProfile.getUserId());
-
         return targetDiaryProfile;
     }
 
