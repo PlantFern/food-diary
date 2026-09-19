@@ -107,4 +107,12 @@ public class GoalController {
 
         return  ResponseEntity.ok(goalService.getActiveByDiaryProfile(diaryProfileId));
     }
+
+    @GetMapping("/get-one/{goalId}")
+    public ResponseEntity<GoalDto> getById(
+            @PathVariable Long goalId
+    ) {
+
+        return ResponseEntity.ok(goalService.getById(goalId));
+    }
 }

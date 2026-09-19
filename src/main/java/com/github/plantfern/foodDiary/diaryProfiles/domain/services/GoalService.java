@@ -162,6 +162,20 @@ public class GoalService implements GoalApi {
         return goalMapper.toDto(goal);
     }
 
+    @Transactional(readOnly = true)
+    public GoalDto getById(Long goalId) {
+
+        var foundGoal = goalRepository
+                .findById(goalId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Goal with such id not found")
+                );
+
+        diaryProfilePolicy.ensureCanGet(currentUser, foundGoal.getDiaryProfile().getUserId() );
+
+        return goalMapper.toDto(foundGoal);
+    }
+
 
     @Transactional(readOnly = true)
     @Override
