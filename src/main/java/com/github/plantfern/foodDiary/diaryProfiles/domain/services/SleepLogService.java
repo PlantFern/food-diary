@@ -102,6 +102,19 @@ public class SleepLogService implements SleepLogApi {
         sleepLogRepository.delete(sleepLog);
     }
 
+    public SleepLogDto getById(Long sleepLogId) {
+
+        var sleepLog = sleepLogRepository
+                .findById(sleepLogId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Sleep log with such id not found")
+                );
+
+        diaryProfilePolicy.ensureCanGet(currentUser, sleepLog.getDiaryProfile().getUserId());
+
+        return sleepLogMapper.toDto(sleepLog);
+    }
+
 
     @Transactional
     public List<SleepLogDto> getByDiaryProfileIdAndDate(Long diaryProfileId, LocalDate date) {
