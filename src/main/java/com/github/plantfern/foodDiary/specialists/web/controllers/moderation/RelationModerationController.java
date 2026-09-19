@@ -40,4 +40,10 @@ public class RelationModerationController {
 
         return ResponseEntity.ok(userRelationService.findBySpecialistId(diaryProfileId));
     }
+
+    @GetMapping("/by-specialist/{specialistId}")
+    public ResponseEntity<List<UserRelationDto>> getAllBySpecialist(@PathVariable Long specialistId) {
+
+        return ResponseEntity.ok(userRelationService.findBySpecialistId(specialistId));
+    }
 }

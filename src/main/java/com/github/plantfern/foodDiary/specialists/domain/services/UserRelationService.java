@@ -207,6 +207,19 @@ public class UserRelationService implements UserRelationApi {
         return findByDiaryProfileIdInternal(diaryProfileId);
     }
 
+    @Transactional(readOnly = true)
+    public List<UserRelationDto> findBySpecialistId(Long specialistId) {
+
+        var specialistUserId = specialistService.findById(specialistId).userId();
+
+        userRelationPolicy.ensureSpecialistAccess(currentUser, specialistUserId);
+
+        return userRelationRepository
+                .findAllBySpecialistId(specialistId)
+                .stream().map(userRelationMapper::toDto)
+                .toList();
+    }
+
 
     //region Internal methods
 

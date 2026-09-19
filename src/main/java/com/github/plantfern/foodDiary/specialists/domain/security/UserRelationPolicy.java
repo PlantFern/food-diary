@@ -84,6 +84,23 @@ public class UserRelationPolicy {
 
         throw new AccessDeniedException("Only specialist or moderator can change status of user relation");
     }
+    
+    public void ensureSpecialistAccess(
+            CurrentUser currentUser,
+            Long specialistUserId
+    ) {
+
+        var currentId = currentUser.requireId();
+
+        if(currentId.equals(specialistUserId))
+            return;
+
+        if(currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR))
+            return;
+
+        throw new AccessDeniedException("Only specialist or moderators can get");
+    }
 
     public void ensureClientAccess(
             CurrentUser currentUser,
