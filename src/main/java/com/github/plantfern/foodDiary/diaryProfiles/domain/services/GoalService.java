@@ -118,6 +118,8 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
 
+        goal.getGoalNutrientList().clear();
+
         goalRepository.delete(goal);
     }
 
