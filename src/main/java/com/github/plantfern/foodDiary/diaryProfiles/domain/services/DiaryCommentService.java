@@ -58,7 +58,6 @@ public class DiaryCommentService implements DiaryCommentApi {
     @Transactional
     public DiaryCommentDto update(
             Long diaryCommentId,
-            Long diaryProfileId,
             CommentableType commentableType,
             Long commentableId,
             String body
@@ -72,7 +71,6 @@ public class DiaryCommentService implements DiaryCommentApi {
 
         diaryProfilePolicy.ensureCreatedBy(currentUser, foundDiaryComment.getCreatedById());
 
-        foundDiaryComment.setDiaryProfileId(diaryProfileId);
         foundDiaryComment.setCommentableType(commentableType);
         foundDiaryComment.setCommentableId(commentableId);
         foundDiaryComment.setBody(body);
