@@ -72,6 +72,9 @@ public class GoalService implements GoalApi {
                 )
         );
 
+        if (goalNutrientList.isEmpty())
+            return goalMapper.toDto(goal);
+
         var goalId = goal.getId();
         for( var goalNutrient : goalNutrientList ) {
             goal.getGoalNutrientSet().add(
@@ -126,6 +129,9 @@ public class GoalService implements GoalApi {
                         oldGoal.getCreatedById()
                 )
         );
+
+        if (goalNutrientList.isEmpty())
+            return goalMapper.toDto(newGoal);
 
         var currentGoalId = newGoal.getId();
         for( var goalNutrient : goalNutrientList ) {
