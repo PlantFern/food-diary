@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.mappers;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileHiddenNutrientEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -22,4 +23,8 @@ public interface ProfileFeatureSettingsMapper {
     ProfileFeatureSettingsEntity toEntity(ProfileFeatureSettingsDto profileFeatureSettings);
 
     Set<ProfileFeatureSettingsDto> toDtoList(Set<ProfileFeatureSettingsEntity> profileFeatureSettingsSet);
+
+    default Long mapHiddenNutrient(ProfileHiddenNutrientEntity entity){
+        return entity.getNutrientId();
+    }
 }
