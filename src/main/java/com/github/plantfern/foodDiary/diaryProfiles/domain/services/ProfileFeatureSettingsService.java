@@ -117,14 +117,16 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         if(!nutrientService.existsAllByIdIn(hiddenNutrients))
             throw new EntityNotFoundException("Not all nutrients found");
 
-        var newSettings = new ProfileFeatureSettingsEntity(
-                profileFeatureSettings.getDiaryProfileId(),
-                showSleep,
-                showSleepLogs,
-                showWeight,
-                showWeightLogs,
-                showAllergensWarning,
-                currentUser.requireId()
+        var newSettings = profileFeatureSettingsRepository.save(
+                new ProfileFeatureSettingsEntity(
+                        profileFeatureSettings.getDiaryProfileId(),
+                        showSleep,
+                        showSleepLogs,
+                        showWeight,
+                        showWeightLogs,
+                        showAllergensWarning,
+                        currentUser.requireId()
+                )
         );
 
         if(hiddenNutrients.isEmpty())
