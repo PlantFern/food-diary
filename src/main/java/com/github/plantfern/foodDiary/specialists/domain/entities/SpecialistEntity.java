@@ -59,7 +59,7 @@ public class SpecialistEntity{
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<UserRelationEntity> relations;
+    private List<UserRelationEntity> relations = new ArrayList<>();
 
 
     protected SpecialistEntity(){}
