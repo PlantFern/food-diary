@@ -212,7 +212,7 @@ public class GoalService implements GoalApi {
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
         if(goal.getActualEndDate() != null)
-            return null;
+            throw new EntityNotFoundException("Any goal not found");
         return goalMapper.toDto(goal);
     }
 
