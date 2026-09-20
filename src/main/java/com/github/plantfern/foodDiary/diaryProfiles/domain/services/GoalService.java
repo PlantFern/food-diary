@@ -62,14 +62,15 @@ public class GoalService implements GoalApi {
                         }
                 );
 
-        var goal =
+        var goal = goalRepository.save(
                 new GoalEntity(
                         diaryProfileId,
                         plannedWeight,
                         startDate,
                         plannedEndDate,
                         currentUser.requireId()
-                );
+                )
+        );
 
         var goalId = goal.getId();
         for( var goalNutrient : goalNutrientList ) {
