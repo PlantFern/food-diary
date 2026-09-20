@@ -20,11 +20,9 @@ public class CommentController {
 
 
     private final DiaryCommentService diaryCommentService;
-    private final DiaryProfileService diaryProfileService;
 
-    public CommentController(DiaryCommentService diaryCommentService, DiaryProfileService diaryProfileService) {
+    public CommentController(DiaryCommentService diaryCommentService) {
         this.diaryCommentService = diaryCommentService;
-        this.diaryProfileService = diaryProfileService;
     }
 
     @PostMapping("/{diaryProfile}")
