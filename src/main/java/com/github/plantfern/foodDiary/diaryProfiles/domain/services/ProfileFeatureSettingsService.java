@@ -102,10 +102,11 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                                 () -> new EntityNotFoundException("No profile feature settings with such id")
                         );
 
-        diaryProfilePolicy.ensureCreatedBy(
-                currentUser,
-                profileFeatureSettings.getCreatedById()
-        );
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(profileFeatureSettings.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
+        diaryProfilePolicy.ensureCreatedBy(currentUser, profileFeatureSettings.getCreatedById());
 
         if(!nutrientService.existsAllByIdIn(hiddenNutrients))
             throw new EntityNotFoundException("Not all nutrients found");
@@ -135,20 +136,18 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     @Transactional
     public ProfileFeatureSettingsDto reset(Long profileFeatureSettingsId) {
 
-        var currentUserId = currentUser.requireId();
         var profileFeatureSettings =
                 profileFeatureSettingsRepository
                         .findById(profileFeatureSettingsId)
                         .orElseThrow(
                                 () -> new EntityNotFoundException("No profile feature settings with such id")
                         );
-        var diaryProfile = diaryProfileService
-                .getByIdInternal(profileFeatureSettings.getDiaryProfileId());
 
-        diaryProfilePolicy.ensureCanWrite(
-                currentUser,
-                diaryProfile.userId()
-        );
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(profileFeatureSettings.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
+        diaryProfilePolicy.ensureCreatedBy(currentUser, profileFeatureSettings.getCreatedById());
 
         profileFeatureSettings.setExpiredDate();
 
