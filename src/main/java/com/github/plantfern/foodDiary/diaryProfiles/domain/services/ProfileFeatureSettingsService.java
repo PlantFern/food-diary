@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
+import com.github.plantfern.foodDiary.common.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.ProfileFeatureSettingsApi;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileHiddenNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,6 +32,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     private final CurrentUser currentUser;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
+    private final NutrientService nutrientService;
 
 
     @Transactional
@@ -45,6 +49,9 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
+
+        if(!nutrientService.existsAllByIdIn(hiddenNutrients))
+            throw new EntityNotFoundException("Not all nutrients found");
 
         profileFeatureSettingsRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
@@ -99,6 +106,9 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                 currentUser,
                 profileFeatureSettings.getCreatedById()
         );
+
+        if(!nutrientService.existsAllByIdIn(hiddenNutrients))
+            throw new EntityNotFoundException("Not all nutrients found");
 
         var newSettings = new ProfileFeatureSettingsEntity(
                 profileFeatureSettings.getDiaryProfileId(),
