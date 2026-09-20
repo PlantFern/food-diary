@@ -93,7 +93,7 @@ public class ProfileFeatureSettingsEntity {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "profileFeatureSettings",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             orphanRemoval = true
     )
     private Set<ProfileHiddenNutrientEntity> profileHiddenNutrientSet = new HashSet<>();
