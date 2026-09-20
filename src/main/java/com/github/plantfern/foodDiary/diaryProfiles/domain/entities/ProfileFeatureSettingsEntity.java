@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -94,7 +95,7 @@ public class ProfileFeatureSettingsEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<ProfileHiddenNutrientEntity> profileHiddenNutrientEntityList;
+    private Set<ProfileHiddenNutrientEntity> profileHiddenNutrientEntityList;
 
 
     protected ProfileFeatureSettingsEntity() {}
