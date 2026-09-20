@@ -153,13 +153,11 @@ public class DiaryProfileService implements DiaryProfileApi {
     @Transactional(readOnly = true)
     DiaryProfileEntity getById(Long diaryProfileId) {
 
-        var targetDiaryProfile = diaryProfileRepository
+        return diaryProfileRepository
                 .findById(diaryProfileId)
                 .orElseThrow(
                         () -> new IllegalArgumentException("Diary profile not found")
                 );
-
-        return targetDiaryProfile;
     }
 
 
