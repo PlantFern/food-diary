@@ -24,7 +24,7 @@ public class ClientGoalController {
     }
 
 
-    @PostMapping("/{diaryProfileId}")
+    @PostMapping ("/{diaryProfileId}")
     public ResponseEntity<GoalDto> create(
             @PathVariable Long diaryProfileId,
             @RequestBody GoalRequest request
@@ -49,7 +49,7 @@ public class ClientGoalController {
         );
     }
 
-    @PutMapping ("/{goalId}")
+    @PutMapping ("/goals/{goalId}")
     public ResponseEntity<GoalDto> update(
             @PathVariable Long goalId,
             @RequestBody GoalRequest request
@@ -74,7 +74,7 @@ public class ClientGoalController {
         );
     }
 
-    @DeleteMapping("/{diaryProfileId}")
+    @DeleteMapping("/goals/{goalId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable Long goalId
@@ -83,7 +83,7 @@ public class ClientGoalController {
         goalService.delete(goalId);
     }
 
-    @GetMapping("/{diaryProfileId}")
+    @GetMapping("/diary-profile/{diaryProfileId}/get-all")
     public ResponseEntity<List<GoalDto>> getAll(
             @PathVariable Long diaryProfileId
     ) {
@@ -91,7 +91,7 @@ public class ClientGoalController {
         return  ResponseEntity.ok(goalService.getAllByDiaryProfile(diaryProfileId));
     }
 
-    @GetMapping("/latest/{diaryProfileId}")
+    @GetMapping("/diary_profile/{diaryProfileId}/latest")
     public ResponseEntity<GoalDto> getLatest(
             @PathVariable Long diaryProfileId
     ) {
@@ -99,7 +99,7 @@ public class ClientGoalController {
         return  ResponseEntity.ok(goalService.getLatestByDiaryProfile(diaryProfileId));
     }
 
-    @GetMapping("/active/{diaryProfileId}")
+    @GetMapping("/diary_profile/{diaryProfileId}/active")
     public ResponseEntity<GoalDto> getActive(
             @PathVariable Long diaryProfileId
     ) {
@@ -107,7 +107,7 @@ public class ClientGoalController {
         return  ResponseEntity.ok(goalService.getActiveByDiaryProfile(diaryProfileId));
     }
 
-    @GetMapping("/get-one/{goalId}")
+    @GetMapping("/goals/{goalId}")
     public ResponseEntity<GoalDto> getById(
             @PathVariable Long goalId
     ) {

@@ -4,6 +4,8 @@ package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.specialist;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatureSettingsService;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DateTimePeriodRequest;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileFeatureSettingsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,55 @@ public class ClientProfileSettingsController {
             ProfileFeatureSettingsMapper mapper) {
         this.profileFeatureSettingsService = profileFeatureSettingsService;
         this.mapper = mapper;
+    }
+
+
+    @PostMapping("/{diaryProfileId}")
+    public ResponseEntity<ProfileFeatureSettingsDto> create(
+            @PathVariable Long diaryProfileId,
+            @RequestBody ProfileFeatureSettingsRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.create(
+                        diaryProfileId,
+                        request.showSleep(),
+                        request.showSleepLogs(),
+                        request.showWeight(),
+                        request.showWeightLogs(),
+                        request.showAllergensWarning(),
+                        request.hiddenNutrients()
+                )
+        );
+    }
+
+    @PutMapping("/settings/{profileFeatureSettingsId}")
+    public ResponseEntity<ProfileFeatureSettingsDto> update(
+            @PathVariable Long profileFeatureSettingsId,
+            @RequestBody ProfileFeatureSettingsRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.update(
+                        profileFeatureSettingsId,
+                        request.showSleep(),
+                        request.showSleepLogs(),
+                        request.showWeight(),
+                        request.showWeightLogs(),
+                        request.showAllergensWarning(),
+                        request.hiddenNutrients()
+                )
+        );
+    }
+
+    @PatchMapping("/settings/complete/{profileFeatureSettingsId}")
+    public ResponseEntity<ProfileFeatureSettingsDto> reset(
+            @PathVariable Long profileFeatureSettingsId
+    ) {
+
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.reset(profileFeatureSettingsId)
+        );
     }
 
     @GetMapping("/diary-profile/{diaryProfileId}/latest")
@@ -55,18 +106,13 @@ public class ClientProfileSettingsController {
     @GetMapping("/diary-profile/{diaryProfileId}/by-period")
     public ResponseEntity<List<ProfileFeatureSettingsDto>> getAllByPeriodAndDiaryProfileId(
             @PathVariable Long diaryProfileId,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime lowerBound,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            LocalDateTime upperBound
+            @ModelAttribute DateTimePeriodRequest request
     ) {
         return ResponseEntity.ok(
                 profileFeatureSettingsService
                         .getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileId(
-                                lowerBound,
-                                upperBound,
+                                request.startPeriod(),
+                                request.endPeriod(),
                                 diaryProfileId
                         )
                         .stream()
@@ -75,7 +121,7 @@ public class ClientProfileSettingsController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/find-by-author-and-diary-profile")
     public ResponseEntity<List<ProfileFeatureSettingsDto>> findAllByCreatedByIdAndDiaryProfileId(
             @RequestParam Long createdById,
             @RequestParam Long diaryProfileId
@@ -88,6 +134,18 @@ public class ClientProfileSettingsController {
                         .stream()
                         .map(mapper::toDto)
                         .toList()
+        );
+    }
+
+    @GetMapping("/settings")
+    public ResponseEntity<ProfileFeatureSettingsDto> getById(
+            @RequestParam Long profileFeatureSettings
+    ) {
+        return ResponseEntity.ok(mapper.toDto(
+                        profileFeatureSettingsService.getById(
+                                profileFeatureSettings
+                        )
+                )
         );
     }
 }
