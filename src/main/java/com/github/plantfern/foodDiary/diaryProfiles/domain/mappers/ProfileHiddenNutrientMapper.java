@@ -14,5 +14,5 @@ public interface ProfileHiddenNutrientMapper {
 
     ProfileHiddenNutrientEntity toEntity(ProfileHiddenNutrientDto profileHiddenNutrient);
 
-    List<ProfileHiddenNutrientDto> toDtoList(ProfileHiddenNutrientEntity profileHiddenNutrientList);
+    List<ProfileHiddenNutrientDto> toDtoList(List<ProfileHiddenNutrientEntity> profileHiddenNutrientList);
 }
