@@ -84,9 +84,12 @@ public class WeightLogService implements WeightLogApi {
                 () -> new EntityNotFoundException("Weight log with such id not found")
         );
 
+        var diaryProfileUser = diaryProfileService
+                .getOwnerUserIdInternal(weightLog.getDiaryProfileId());
+
         diaryProfilePolicy.ensureIsOwner(
                 currentUser,
-                weightLog.getDiaryProfile().getUserId()
+                diaryProfileUser
         );
 
         weightLogRepository.delete(weightLog);
