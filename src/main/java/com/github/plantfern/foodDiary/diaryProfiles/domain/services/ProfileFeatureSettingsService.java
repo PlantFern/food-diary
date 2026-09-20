@@ -69,7 +69,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         var profileFeatureSettingsId = profileFeatureSettings.getId();
         for(Long nutrientId : hiddenNutrients) {
-            profileFeatureSettings.getProfileHiddenNutrientEntityList().add(
+            profileFeatureSettings.getProfileHiddenNutrientSet().add(
                     new ProfileHiddenNutrientEntity(profileFeatureSettingsId, nutrientId)
             );
         }
@@ -106,10 +106,10 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         profileFeatureSettings.setShowWeightLogs(showWeightLogs);
         profileFeatureSettings.setShowAllergensWarning(showAllergensWarning);
 
-        profileFeatureSettings.getProfileHiddenNutrientEntityList().clear();
+        profileFeatureSettings.getProfileHiddenNutrientSet().clear();
 
         for(Long nutrientId : hiddenNutrients) {
-            profileFeatureSettings.getProfileHiddenNutrientEntityList().add(
+            profileFeatureSettings.getProfileHiddenNutrientSet().add(
                     new ProfileHiddenNutrientEntity(profileFeatureSettings.getId(), nutrientId)
             );
         }

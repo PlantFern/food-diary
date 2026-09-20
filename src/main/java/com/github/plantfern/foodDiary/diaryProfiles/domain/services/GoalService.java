@@ -63,7 +63,7 @@ public class GoalService implements GoalApi {
 
         var goalId = goal.getId();
         for( var goalNutrient : goalNutrientList ) {
-            goal.getGoalNutrientList().add(
+            goal.getGoalNutrientSet().add(
                     new GoalNutrientEntity(
                             goalId,
                             goalNutrient.nutrientId(),
@@ -107,7 +107,7 @@ public class GoalService implements GoalApi {
 
         var currentGoalId = newGoal.getId();
         for( var goalNutrient : goalNutrientDtos ) {
-            newGoal.getGoalNutrientList().add(
+            newGoal.getGoalNutrientSet().add(
                     new GoalNutrientEntity(
                             currentGoalId,
                             goalNutrient.nutrientId(),

@@ -72,7 +72,7 @@ public class GoalEntity {
             mappedBy = "goal",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    private Set<GoalNutrientEntity> goalNutrientList;
+    private Set<GoalNutrientEntity> goalNutrientSet;
 
 
     protected GoalEntity() {}
