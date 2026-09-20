@@ -100,6 +100,10 @@ public class GoalService implements GoalApi {
                         () -> new EntityNotFoundException("Goal with such id not found")
                 );
 
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(oldGoal.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldGoal.getCreatedById());
 
         var nutrientIds = goalNutrientDtos
@@ -147,6 +151,10 @@ public class GoalService implements GoalApi {
                         () -> new EntityNotFoundException("Goal with such id not found")
                 );
 
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(goal.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
 
         goal.setDeletedDate();
