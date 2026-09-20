@@ -54,25 +54,24 @@ public class WeightLogService implements WeightLogApi {
     @Transactional
     public WeightLogDto update(
             Long weightLogId,
-            Long diaryProfileId,
             Float weight
     ) {
 
         if(weight <= 0)
             throw new IllegalArgumentException("Weight cannot be less than or equal to 0");
 
-        var diaryProfile = diaryProfileService.getById(diaryProfileId);
-
         var weightLog = weightLogRepository.findById(weightLogId).orElseThrow(
                 () -> new EntityNotFoundException("Weight log with such id not found")
         );
 
+        var diaryProfileUser = diaryProfileService
+                .getOwnerUserIdInternal(weightLog.getDiaryProfileId());
+
         diaryProfilePolicy.ensureIsOwner(
                 currentUser,
-                weightLog.getDiaryProfile().getUserId()
+                diaryProfileUser
         );
 
-        weightLog.setDiaryProfileId(diaryProfile.getId());
         weightLog.setWeight(weight);
 
         return weightLogMapper.toDto(weightLogRepository.save(weightLog));
