@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfil
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.WeightLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.WeightLogService;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DatePeriodRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,5 +84,18 @@ public class WeightLogController {
     ) {
 
         return ResponseEntity.ok(weightLogService.getById(commentId));
+    }
+
+    @GetMapping("/get-by-petiod/{diaryProfileId}")
+    public ResponseEntity<List<WeightLogDto>> getByPeriod(
+            @PathVariable Long diaryProfileId,
+            @ModelAttribute DatePeriodRequest request
+            ){
+
+        return ResponseEntity.ok(weightLogService.getByDiaryProfileAndPeriod(
+                diaryProfileId,
+                request.startPeriod(),
+                request.endPeriod()
+        ));
     }
 }

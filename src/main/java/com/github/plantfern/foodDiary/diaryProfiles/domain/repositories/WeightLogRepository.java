@@ -5,8 +5,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEnt
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.nio.file.WatchEvent;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +14,11 @@ import java.util.Optional;
 public interface WeightLogRepository extends JpaRepository<WeightLogEntity, Long> {
 
     Optional<WeightLogEntity> findFirstByDiaryProfileIdOrderByCreatedAtDesc(Long diaryProfileId);
+
+    List<WeightLogEntity> findAllByDiaryProfileIdAndCreatedAtBetween(
+            Long diaryProfileId,
+            LocalDateTime beginPeriod,
+            LocalDateTime endPeriod);
 
     List<WeightLogEntity> findByDiaryProfileId(Long diaryProfileId);
 }

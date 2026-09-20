@@ -13,6 +13,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -144,5 +147,31 @@ public class WeightLogService implements WeightLogApi {
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
         return foundComment;
+    }
+
+    public List<WeightLogDto> getByDiaryProfileAndPeriod(
+            Long diaryProfileId,
+            LocalDate beginPeriod,
+            LocalDate endPeriod
+    ) {
+
+        if(beginPeriod.isAfter(endPeriod))
+            throw new IllegalArgumentException("Period cannot begin after it ends");
+
+        var foundEeightLogList = weightLogRepository.findAllByDiaryProfileIdAndCreatedAtBetween(
+                        diaryProfileId,
+                        LocalDateTime.of(beginPeriod, LocalTime.MIN),
+                        LocalDateTime.of(endPeriod, LocalTime.MIN)
+                )
+                .stream()
+                .map(weightLogMapper::toDto)
+                .toList();
+
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(foundEeightLogList.getFirst().diaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
+
+        return foundEeightLogList;
     }
 }
