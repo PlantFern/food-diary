@@ -130,7 +130,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         currentUser.requireId()
                 )
         );
-        profileFeatureSettingsRepository.save(oldSettings)
+        profileFeatureSettingsRepository.save(oldSettings);
 
         if(hiddenNutrients.isEmpty())
             return profileFeatureSettingsMapper.toDto(newSettings);
