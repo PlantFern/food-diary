@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 
 @Service
 @AllArgsConstructor
@@ -20,5 +22,9 @@ public class NutrientService {
                 .orElseThrow(
                         () -> new EntityNotFoundException("No nutrientEntity with such id")
                 );
+    }
+
+    public boolean existsAllByIdIn(Set<Long> ids) {
+        return nutrientRepository.existsAllByIdIn(ids);
     }
 }
