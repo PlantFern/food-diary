@@ -38,7 +38,7 @@ public class SleepLogController {
         );
     }
 
-    @PutMapping("/{sleepLogId}")
+    @PutMapping("/sleep-logs/{sleepLogId}")
     public ResponseEntity<SleepLogDto> update(
             @PathVariable Long sleepLogId,
             @ModelAttribute DateTimePeriodRequest request
@@ -53,7 +53,7 @@ public class SleepLogController {
         );
     }
 
-    @DeleteMapping("/{sleepLogId}")
+    @DeleteMapping("/sleep-logs/{sleepLogId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable Long sleepLogId
@@ -64,7 +64,7 @@ public class SleepLogController {
     }
 
 
-    @GetMapping("/{sleepLogId}")
+    @GetMapping("/sleep-logs/{sleepLogId}")
     public ResponseEntity<SleepLogDto> getById(
             @PathVariable Long sleepLogId
     ) {
@@ -75,7 +75,7 @@ public class SleepLogController {
         );
     }
 
-    @GetMapping("/{diaryProfile}/{selectedDay}")
+    @GetMapping("/diary-profile/{diaryProfile}/{selectedDay}")
     public ResponseEntity<List<SleepLogDto>> getForSelectedDay(
             @PathVariable Long diaryProfile,
             @PathVariable LocalDate selectedDay
@@ -90,7 +90,7 @@ public class SleepLogController {
         );
     }
 
-    @GetMapping("/{diaryProfileId}/for-a-period")
+    @GetMapping("/diary-profile/{diaryProfileId}/for-a-period")
     public ResponseEntity<List<SleepLogDto>> getForSelectedPeriod(
             @PathVariable Long diaryProfileId,
             @ModelAttribute DateTimePeriodRequest request

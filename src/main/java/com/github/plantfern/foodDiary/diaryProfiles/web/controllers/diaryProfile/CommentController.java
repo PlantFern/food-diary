@@ -40,7 +40,7 @@ public class CommentController {
         );
     }
 
-    @PutMapping("/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public ResponseEntity<DiaryCommentDto> update(
             @PathVariable Long commentId,
             @ModelAttribute CommentRequest request
@@ -55,7 +55,7 @@ public class CommentController {
         );
     }
 
-    @GetMapping("/{commentId}")
+    @GetMapping("/comments/{commentId}")
     public ResponseEntity<DiaryCommentDto> getById(
             @PathVariable Long commentId
     ) {
@@ -63,7 +63,7 @@ public class CommentController {
         return ResponseEntity.ok(diaryCommentService.getById(commentId));
     }
 
-    @GetMapping("/get-by-comment-type/{diaryProfileId}")
+    @GetMapping("/diary-profile/{diaryProfileId}/get-by-comment-type")
     public ResponseEntity<List<DiaryCommentDto>>  getAllByCommentType(
             @PathVariable Long diaryProfileId,
             @RequestParam String commentType
@@ -76,7 +76,7 @@ public class CommentController {
                 ));
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable Long commentId

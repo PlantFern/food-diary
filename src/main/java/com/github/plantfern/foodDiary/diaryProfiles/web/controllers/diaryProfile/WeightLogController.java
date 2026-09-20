@@ -36,30 +36,30 @@ public class WeightLogController {
         );
     }
 
-    @PutMapping("/{commentId}")
+    @PutMapping("/weight-logs/{weightLogId}")
     public ResponseEntity<WeightLogDto> update(
-            @PathVariable Long commentId,
+            @PathVariable Long weightLogId,
             @RequestParam Float weight
     ) {
 
         return ResponseEntity.ok(weightLogService
                 .update(
-                        commentId,
+                        weightLogId,
                         weight
                 )
         );
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/weight-logs/{weightLogId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
-            @PathVariable Long commentId
+            @PathVariable Long weightLogId
     ) {
 
-        weightLogService.delete(commentId);
+        weightLogService.delete(weightLogId);
     }
 
-    @GetMapping("/get-all/{diaryProfileId}")
+    @GetMapping("/diary-profile/{diaryProfileId}/get-all")
     public ResponseEntity<List<WeightLogDto>> getByDiaryProfile(
             @PathVariable Long diaryProfileId
     ) {
@@ -68,7 +68,7 @@ public class WeightLogController {
                 .getByDiaryProfileId(diaryProfileId));
     }
 
-    @GetMapping("/get-latest/{diaryProfileId}")
+    @GetMapping("/diary-profile/{diaryProfileId}/get-latest")
     public ResponseEntity<WeightLogDto> getLatestByDiaryProfile(
             @PathVariable Long diaryProfileId
     ) {
@@ -78,15 +78,15 @@ public class WeightLogController {
         );
     }
 
-    @GetMapping("/{commentId}")
+    @GetMapping("/weight-logs/{weightLogId}")
     public ResponseEntity<WeightLogDto> getById(
-            @PathVariable Long commentId
+            @PathVariable Long weightLogId
     ) {
 
-        return ResponseEntity.ok(weightLogService.getById(commentId));
+        return ResponseEntity.ok(weightLogService.getById(weightLogId));
     }
 
-    @GetMapping("/get-by-period/{diaryProfileId}")
+    @GetMapping("/diary-profile/{diaryProfileId}/get-by-period")
     public ResponseEntity<List<WeightLogDto>> getByPeriod(
             @PathVariable Long diaryProfileId,
             @ModelAttribute DatePeriodRequest request

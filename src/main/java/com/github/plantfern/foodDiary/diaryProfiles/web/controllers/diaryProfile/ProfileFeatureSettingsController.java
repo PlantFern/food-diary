@@ -49,7 +49,7 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @PutMapping("/{profileFeatureSettingsId}")
+    @PutMapping("/settings/{profileFeatureSettingsId}")
     public ResponseEntity<ProfileFeatureSettingsDto> update(
             @PathVariable Long profileFeatureSettingsId,
             @RequestBody ProfileFeatureSettingsRequest request
@@ -68,7 +68,7 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @PatchMapping("/complete/{profileFeatureSettingsId}")
+    @PatchMapping("/settings/complete/{profileFeatureSettingsId}")
     public ResponseEntity<ProfileFeatureSettingsDto> reset(
             @PathVariable Long profileFeatureSettingsId
     ) {
@@ -136,7 +136,7 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @GetMapping("")
+    @GetMapping("/settings")
     public ResponseEntity<ProfileFeatureSettingsDto> getById(
             @RequestParam Long profileFeatureSettings
     ) {

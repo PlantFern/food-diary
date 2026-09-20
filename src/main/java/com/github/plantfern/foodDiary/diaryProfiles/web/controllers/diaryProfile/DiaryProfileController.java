@@ -23,19 +23,19 @@ public class DiaryProfileController {
     }
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DiaryProfileDto> findDiary(@PathVariable Long id){
-        var response = diaryProfileService.getByIdWithPolicy( id );
+    @GetMapping("/{diaryProfileId}")
+    public ResponseEntity<DiaryProfileDto> findDiary(@PathVariable Long diaryProfileId){
+        var response = diaryProfileService.getByIdWithPolicy( diaryProfileId );
 
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{diaryProfileId}")
     public ResponseEntity<DiaryProfileDto> updateDiary(
-            @PathVariable Long id,
+            @PathVariable Long diaryProfileId,
             @RequestParam ProfileDataRequest profileDataRequest){
         diaryProfileService.update(
-                id,
+                diaryProfileId,
                 profileDataRequest.height(),
                 profileDataRequest.birthDate(),
                 profileDataRequest.genderCode()
