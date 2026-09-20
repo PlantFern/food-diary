@@ -93,7 +93,9 @@ public class DiaryCommentService implements DiaryCommentApi {
 
         diaryProfilePolicy.ensureCreatedBy(currentUser, foundDiaryComment.getCreatedById());
 
-        diaryCommentRepository.delete(foundDiaryComment);
+        foundDiaryComment.setDeletedDate();
+
+        diaryCommentRepository.save(foundDiaryComment);
     }
 
 
