@@ -9,7 +9,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 
 @Setter
@@ -72,7 +72,7 @@ public class GoalEntity {
             mappedBy = "goal",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    private List<GoalNutrientEntity> goalNutrientList;
+    private Set<GoalNutrientEntity> goalNutrientList;
 
 
     protected GoalEntity() {}

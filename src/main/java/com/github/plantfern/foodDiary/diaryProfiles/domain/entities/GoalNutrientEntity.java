@@ -6,12 +6,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 
 @Setter
 @Getter
 
 @Entity
-@Table(name = "goal_nutrients")
+@Table(
+        name = "goal_nutrients",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"goal_id", "nutrient_id"})
+)
 public class GoalNutrientEntity {
 
     @Setter(AccessLevel.NONE)
@@ -51,4 +56,20 @@ public class GoalNutrientEntity {
         this.nutrientId = nutrientId;
         this.amount = amount;
     }
+
+
+    // region Overrides methods
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GoalNutrientEntity that)) return false;
+        return Objects.equals(getGoalId(), that.getGoalId())
+                && Objects.equals(getNutrientId(), that.getGoalId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(goalId, nutrientId);
+    }
+    // endregion
 }
