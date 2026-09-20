@@ -85,7 +85,7 @@ public class CommentController {
         diaryCommentService.delete(commentId);
     }
 
-    @GetMapping("/get-by-ids/}")
+    @GetMapping("/get-by-ids")
     public ResponseEntity<List<DiaryCommentDto>> getAllByIds(
             @RequestParam Set<Long> commentIds
     ) {
