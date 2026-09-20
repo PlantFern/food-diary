@@ -25,6 +25,9 @@ public class NutrientService {
     }
 
     public boolean existsAllByIdIn(Set<Long> ids) {
-        return nutrientRepository.existsAllByIdIn(ids);
+        if(ids == null || ids.isEmpty()) {
+            return true;
+        }
+        return nutrientRepository.countByIdIn(ids) == ids.size();
     }
 }
