@@ -218,7 +218,10 @@ public class GoalService implements GoalApi {
                         () -> new EntityNotFoundException("Goal with such id not found")
                 );
 
-        diaryProfilePolicy.ensureCanGet(currentUser, foundGoal.getDiaryProfile().getUserId() );
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(foundGoal.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
         return goalMapper.toDto(foundGoal);
     }
