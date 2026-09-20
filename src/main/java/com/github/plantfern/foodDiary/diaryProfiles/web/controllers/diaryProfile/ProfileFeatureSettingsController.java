@@ -120,7 +120,7 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/find-by-author-and-diary-profile")
     public ResponseEntity<List<ProfileFeatureSettingsDto>> findAllByCreatedByIdAndDiaryProfileId(
             @RequestParam Long createdById,
             @RequestParam Long diaryProfileId
@@ -136,7 +136,7 @@ public class ProfileFeatureSettingsController {
         );
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<ProfileFeatureSettingsDto> getById(
             @RequestParam Long profileFeatureSettings
     ) {
