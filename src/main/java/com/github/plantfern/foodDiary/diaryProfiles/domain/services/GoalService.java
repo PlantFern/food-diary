@@ -61,15 +61,14 @@ public class GoalService implements GoalApi {
                         }
                 );
 
-        var goal = goalRepository.save(
+        var goal =
                 new GoalEntity(
                         diaryProfileId,
                         plannedWeight,
                         startDate,
                         plannedEndDate,
                         currentUser.requireId()
-                )
-        );
+                );
 
         var goalId = goal.getId();
         for( var goalNutrient : goalNutrientList ) {
@@ -82,7 +81,7 @@ public class GoalService implements GoalApi {
             );
         }
 
-        return goalMapper.toDto(goal);
+        return goalMapper.toDto(goalRepository.save(goal));
     }
 
     @Transactional
