@@ -62,15 +62,17 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         }
                 );
 
-        var profileFeatureSettings =
-                new ProfileFeatureSettingsEntity(
-                        diaryProfile.id(),
-                        showSleep,
-                        showSleepLogs,
-                        showWeight,
-                        showWeightLogs,
-                        showAllergensWarning,
-                        currentUserId
+        var profileFeatureSettings = profileFeatureSettingsRepository
+                .save(
+                        new ProfileFeatureSettingsEntity(
+                                diaryProfile.id(),
+                                showSleep,
+                                showSleepLogs,
+                                showWeight,
+                                showWeightLogs,
+                                showAllergensWarning,
+                                currentUserId
+                        )
                 );
 
         var profileFeatureSettingsId = profileFeatureSettings.getId();
