@@ -9,6 +9,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrient
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.GoalMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.GoalNutrientRequest;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class GoalService implements GoalApi {
             Long plannedWeight,
             LocalDate startDate,
             LocalDate plannedEndDate,
-            List<GoalNutrientDto> goalNutrientList
+            List<GoalNutrientRequest> goalNutrientList
     ) {
 
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
@@ -47,7 +48,7 @@ public class GoalService implements GoalApi {
 
         var nutrientIds = goalNutrientList
                 .stream()
-                .map(GoalNutrientDto::nutrientId)
+                .map(GoalNutrientRequest::nutrientId)
                 .collect(Collectors.toSet());
         if (!nutrientService.existsAllByIdIn(nutrientIds))
             throw new EntityNotFoundException("Not all nutrients found");
@@ -90,7 +91,7 @@ public class GoalService implements GoalApi {
             Long plannedWeight,
             LocalDate startDate,
             LocalDate plannedEndDate,
-            List<GoalNutrientDto> goalNutrientDtos
+            List<GoalNutrientRequest> goalNutrientList
     ) {
 
         var oldGoal = goalRepository
@@ -105,9 +106,9 @@ public class GoalService implements GoalApi {
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldGoal.getCreatedById());
 
-        var nutrientIds = goalNutrientDtos
+        var nutrientIds = goalNutrientList
                 .stream()
-                .map(GoalNutrientDto::nutrientId)
+                .map(GoalNutrientRequest::nutrientId)
                 .collect(Collectors.toSet());
         if (!nutrientService.existsAllByIdIn(nutrientIds))
             throw new EntityNotFoundException("Not all nutrients found");
@@ -126,7 +127,7 @@ public class GoalService implements GoalApi {
         );
 
         var currentGoalId = newGoal.getId();
-        for( var goalNutrient : goalNutrientDtos ) {
+        for( var goalNutrient : goalNutrientList ) {
             newGoal.getGoalNutrientSet().add(
                     new GoalNutrientEntity(
                             currentGoalId,
