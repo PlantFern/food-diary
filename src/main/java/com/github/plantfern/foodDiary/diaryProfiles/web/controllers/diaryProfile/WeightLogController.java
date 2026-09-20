@@ -86,7 +86,7 @@ public class WeightLogController {
         return ResponseEntity.ok(weightLogService.getById(commentId));
     }
 
-    @GetMapping("/get-by-petiod/{diaryProfileId}")
+    @GetMapping("/get-by-period/{diaryProfileId}")
     public ResponseEntity<List<WeightLogDto>> getByPeriod(
             @PathVariable Long diaryProfileId,
             @ModelAttribute DatePeriodRequest request
