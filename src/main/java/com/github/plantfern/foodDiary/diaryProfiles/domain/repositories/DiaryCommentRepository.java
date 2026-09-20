@@ -15,6 +15,8 @@ import java.util.List;
 @Repository
 public interface DiaryCommentRepository extends JpaRepository<DiaryCommentEntity, Long> {
 
+    List<DiaryCommentEntity> findAllByCommentableIdIn(Collection<Long> commentableId);
+
     List<DiaryCommentEntity> findAllByCommentableTypeAndDiaryProfileId
             (CommentableType commentableType, Long diaryProfile);
 

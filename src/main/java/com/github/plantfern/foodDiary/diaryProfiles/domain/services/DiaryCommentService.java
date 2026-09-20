@@ -121,6 +121,30 @@ public class DiaryCommentService implements DiaryCommentApi {
     }
 
 
+    public List<DiaryCommentDto> getByCommentableIds(Set<Long> commentableIds) {
+
+        var foundCommentList = diaryCommentRepository
+                .findAllByCommentableIdIn(commentableIds)
+                .stream()
+                .map(diaryCommentMapper::toDto)
+                .toList();
+
+        var diaryProfileId = foundCommentList.getFirst().diaryProfileId();
+        var matchResult = foundCommentList
+                .stream()
+                .allMatch(diaryComment ->
+                        diaryComment.diaryProfileId().equals(diaryProfileId));
+        if(!matchResult)
+            throw new IllegalArgumentException("All comments have to refer to same diary profile");
+
+
+        var diaryProfileUserId = diaryProfileService.getOwnerUserIdInternal(diaryProfileId);
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileId);
+
+        return foundCommentList;
+    }
+
+
     @Override
     @Transactional(readOnly = true)
     public List<DiaryCommentDto> getByDiaryProfileAndCommentableTypeInternal(Long diaryProfileId, CommentableType type) {

@@ -78,4 +78,22 @@ public class CommentController {
                 ));
     }
 
+    @PutMapping("/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
+            @PathVariable Long commentId
+    ) {
+
+        diaryCommentService.delete(commentId);
+    }
+
+    @GetMapping("/get-by-ids/}")
+    public ResponseEntity<List<DiaryCommentDto>> getAllByIds(
+            @RequestParam Set<Long> commentIds
+    ) {
+
+        return ResponseEntity.ok(
+                diaryCommentService.getByCommentableIds(commentIds)
+        );
+    }
 }
