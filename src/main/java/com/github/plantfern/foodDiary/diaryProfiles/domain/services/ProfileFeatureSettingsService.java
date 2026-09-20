@@ -134,13 +134,13 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         for(Long nutrientId : hiddenNutrients) {
             newSettings.getProfileHiddenNutrientSet().add(
-                    new ProfileHiddenNutrientEntity(profileFeatureSettings.getId(), nutrientId)
+                    new ProfileHiddenNutrientEntity(newSettings.getId(), nutrientId)
             );
         }
 
         return profileFeatureSettingsMapper.toDto(
             profileFeatureSettingsRepository
-                    .save(profileFeatureSettings)
+                    .save(newSettings)
         );
     }
 
