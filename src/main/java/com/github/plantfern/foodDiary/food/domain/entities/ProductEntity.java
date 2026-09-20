@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.food.domain.entities;
 
 
+import com.github.plantfern.foodDiary.food.api.DataSource;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class ProductEntity {
     private Long id;
 
     @Column(name = "code", length = 40, unique = true, nullable = false)
-    private String code;
+    private String code = "";
 
     @Column(name = "description", length = 150)
     private String description;
@@ -76,8 +77,7 @@ public class ProductEntity {
 
     protected ProductEntity() {}
 
-    public ProductEntity(String code, String description, Long categoryId, String photoPath, boolean isPublic, Long entityStatusId, Long createdById) {
-        this.code = code;
+    public ProductEntity(String description, Long categoryId, String photoPath, boolean isPublic, Long entityStatusId, Long createdById) {
         this.description = description;
         this.categoryId = categoryId;
         this.photoPath = photoPath;
@@ -102,5 +102,10 @@ public class ProductEntity {
         if (deletedAt == null) {
             deletedAt = LocalDateTime.now();
         }
+    }
+
+    public void assignCode(DataSource source) {
+        if (code.isEmpty())
+            code = source + String.format("%08d", id);
     }
 }
