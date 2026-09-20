@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,21 +59,21 @@ public class DiaryProfileEntity {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            mappedBy = "diaryProfileEntity"
+            mappedBy = "diaryProfile"
     )
-    private List<ProfileFeatureSettingsEntity> profileFeatureSettingsEntityList;
+    private List<ProfileFeatureSettingsEntity> profileFeatureSettingsEntityList = new ArrayList<>();
 
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "diaryProfile"
     )
-    private List<GoalEntity> goalList;
+    private List<GoalEntity> goalList = new ArrayList<>();
 
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "diaryProfile"
     )
-    private List<DiaryCommentEntity> diaryCommentList;
+    private List<DiaryCommentEntity> diaryCommentList = new ArrayList<>();
 
 
     protected DiaryProfileEntity(){ }
