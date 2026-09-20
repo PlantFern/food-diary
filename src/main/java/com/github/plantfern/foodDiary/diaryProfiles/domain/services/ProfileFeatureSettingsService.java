@@ -100,16 +100,18 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                 profileFeatureSettings.getCreatedById()
         );
 
-        profileFeatureSettings.setShowSleep(showSleep);
-        profileFeatureSettings.setShowSleepLogs(showSleepLogs);
-        profileFeatureSettings.setShowWeight(showWeight);
-        profileFeatureSettings.setShowWeightLogs(showWeightLogs);
-        profileFeatureSettings.setShowAllergensWarning(showAllergensWarning);
-
-        profileFeatureSettings.getProfileHiddenNutrientSet().clear();
+        var newSettings = new ProfileFeatureSettingsEntity(
+                profileFeatureSettings.getDiaryProfileId(),
+                showSleep,
+                showSleepLogs,
+                showWeight,
+                showWeightLogs,
+                showAllergensWarning,
+                currentUser.requireId()
+        );
 
         for(Long nutrientId : hiddenNutrients) {
-            profileFeatureSettings.getProfileHiddenNutrientSet().add(
+            newSettings.getProfileHiddenNutrientSet().add(
                     new ProfileHiddenNutrientEntity(profileFeatureSettings.getId(), nutrientId)
             );
         }
