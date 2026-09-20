@@ -169,7 +169,9 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         () -> new EntityNotFoundException("Profile feature setting eith such id not found")
                 );
 
-        diaryProfilePolicy.ensureCanGet(currentUser, settings.getDiaryProfile().getUserId());
+        var diaryProfileUserId = diaryProfileService.getOwnerUserIdInternal(settings.getDiaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
         return settings;
     }
@@ -201,31 +203,6 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         return profileFeatureSettingsRepository
                 .findAllByDiaryProfileId(diaryProfileId)
-                .stream()
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<ProfileFeatureSettingsEntity> getAllByCreatedById(
-            Long userId
-    ) {
-
-        if(!userApi.existsByIdInternal(userId))
-            throw new EntityNotFoundException("No user with such id");
-
-        var diaryProfileIdList = profileFeatureSettingsRepository
-                .findAllDiaryProfileIdByCreatedById(userId)
-                .stream()
-                .toList();
-
-        diaryProfilePolicy.ensureCanGetAll(
-                currentUser,
-                diaryProfileService
-                        .getOwnerUserIdList(diaryProfileIdList)
-        );
-
-        return profileFeatureSettingsRepository
-                .findAllByCreatedById(userId)
                 .stream()
                 .toList();
     }
