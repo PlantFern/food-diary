@@ -75,6 +75,9 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         )
                 );
 
+        if(hiddenNutrients.isEmpty())
+            return profileFeatureSettingsMapper.toDto(profileFeatureSettings);
+
         var profileFeatureSettingsId = profileFeatureSettings.getId();
         for(Long nutrientId : hiddenNutrients) {
             profileFeatureSettings.getProfileHiddenNutrientSet().add(
@@ -123,6 +126,9 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                 showAllergensWarning,
                 currentUser.requireId()
         );
+
+        if(hiddenNutrients.isEmpty())
+            return profileFeatureSettingsMapper.toDto(newSettings);
 
         for(Long nutrientId : hiddenNutrients) {
             newSettings.getProfileHiddenNutrientSet().add(
