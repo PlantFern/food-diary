@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.api.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public record ProfileFeatureSettingsDto(
         Long id,
@@ -12,6 +13,7 @@ public record ProfileFeatureSettingsDto(
         Boolean showAllergensWarning,
         Long createdById,
         LocalDateTime createdAt,
-        LocalDateTime expiredAt
+        LocalDateTime expiredAt,
+        Set<Long> hiddenNutrientIds
 ) {
 }
