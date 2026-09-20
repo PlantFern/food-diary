@@ -31,7 +31,7 @@ public class DiaryCommentService implements DiaryCommentApi {
 
 
     @Transactional
-    public void create(
+    public DiaryCommentDto create(
             Long diaryProfileId,
             CommentableType commentableType,
             Long commentableId,
@@ -43,19 +43,20 @@ public class DiaryCommentService implements DiaryCommentApi {
 
         diaryProfilePolicy.ensureHasRelationsWithProfile(currentUser, foundDiaryProfile.userId());
 
-        diaryCommentRepository.save(
-                new DiaryCommentEntity(
-                        foundDiaryProfile.id(),
-                        commentableType,
-                        commentableId,
-                        body,
-                        currentUser.requireId()
+        return diaryCommentMapper.toDto(diaryCommentRepository.save(
+                        new DiaryCommentEntity(
+                                foundDiaryProfile.id(),
+                                commentableType,
+                                commentableId,
+                                body,
+                                currentUser.requireId()
+                        )
                 )
         );
     }
 
     @Transactional
-    public void update(
+    public DiaryCommentDto update(
             Long diaryCommentId,
             Long diaryProfileId,
             CommentableType commentableType,
@@ -76,8 +77,9 @@ public class DiaryCommentService implements DiaryCommentApi {
         foundDiaryComment.setCommentableId(commentableId);
         foundDiaryComment.setBody(body);
 
-        diaryCommentRepository.save(
-                foundDiaryComment
+        return diaryCommentMapper.toDto(
+                        diaryCommentRepository.save(foundDiaryComment
+                )
         );
     }
 
