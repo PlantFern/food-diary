@@ -16,9 +16,6 @@ public interface GoalNutrientMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "goal", ignore = true)
-    @Mapping(target = "goalId", ignore = true)
-    @Mapping(target = "nutrientId", ignore = true)
-    @Mapping(target = "amount", ignore = true)
     GoalNutrientEntity toEntity(GoalNutrientDto goalNutrientDto);
 
     List<GoalNutrientDto> toDtoList(List<GoalNutrientEntity> goalNutrientEntityList);

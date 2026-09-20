@@ -21,14 +21,7 @@ public interface GoalMapper {
     )
     GoalDto toDto(GoalEntity goalEntity);
 
-    @Mapping(target = "goalNutrientSet", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "createdById", ignore = true)
-    @Mapping(target = "plannedEndDate", ignore = true)
-    @Mapping(target = "actualEndDate", ignore = true)
-    @Mapping(target = "startDate", ignore = true)
-    @Mapping(target = "plannedWeight", ignore = true)
-    @Mapping(target = "diaryProfileId", ignore = true)
+    @Mapping(target = "id", ignore = true)
     GoalEntity toEntity(GoalDto goalDto);
 
     List<GoalDto> toDtoList(List<GoalEntity> goalEntityList);
