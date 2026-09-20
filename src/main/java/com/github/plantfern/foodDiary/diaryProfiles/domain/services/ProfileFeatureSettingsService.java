@@ -62,7 +62,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         }
                 );
 
-        var profileFeatureSettings = profileFeatureSettingsRepository.save(
+        var profileFeatureSettings =
                 new ProfileFeatureSettingsEntity(
                         diaryProfile.id(),
                         showSleep,
@@ -71,8 +71,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         showWeightLogs,
                         showAllergensWarning,
                         currentUserId
-                )
-        );
+                );
 
         var profileFeatureSettingsId = profileFeatureSettings.getId();
         for(Long nutrientId : hiddenNutrients) {
@@ -81,7 +80,9 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             );
         }
 
-        return profileFeatureSettingsMapper.toDto(profileFeatureSettings);
+        return profileFeatureSettingsMapper.toDto(
+                profileFeatureSettingsRepository.save(profileFeatureSettings)
+        );
     }
 
     @Transactional
