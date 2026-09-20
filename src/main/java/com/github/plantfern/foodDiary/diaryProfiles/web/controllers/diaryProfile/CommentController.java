@@ -1,11 +1,81 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfile;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.github.plantfern.foodDiary.diaryProfiles.api.CommentableType;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryCommentDto;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.services.DiaryCommentService;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.services.DiaryProfileService;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.CommentRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 
 @RestController
 @RequestMapping("/api/diary-profile/comment")
 public class CommentController {
+
+
+    private final DiaryCommentService diaryCommentService;
+    private final DiaryProfileService diaryProfileService;
+
+    public CommentController(DiaryCommentService diaryCommentService, DiaryProfileService diaryProfileService) {
+        this.diaryCommentService = diaryCommentService;
+        this.diaryProfileService = diaryProfileService;
+    }
+
+    @PostMapping("/{diaryProfile}")
+    public ResponseEntity<DiaryCommentDto> create(
+            @PathVariable Long diaryProfile,
+            @ModelAttribute CommentRequest request
+    ) {
+
+        return ResponseEntity.ok(diaryCommentService.create(
+                        diaryProfile,
+                        request.commentableType(),
+                        request.commentableId(),
+                        request.body()
+                )
+        );
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<DiaryCommentDto> update(
+            @PathVariable Long commentId,
+            @ModelAttribute CommentRequest request
+    ) {
+
+        return ResponseEntity.ok(diaryCommentService.update(
+                        commentId,
+                        request.commentableType(),
+                        request.commentableId(),
+                        request.body()
+                )
+        );
+    }
+
+    @GetMapping("/{commentId}")
+    public ResponseEntity<DiaryCommentDto> getById(
+            @PathVariable Long commentId
+    ) {
+
+        return ResponseEntity.ok(diaryCommentService.getById(commentId));
+    }
+
+    @GetMapping("/get-by-comment-type/{diaryProfileId}")
+    public ResponseEntity<List<DiaryCommentDto>>  getAllByCommentType(
+            @PathVariable Long diaryProfileId,
+            @RequestParam String commentType
+    ) {
+
+        return ResponseEntity.ok(diaryCommentService
+                .getByDiaryProfileAndCommentableType(
+                        diaryProfileId,
+                        CommentableType.valueOf(commentType)
+                ));
+    }
+
 }
