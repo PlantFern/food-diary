@@ -7,6 +7,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileHidde
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -22,7 +23,7 @@ public interface ProfileFeatureSettingsMapper {
     @Mapping(target="profileHiddenNutrientSet", ignore=true)
     ProfileFeatureSettingsEntity toEntity(ProfileFeatureSettingsDto profileFeatureSettings);
 
-    Set<ProfileFeatureSettingsDto> toDtoList(Set<ProfileFeatureSettingsEntity> profileFeatureSettingsSet);
+    List<ProfileFeatureSettingsDto> toDtoList(List<ProfileFeatureSettingsEntity> profileFeatureSettingsList);
 
     default Long mapHiddenNutrient(ProfileHiddenNutrientEntity entity){
         return entity.getNutrientId();
