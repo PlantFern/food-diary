@@ -84,7 +84,7 @@ public class GoalController {
         goalService.delete(goalId);
     }
 
-    @GetMapping("/{diaryProfileId}")
+    @GetMapping("/get-all/{diaryProfileId}")
     public ResponseEntity<List<GoalDto>> getAll(
             @PathVariable Long diaryProfileId
     ) {
@@ -108,7 +108,7 @@ public class GoalController {
         return  ResponseEntity.ok(goalService.getActiveByDiaryProfile(diaryProfileId));
     }
 
-    @GetMapping("/get-one/{goalId}")
+    @GetMapping("/{goalId}")
     public ResponseEntity<GoalDto> getById(
             @PathVariable Long goalId
     ) {
