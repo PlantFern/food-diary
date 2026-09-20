@@ -128,4 +128,21 @@ public class WeightLogService implements WeightLogApi {
 
         return foundEeightLogList;
     }
+
+    public WeightLogDto getById(Long commentId){
+
+        var foundComment = weightLogRepository
+                .findById(commentId)
+                .map(weightLogMapper::toDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Diary comment with such id not found")
+                );
+
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(foundComment.diaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
+
+        return foundComment;
+    }
 }

@@ -76,4 +76,12 @@ public class WeightLogController {
                 .getLatestByDiaryProfileId(diaryProfileId)
         );
     }
+
+    @GetMapping("/{commentId}")
+    public ResponseEntity<WeightLogDto> getById(
+            @PathVariable Long commentId
+    ) {
+
+        return ResponseEntity.ok(weightLogService.getById(commentId));
+    }
 }
