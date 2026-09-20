@@ -74,7 +74,7 @@ public class GoalController {
         return  ResponseEntity.ok(goalService.getAllByDiaryProfile(diaryProfileId));
     }
 
-    @GetMapping("/diary_profile/{diaryProfileId}/latest")
+    @GetMapping("/diary-profile/{diaryProfileId}/latest")
     public ResponseEntity<GoalDto> getLatest(
             @PathVariable Long diaryProfileId
     ) {
@@ -82,7 +82,7 @@ public class GoalController {
         return  ResponseEntity.ok(goalService.getLatestByDiaryProfile(diaryProfileId));
     }
 
-    @GetMapping("/diary_profile/{diaryProfileId}/active")
+    @GetMapping("/diary-profile/{diaryProfileId}/active")
     public ResponseEntity<GoalDto> getActive(
             @PathVariable Long diaryProfileId
     ) {
