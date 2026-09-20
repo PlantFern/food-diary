@@ -6,7 +6,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatu
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Mapper(componentModel = "spring")
@@ -14,12 +14,12 @@ public interface ProfileFeatureSettingsMapper {
 
     @Mapping(
             target = "hiddenNutrientIds",
-            source = "profileHiddentNutrientEntityList"
+            source = "profileHiddenNutrientSet"
     )
     ProfileFeatureSettingsDto toDto(ProfileFeatureSettingsEntity profileFeatureSettings);
 
-    @Mapping(target="profileHiddentNutrientEntityList", ignore=true)
+    @Mapping(target="profileHiddenNutrientSet", ignore=true)
     ProfileFeatureSettingsEntity toEntity(ProfileFeatureSettingsDto profileFeatureSettings);
 
-    List<ProfileFeatureSettingsDto> toDtoList(List<ProfileFeatureSettingsEntity> profileFeatureSettingsList);
+    Set<ProfileFeatureSettingsDto> toDtoList(Set<ProfileFeatureSettingsEntity> profileFeatureSettingsSet);
 }

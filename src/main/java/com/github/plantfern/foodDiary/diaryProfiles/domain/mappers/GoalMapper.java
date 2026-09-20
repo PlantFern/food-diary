@@ -8,6 +8,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Mapper(componentModel = "spring")
@@ -17,5 +18,5 @@ public interface GoalMapper {
 
     GoalEntity toEntity(GoalDto goalDto);
 
-    List<GoalDto> toDtoList(List<GoalEntity> goalEntityList);
+    Set<GoalDto> toDtoList(Set<GoalEntity> goalEntityList);
 }

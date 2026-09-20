@@ -95,7 +95,7 @@ public class ProfileFeatureSettingsEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<ProfileHiddenNutrientEntity> profileHiddenNutrientEntityList;
+    private Set<ProfileHiddenNutrientEntity> profileHiddenNutrientSet;
 
 
     protected ProfileFeatureSettingsEntity() {}
