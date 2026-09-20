@@ -30,21 +30,12 @@ public class ClientGoalController {
             @RequestBody GoalRequest request
     ) {
 
-        List<GoalNutrientDto> goalNutrientDtoList = new ArrayList<>();
-        for(var goalNutrient : request.nutrientGoals()){
-            goalNutrientDtoList.add(new GoalNutrientDto(
-                    0L,
-                    goalNutrient.nutrientId(),
-                    goalNutrient.amount()
-            ));
-        }
-
         return ResponseEntity.ok(goalService.create(
                         diaryProfileId,
                         request.plannedWeight(),
                         request.startDate(),
                         request.plannedEndDate(),
-                        goalNutrientDtoList
+                        request.nutrientGoals()
                 )
         );
     }
@@ -55,21 +46,12 @@ public class ClientGoalController {
             @RequestBody GoalRequest request
     ) {
 
-        List<GoalNutrientDto> goalNutrientDtoList = new ArrayList<>();
-        for(var goalNutrient : request.nutrientGoals()){
-            goalNutrientDtoList.add(new GoalNutrientDto(
-                    0L,
-                    goalNutrient.nutrientId(),
-                    goalNutrient.amount()
-            ));
-        }
-
         return ResponseEntity.ok(goalService.update(
                         goalId,
                         request.plannedWeight(),
                         request.startDate(),
                         request.plannedEndDate(),
-                        goalNutrientDtoList
+                        request.nutrientGoals()
                 )
         );
     }
