@@ -16,13 +16,13 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/moderation/users")
 @PreAuthorize("hasAnyRole('MODERATOR', 'ADMINISTRATOR')")
-public class UserController {
+public class ModerationUserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService, UserMapper mapper) {
+    public ModerationUserController(UserService userService, UserMapper mapper) {
         this.userService = userService;
         this.userMapper = mapper;
     }
