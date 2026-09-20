@@ -2,7 +2,9 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.WeightLogApi;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.WeightLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.WeightLogMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.WeightLogRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
@@ -22,10 +24,11 @@ public class WeightLogService implements WeightLogApi {
     private final DiaryProfileService diaryProfileService;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
+    private final WeightLogMapper weightLogMapper;
 
 
     @Transactional
-    public void create(
+    public WeightLogDto create(
             Long diaryProfileId,
             Float weight
     ) {
@@ -38,16 +41,18 @@ public class WeightLogService implements WeightLogApi {
 
         diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
-        weightLogRepository.save(
-                new WeightLogEntity(
-                        diaryProfileId,
-                        weight
+        return weightLogMapper
+                .toDto(weightLogRepository.save(
+                        new WeightLogEntity(
+                                diaryProfileId,
+                                weight
+                        )
                 )
         );
     }
 
     @Transactional
-    public void update(
+    public WeightLogDto update(
             Long weightLogId,
             Long diaryProfileId,
             Float weight
@@ -70,7 +75,7 @@ public class WeightLogService implements WeightLogApi {
         weightLog.setDiaryProfileId(diaryProfile.getId());
         weightLog.setWeight(weight);
 
-        weightLogRepository.save(weightLog);
+        return weightLogMapper.toDto(weightLogRepository.save(weightLog));
     }
 
     @Transactional
