@@ -101,7 +101,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Set<Long> hiddenNutrients
     ) {
 
-        var profileFeatureSettings =
+        var oldSettings =
                 profileFeatureSettingsRepository
                         .findById(profileFeatureSettingsId)
                         .orElseThrow(
@@ -109,17 +109,19 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         );
 
         var diaryProfileUserId = diaryProfileService
-                .getOwnerUserIdInternal(profileFeatureSettings.getDiaryProfileId());
+                .getOwnerUserIdInternal(oldSettings.getDiaryProfileId());
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
-        diaryProfilePolicy.ensureCreatedBy(currentUser, profileFeatureSettings.getCreatedById());
+        diaryProfilePolicy.ensureCreatedBy(currentUser, oldSettings.getCreatedById());
 
         if(!nutrientService.existsAllByIdIn(hiddenNutrients))
             throw new EntityNotFoundException("Not all nutrients found");
 
+        oldSettings.setExpiredDate();
+
         var newSettings = profileFeatureSettingsRepository.save(
                 new ProfileFeatureSettingsEntity(
-                        profileFeatureSettings.getDiaryProfileId(),
+                        oldSettings.getDiaryProfileId(),
                         showSleep,
                         showSleepLogs,
                         showWeight,
@@ -128,6 +130,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         currentUser.requireId()
                 )
         );
+        profileFeatureSettingsRepository.save(oldSettings)
 
         if(hiddenNutrients.isEmpty())
             return profileFeatureSettingsMapper.toDto(newSettings);
