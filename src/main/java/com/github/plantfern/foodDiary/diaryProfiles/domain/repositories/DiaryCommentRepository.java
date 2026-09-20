@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -17,10 +18,4 @@ public interface DiaryCommentRepository extends JpaRepository<DiaryCommentEntity
     List<DiaryCommentEntity> findAllByCommentableTypeAndDiaryProfileId
             (CommentableType commentableType, Long diaryProfile);
 
-    List<DiaryCommentEntity> findAllByDiaryProfileAndCommentableTypeOrderByCommentDateDesc(
-            DiaryProfileEntity diaryProfile, CommentableType commentableType
-    );
-
-    List<DiaryCommentEntity> findAllByDiaryProfileIdAndCommentDate
-            (Long diaryProfileId, LocalDate commentDate);
 }

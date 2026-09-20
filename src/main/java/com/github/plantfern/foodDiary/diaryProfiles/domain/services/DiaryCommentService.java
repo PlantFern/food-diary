@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -34,8 +35,7 @@ public class DiaryCommentService implements DiaryCommentApi {
             Long diaryProfileId,
             CommentableType commentableType,
             Long commentableId,
-            String body,
-            LocalDate commentDate
+            String body
     ) {
 
         var foundDiaryProfile = diaryProfileService
@@ -49,7 +49,6 @@ public class DiaryCommentService implements DiaryCommentApi {
                         commentableType,
                         commentableId,
                         body,
-                        commentDate,
                         currentUser.requireId()
                 )
         );
@@ -61,8 +60,7 @@ public class DiaryCommentService implements DiaryCommentApi {
             Long diaryProfileId,
             CommentableType commentableType,
             Long commentableId,
-            String body,
-            LocalDate commentDate
+            String body
     ) {
 
         var foundDiaryComment = diaryCommentRepository
@@ -77,7 +75,6 @@ public class DiaryCommentService implements DiaryCommentApi {
         foundDiaryComment.setCommentableType(commentableType);
         foundDiaryComment.setCommentableId(commentableId);
         foundDiaryComment.setBody(body);
-        foundDiaryComment.setCommentDate(commentDate);
 
         diaryCommentRepository.save(
                 foundDiaryComment
@@ -110,17 +107,6 @@ public class DiaryCommentService implements DiaryCommentApi {
         return this.getByDiaryProfileAndCommentableTypeInternal(diaryProfileId, type);
     }
 
-    @Transactional(readOnly = true)
-    public List<DiaryCommentDto> getByDiaryProfileAndCommentDate(Long diaryProfileId, LocalDate commentDate) {
-
-        var foundDiaryProfile = diaryProfileService
-                .getByIdInternal(diaryProfileId);
-
-        diaryProfilePolicy.ensureHasRelationsWithProfile(currentUser, foundDiaryProfile.userId());
-
-        return this.getByDiaryProfileAndCommentDateInternal(diaryProfileId, commentDate);
-    }
-
     @Transactional
     public DiaryCommentDto getById(Long id) {
 
@@ -142,20 +128,6 @@ public class DiaryCommentService implements DiaryCommentApi {
                 .findAllByCommentableTypeAndDiaryProfileId(
                         type,
                         diaryProfileId
-                )
-                .stream()
-                .map(diaryCommentMapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<DiaryCommentDto> getByDiaryProfileAndCommentDateInternal(Long diaryProfileId, LocalDate commentDate) {
-
-        return diaryCommentRepository
-                .findAllByDiaryProfileIdAndCommentDate(
-                        diaryProfileId,
-                        commentDate
                 )
                 .stream()
                 .map(diaryCommentMapper::toDto)

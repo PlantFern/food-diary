@@ -12,7 +12,6 @@ public record DiaryCommentDto (
         CommentableType commentableType,
         Long commentableId,
         String body,
-        LocalDate commentDate,
         Long createdById
 ) {
 }

@@ -46,9 +46,6 @@ public class DiaryCommentEntity {
     @Column(name = "commentable_id")
     private Long commentableId;
 
-    @Column(name = "comment_date")
-    private LocalDate commentDate;
-
     @Column(name = "body", nullable = false)
     private String body;
 
@@ -77,14 +74,12 @@ public class DiaryCommentEntity {
                     CommentableType commentableType,
                     Long commentableId,
                     String body,
-                    LocalDate commentDate,
                     Long createdById
             ) {
         this.diaryProfileId = diaryProfileId;
         this.commentableType = commentableType;
         this.commentableId = commentableId;
         this.body = body;
-        this.commentDate = commentDate;
         this.createdById = createdById;
     }
 

@@ -11,8 +11,5 @@ public interface DiaryCommentApi {
     List<DiaryCommentDto> getByDiaryProfileAndCommentableTypeInternal
             (Long diaryProfileId, CommentableType type);
 
-    List<DiaryCommentDto> getByDiaryProfileAndCommentDateInternal
-            (Long diaryProfileId, LocalDate commentDate);
-
     DiaryCommentDto getByIdInternal(Long id);
 }
