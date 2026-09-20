@@ -97,15 +97,19 @@ public class WeightLogService implements WeightLogApi {
 
 
     @Transactional
-    public WeightLogEntity getLatestByDiaryProfileId(Long diaryProfileId) {
+    public WeightLogDto getLatestByDiaryProfileId(Long diaryProfileId) {
         return weightLogRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .map(weightLogMapper::toDto)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Weight log for such diary profile id not found")
                 );
     }
 
-    public List<WeightLogEntity> getByDiaryProfileId(Long diaryProfileId) {
-        return weightLogRepository.findByDiaryProfileId(diaryProfileId);
+    public List<WeightLogDto> getByDiaryProfileId(Long diaryProfileId) {
+        return weightLogRepository.findByDiaryProfileId(diaryProfileId)
+                .stream()
+                .map(weightLogMapper::toDto)
+                .toList();
     }
 }
