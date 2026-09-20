@@ -98,18 +98,34 @@ public class WeightLogService implements WeightLogApi {
 
     @Transactional
     public WeightLogDto getLatestByDiaryProfileId(Long diaryProfileId) {
-        return weightLogRepository
+
+        var foundWeightLog = weightLogRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
                 .map(weightLogMapper::toDto)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Weight log for such diary profile id not found")
                 );
+
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(foundWeightLog.diaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
+
+        return foundWeightLog;
     }
 
     public List<WeightLogDto> getByDiaryProfileId(Long diaryProfileId) {
-        return weightLogRepository.findByDiaryProfileId(diaryProfileId)
+
+        var foundEeightLogList = weightLogRepository.findByDiaryProfileId(diaryProfileId)
                 .stream()
                 .map(weightLogMapper::toDto)
                 .toList();
+
+        var diaryProfileUserId = diaryProfileService
+                .getOwnerUserIdInternal(foundEeightLogList.getFirst().diaryProfileId());
+
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
+
+        return foundEeightLogList;
     }
 }
