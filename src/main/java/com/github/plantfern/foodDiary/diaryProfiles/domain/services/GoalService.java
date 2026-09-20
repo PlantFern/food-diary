@@ -193,7 +193,8 @@ public class GoalService implements GoalApi {
                         () -> new EntityNotFoundException("Any goal not found")
                 );
 
-        diaryProfilePolicy.ensureCanGet(currentUser, goal.getDiaryProfile().getUserId());
+        var diaryProfileUserId = diaryProfileService.getOwnerUserIdInternal(goal.getDiaryProfileId());
+        diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
         if(goal.getActualEndDate() != null)
             return null;
