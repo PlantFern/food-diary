@@ -39,7 +39,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Boolean showWeight,
             Boolean showWeightLogs,
             Boolean showAllergensWarning,
-            List<Long> hiddenNutrients
+            Set<Long> hiddenNutrients
     ) {
         var currentUserId = currentUser.requireId();
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
@@ -85,7 +85,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
             Boolean showWeight,
             Boolean showWeightLogs,
             Boolean showAllergensWarning,
-            List<Long> hiddenNutrients
+            Set<Long> hiddenNutrients
     ) {
 
         var profileFeatureSettings =
