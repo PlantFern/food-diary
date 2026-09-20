@@ -76,7 +76,7 @@ public class CommentController {
                 ));
     }
 
-    @PutMapping("/{commentId}")
+    @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable Long commentId
