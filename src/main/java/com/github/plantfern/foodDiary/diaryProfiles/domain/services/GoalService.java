@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
+import com.github.plantfern.foodDiary.common.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.GoalApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -27,6 +29,7 @@ public class GoalService implements GoalApi {
     private final DiaryProfileService diaryProfileService;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
+    private final NutrientService nutrientService;
 
 
     @Transactional
@@ -41,6 +44,13 @@ public class GoalService implements GoalApi {
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
+
+        var nutrientIds = goalNutrientList
+                .stream()
+                .map(GoalNutrientDto::nutrientId)
+                .collect(Collectors.toSet());
+        if (!nutrientService.existsAllByIdIn(nutrientIds))
+            throw new EntityNotFoundException("Not all nutrients found");
 
         goalRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
@@ -91,6 +101,13 @@ public class GoalService implements GoalApi {
                 );
 
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldGoal.getCreatedById());
+
+        var nutrientIds = goalNutrientDtos
+                .stream()
+                .map(GoalNutrientDto::nutrientId)
+                .collect(Collectors.toSet());
+        if (!nutrientService.existsAllByIdIn(nutrientIds))
+            throw new EntityNotFoundException("Not all nutrients found");
 
         oldGoal.setDeletedDate();
         goalRepository.save(oldGoal);
