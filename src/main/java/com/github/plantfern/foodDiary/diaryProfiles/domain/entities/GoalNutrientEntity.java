@@ -64,7 +64,7 @@ public class GoalNutrientEntity {
         if (this == o) return true;
         if (!(o instanceof GoalNutrientEntity that)) return false;
         return Objects.equals(getGoalId(), that.getGoalId())
-                && Objects.equals(getNutrientId(), that.getGoalId());
+                && Objects.equals(getNutrientId(), that.getNutrientId());
     }
 
     @Override
