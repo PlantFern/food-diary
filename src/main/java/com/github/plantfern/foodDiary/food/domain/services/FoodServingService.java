@@ -23,6 +23,41 @@ public class FoodServingService {
             FoodServingRepository foodServingRepository,
             ProductService productService, ServingUnitService servingUnitService, FoodServingMapper foodServingMapper) {
         this.foodServingRepository = foodServingRepository;
+        this.productService = productService;
+        this.servingUnitService = servingUnitService;
+        this.foodServingMapper = foodServingMapper;
+    }
+
+    public FoodServingDto createForProduct(
+            Long productId,
+            Long amount,
+            Float gramWeight,
+            Long servingUnitId,
+            String description
+    ) {
+
+        if(amount <= 0)
+            throw new IllegalArgumentException("Amount must be greater then 0");
+
+        if(gramWeight <= 0)
+            throw new IllegalArgumentException("Grem weight must be greater then 0");
+
+        if(!servingUnitService.existsById(servingUnitId))
+            throw new EntityNotFoundException("Serving unit not found");
+
+        if(!productService.existsById(productId))
+            throw new EntityNotFoundException("Product not found");
+
+        return foodServingMapper.toDto(foodServingRepository.save(
+                new FoodServingEntity(
+                        productId,
+                        ItemType.PRODUCT,
+                        amount,
+                        gramWeight,
+                        servingUnitId,
+                        description
+                )
+        ));
     }
 
     public List<FoodServingEntity> getByProductId(Long productId) {
