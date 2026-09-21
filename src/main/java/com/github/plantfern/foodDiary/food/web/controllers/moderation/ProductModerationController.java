@@ -6,6 +6,7 @@ import com.github.plantfern.foodDiary.food.api.dto.ProductSearchRequest;
 import com.github.plantfern.foodDiary.food.domain.services.ProductQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,21 +21,21 @@ public class ProductModerationController {
     }
 
     @GetMapping
-    public Page<ProductListItemDto> getAll(
+    public ResponseEntity<Page<ProductListItemDto>> getAll(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Long categoryId,
             Pageable pageable
     ) {
-        return productQueryService.getAll(
+        return ResponseEntity.ok(productQueryService.getAll(
                 new ProductSearchRequest(query, categoryId),
                 pageable
-        );
+        ));
     }
 
     @GetMapping("/{productId}")
-    public ProductDetailDto getDetail(
+    public ResponseEntity<ProductDetailDto> getDetail(
             @PathVariable Long productId
     ) {
-        return productQueryService.getDetailAboutProduct(productId);
+        return ResponseEntity.ok(productQueryService.getDetailAboutProduct(productId));
     }
 }
