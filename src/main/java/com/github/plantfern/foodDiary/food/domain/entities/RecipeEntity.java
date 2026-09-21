@@ -78,7 +78,6 @@ public class RecipeEntity {
             String description,
             String recipe,
             String photoPath,
-            Float totalWeightGrams,
             boolean isPublic,
             Long entityStatusId,
             Long createdById
@@ -87,7 +86,6 @@ public class RecipeEntity {
         this.description = description;
         this.recipe = recipe;
         this.photoPath = photoPath;
-        this.totalWeightGrams = totalWeightGrams;
         this.isPublic = isPublic;
         this.entityStatusId = entityStatusId;
         this.createdById = createdById;
