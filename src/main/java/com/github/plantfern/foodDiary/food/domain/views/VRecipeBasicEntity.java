@@ -19,14 +19,14 @@ public class VRecipeBasicEntity {
     @Column(name = "recipeId")
     private Long recipeId;
 
-    @Column(name = "recipeCode")
-    private String recipeCode;
-
     @Column(name = "recipeName")
     private String recipeName;
 
     @Column(name = "recipeDescription")
     private String recipeDescription;
+
+    @Column(name = "recipe")
+    private String recipe;
 
     @Column(name = "photoPath")
     private String photoPath;
