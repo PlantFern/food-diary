@@ -8,7 +8,10 @@ import com.github.plantfern.foodDiary.food.domain.repositories.RecipeComponentRe
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RecipeComponentService {
@@ -19,6 +22,7 @@ public class RecipeComponentService {
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
 
+    @Autowired
     public RecipeComponentService(
             RecipeService recipeService,
             FoodServingRepository foodServingRepository,
@@ -74,6 +78,16 @@ public class RecipeComponentService {
         ensureCanEditRecipe(component.getRecipe());
 
         recipeComponentRepository.delete(component);
+    }
+
+    public Float countWeightByRecipeId(Long recipeId){
+
+        return recipeComponentRepository.sumWeightGramsByRecipeId(recipeId);
+    }
+
+    public List<RecipeComponentEntity> getAllByRecipeId(Long recipeId) {
+
+        return recipeComponentRepository.findAllByRecipeId(recipeId);
     }
 
     private void ensureCanEditRecipe(RecipeEntity recipe) {
