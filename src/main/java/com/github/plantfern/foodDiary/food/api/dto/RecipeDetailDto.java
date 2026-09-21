@@ -4,16 +4,13 @@ import java.util.List;
 
 public record RecipeDetailDto(
         Long recipeId,
-        String recipeCode,
         String recipeName,
         String recipeDescription,
-        String recipeText,
+        String recipe,
         String photoPath,
         Float totalWeightGrams,
         String entityStatusCode,
         Boolean isPublic,
-        Boolean isFavorite,
-        List<RecipeComponentDto> components,
-        List<ProductNutrientItemDto> nutrients
+        List<RecipeComponentDto> components
 ) {
 }
