@@ -109,11 +109,11 @@ public class ProductQueryService {
                 : new ProductSearchRequest(null, null);
 
         return vProductBasicRepository.findList(
-                (request.query() == null
-                        || request.query().isBlank())
+                (req.query() == null
+                        || req.query().isBlank())
                         ? null
-                        : request.query().trim(),
-                request.categoryId(),
+                        : req.query().trim(),
+                req.categoryId(),
                 pageable
         );
     }
