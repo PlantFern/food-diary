@@ -16,46 +16,44 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final EntityStatusRepository entityStatusRepository;
     private final FoodPolicy foodPolicy;
+    private final RecipeComponentService recipeComponentService;
 
     public RecipeService(
             CurrentUser currentUser,
             RecipeRepository recipeRepository,
             EntityStatusRepository entityStatusRepository,
-            FoodPolicy foodPolicy
-    ) {
+            FoodPolicy foodPolicy,
+            RecipeComponentService recipeComponentService) {
         this.currentUser = currentUser;
         this.recipeRepository = recipeRepository;
         this.entityStatusRepository = entityStatusRepository;
         this.foodPolicy = foodPolicy;
+        this.recipeComponentService = recipeComponentService;
     }
 
     public Long create(
             String name,
             String description,
             String recipeText,
-            String photoPath,
-            Float totalWeightGrams
+            String photoPath
     ) {
         var entityStatus = entityStatusRepository
                 .findByCode(EntityStatus.DRAFT.name())
                 .orElseThrow(() -> new EntityNotFoundException("Entity status with such code not found"));
 
-        // code — временный/placeholder, если в entity NOT NULL;
-        // либо сделай code nullable до assignCode, как удобнее в модели
         var savedRecipe = recipeRepository.save(
                 new RecipeEntity(
                         name,
                         description,
                         recipeText,
                         photoPath,
-                        totalWeightGrams,
                         false,
                         entityStatus.getId(),
                         currentUser.requireId()
                 )
         );
 
-        savedRecipe.assignCode(); // или префикс из data source, если появится
+        savedRecipe.assignCode();
         return recipeRepository.save(savedRecipe).getId();
     }
 
@@ -64,8 +62,7 @@ public class RecipeService {
             String name,
             String description,
             String recipeText,
-            String photoPath,
-            Float totalWeightGrams
+            String photoPath
     ) {
         var foundRecipe = getById(recipeId);
 
@@ -79,7 +76,6 @@ public class RecipeService {
         foundRecipe.setDescription(description);
         foundRecipe.setRecipe(recipeText);
         foundRecipe.setPhotoPath(photoPath);
-        foundRecipe.setTotalWeightGrams(totalWeightGrams);
 
         recipeRepository.save(foundRecipe);
     }
@@ -124,6 +120,15 @@ public class RecipeService {
 
         foundRecipe.softDelete();
         recipeRepository.save(foundRecipe);
+    }
+
+    public void countTotalWeight(Long recipeId) {
+
+        var recipe = recipeRepository
+                .findById(recipeId)
+                .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
+
+        recipe.setTotalWeightGrams(recipeComponentService.countWeightByRecipeId(recipeId));
     }
 
     RecipeEntity getById(Long id) {
