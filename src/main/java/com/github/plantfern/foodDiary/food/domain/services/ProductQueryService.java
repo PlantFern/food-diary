@@ -21,10 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 
 @Transactional
 @Service
@@ -132,13 +128,13 @@ public class ProductQueryService {
         var diaryProfile = diaryProfileApi.getByIdInternal(diaryProfileId);
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
-        var acceptedNutrients = profileFeatureSettingsApi
+        var hiddenNutrientIds = profileFeatureSettingsApi
                 .getActiveByDiaryProfileInternal(diaryProfileId)
                 .hiddenNutrientIds();
 
         var productNutrients = vProductNutrientRepository.findPersonalizedByProductId(
                 diaryProfile.id(),
-                acceptedNutrients
+                hiddenNutrientIds
         );
 
         var foundProductServings = foodServingService

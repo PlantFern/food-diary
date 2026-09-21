@@ -26,12 +26,12 @@ public interface VProductNutrientRepository extends JpaRepository<VProductNutrie
     )
     from VProductNutrientEntity vProductNutrient
     where vProductNutrient.productId = :productId
-      and vProductNutrient.nutrientId is null
-          or vProductNutrient.nutrientId in :acceptedNutrients
+      and ( :hiddenNutrients is null
+          or vProductNutrient.nutrientId not in :hiddenNutrients)
     """)
     List<ProductNutrientItemDto> findPersonalizedByProductId(
             @Param("productId") Long productId,
-            @Param("acceptedNutrients") @Nullable Set<Long> acceptedNutrients
+            @Param("acceptedNutrients") @Nullable Set<Long> hiddenNutrients
     );
 
     @Query("""
