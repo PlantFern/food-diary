@@ -123,4 +123,8 @@ public class ProductService {
                         () -> new EntityNotFoundException("Product with such id not found")
                 );
     }
+
+    public boolean existsById(Long productId) {
+        return productRepository.existsById(productId);
+    }
 }
