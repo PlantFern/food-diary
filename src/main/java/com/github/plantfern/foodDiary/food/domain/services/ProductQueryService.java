@@ -71,19 +71,24 @@ public class ProductQueryService {
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
         var settings = profileFeatureSettingsApi.getActiveByDiaryProfileInternal(diaryProfileId);
-        var firstNutrient = settings
-                .hiddenNutrientIds()
-                .stream()
-                .findFirst()
-                .orElse(null);
+        var hiddenNutrientIds = settings.hiddenNutrientIds();
+        var accepted = nutrientService.getFirstByIdNotIn(hiddenNutrientIds);
+        var checkedAccepted = hiddenNutrientIds != null
+                ? accepted
+                : 1L;
 
         var req = request != null
                 ? request
-                : new PersonalizedProductSearchRequest(null, null, null, null);
+                : new PersonalizedProductSearchRequest(
+                        null,
+                        null,
+                        null,
+                        null
+                );
 
         return vProductBasicRepository.findPersonalizedList(
                 diaryProfileId,
-                firstNutrient,
+                checkedAccepted,
                 currentUser.requireId(),
                 (req.query() == null
                         || req.query().isBlank())

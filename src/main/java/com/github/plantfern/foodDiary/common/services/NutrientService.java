@@ -30,4 +30,11 @@ public class NutrientService {
         }
         return nutrientRepository.countByIdIn(ids) == ids.size();
     }
+
+    public Long getFirstByIdNotIn(Set<Long> ids) {
+        return nutrientRepository
+                .findFirstByIdNotIn(ids)
+                .map(NutrientEntity::getId)
+                .orElse(null);
+    }
 }
