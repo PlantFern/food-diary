@@ -5,6 +5,7 @@ import com.github.plantfern.foodDiary.food.domain.entities.RecipeComponentEntity
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.FoodServingRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.RecipeComponentRepository;
+import com.github.plantfern.foodDiary.food.domain.repositories.RecipeRepository;
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,25 +17,24 @@ import java.util.List;
 @Service
 public class RecipeComponentService {
 
-    private final RecipeService recipeService;
     private final FoodServingRepository foodServingRepository;
     private final RecipeComponentRepository recipeComponentRepository;
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
+    private final RecipeRepository recipeRepository;
 
     @Autowired
     public RecipeComponentService(
-            RecipeService recipeService,
             FoodServingRepository foodServingRepository,
             RecipeComponentRepository recipeComponentRepository,
             FoodPolicy foodPolicy,
-            CurrentUser currentUser
-    ) {
-        this.recipeService = recipeService;
+            CurrentUser currentUser,
+            RecipeRepository recipeRepository) {
         this.foodServingRepository = foodServingRepository;
         this.recipeComponentRepository = recipeComponentRepository;
         this.foodPolicy = foodPolicy;
         this.currentUser = currentUser;
+        this.recipeRepository = recipeRepository;
     }
 
     public Long addToRecipe(Long recipeId, Long productServingId, Float amount) {
@@ -42,7 +42,11 @@ public class RecipeComponentService {
             throw new IllegalArgumentException("Amount must be greater than 0");
         }
 
-        var recipe = recipeService.getById(recipeId);
+        var recipe = recipeRepository
+                .findById(recipeId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Recipe not found")
+                );
 
         foodServingRepository
                 .findById(productServingId)
