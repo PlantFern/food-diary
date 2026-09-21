@@ -12,6 +12,6 @@ public record PersonalizedRecipeItemDto(
         Float totalWeightGrams,
         boolean isPublic,
         boolean isFavorite,
-        List<RecipeComponentItemDto> recipeComponents
+        List<RecipeComponentDto> recipeComponents
 ) {
 }

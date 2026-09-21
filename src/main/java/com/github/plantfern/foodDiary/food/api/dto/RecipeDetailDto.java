@@ -13,7 +13,7 @@ public record RecipeDetailDto(
         String entityStatusCode,
         Boolean isPublic,
         Boolean isFavorite,
-        List<RecipeComponentItemDto> components,
+        List<RecipeComponentDto> components,
         List<ProductNutrientItemDto> nutrients
 ) {
 }
