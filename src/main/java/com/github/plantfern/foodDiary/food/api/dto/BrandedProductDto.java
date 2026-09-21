@@ -4,6 +4,6 @@ public record BrandedProductDto(
         Long id,
         Long productId,
         String barcode,
-        Long baseServing
+        Long baseServingId
 ) {
 }
