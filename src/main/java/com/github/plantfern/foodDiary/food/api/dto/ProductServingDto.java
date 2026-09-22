@@ -4,7 +4,7 @@ public record ProductServingDto (
         Long servingId,
         Long productId,
         String productDescription,
-        Long servingAmount,
+        Float servingAmount,
         Float gramWeight,
         String servingUnitCode,
         Float nutrientPer100g
