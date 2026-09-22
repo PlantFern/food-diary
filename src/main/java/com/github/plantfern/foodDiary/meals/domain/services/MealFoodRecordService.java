@@ -3,15 +3,19 @@ package com.github.plantfern.foodDiary.meals.domain.services;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
+import com.github.plantfern.foodDiary.meals.domain.entities.MealEntity;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealFoodRecordEntity;
 import com.github.plantfern.foodDiary.meals.domain.repositories.MealFoodRecordRepository;
 import com.github.plantfern.foodDiary.meals.domain.repositories.MealRepository;
+import com.github.plantfern.foodDiary.meals.domain.repositories.MealTypeRepository;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -25,25 +29,74 @@ public class MealFoodRecordService {
     private final DiaryProfileApi diaryProfileApi;
     private final MealPolicy mealPolicy;
     private final CurrentUser currentUser;
+    private final MealTypeRepository mealTypeRepository;
     // ProductService / FoodApi — для quick nutrient product
 
     @Transactional
-    public Long add(Long mealId, Long servingId, Float amount, LocalTime eatenAt) {
-        if (amount == null || amount <= 0) {
+    public Long add(
+            Long diaryProfileId,
+            Long mealId,
+            Long mealTypeId,
+            LocalDate date,
+            Long servingId,
+            Float amount,
+            LocalTime eatenAt
+    ) {
+
+        if(amount == null || amount <= 0)
             throw new IllegalArgumentException("Amount must be greater than 0");
-        }
 
-        var meal = mealRepository.findById(mealId)
-                .orElseThrow(() -> new EntityNotFoundException("Meal not found"));
-
-        var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(
+                diaryProfileId
+        );
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
         foodServingApi.getById(servingId);
 
-        return mealFoodRecordRepository.save(
-                new MealFoodRecordEntity(servingId, mealId, amount, eatenAt)
-        ).getId();
+        MealEntity meal;
+        if (mealId != null) {
+
+            meal = mealRepository.findById(mealId)
+                    .orElseThrow(
+                            () -> new EntityNotFoundException("Meal not found")
+                    );
+
+            if(!meal.getDiaryProfileId().equals(diaryProfileId))
+                throw new AccessDeniedException("Meal belongs to another profile");
+        }
+        else {
+
+            if(mealTypeId == null || date == null)
+                throw new IllegalArgumentException("mealTypeId and date required when mealId is null");
+
+            mealTypeRepository
+                    .findById(mealTypeId)
+                    .orElseThrow(
+                            () -> new EntityNotFoundException("Meal type not found")
+                    );
+
+            meal = mealRepository
+                    .findAllByDiaryProfileIdAndMealTypeIdAndDate(
+                            diaryProfileId,
+                            mealTypeId,
+                            date
+                    )
+                    .orElseGet(
+                            () -> mealRepository.save(
+                                    new MealEntity(diaryProfileId, mealTypeId, null, date)
+                            )
+                    );
+        }
+
+        return mealFoodRecordRepository
+                .save(
+                        new MealFoodRecordEntity(
+                                servingId,
+                                meal.getId(),
+                                amount,
+                                eatenAt
+                        )
+                ).getId();
     }
 
     @Transactional
