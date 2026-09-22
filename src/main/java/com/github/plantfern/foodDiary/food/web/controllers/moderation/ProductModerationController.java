@@ -2,7 +2,7 @@ package com.github.plantfern.foodDiary.food.web.controllers.moderation;
 
 import com.github.plantfern.foodDiary.food.api.dto.ProductDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.ProductListItemDto;
-import com.github.plantfern.foodDiary.food.api.dto.ProductSearchRequest;
+import com.github.plantfern.foodDiary.food.web.requests.ProductSearchRequest;
 import com.github.plantfern.foodDiary.food.domain.services.ProductQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

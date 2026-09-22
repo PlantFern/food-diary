@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.food.api.dto;
+package com.github.plantfern.foodDiary.food.web.requests;
 
 public record ProductSearchRequest(
         String query,

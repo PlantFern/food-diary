@@ -1,11 +1,9 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
 
-import com.github.plantfern.foodDiary.common.entities.NutrientEntity;
 import com.github.plantfern.foodDiary.common.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.ProfileFeatureSettingsApi;
-import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileHiddenNutrientDto;
 import com.github.plantfern.foodDiary.food.api.ItemType;
 import com.github.plantfern.foodDiary.food.api.dto.*;
 import com.github.plantfern.foodDiary.food.domain.mappers.FoodServingMapper;
@@ -13,6 +11,7 @@ import com.github.plantfern.foodDiary.food.domain.repositories.FavoriteFoodRepos
 import com.github.plantfern.foodDiary.food.domain.repositories.VProductBasicRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.VProductNutrientRepository;
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
+import com.github.plantfern.foodDiary.food.web.requests.ProductSearchRequest;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
