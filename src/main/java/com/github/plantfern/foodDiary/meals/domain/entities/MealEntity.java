@@ -74,7 +74,6 @@ public class MealEntity {
             Long diaryProfileId,
             Long mealTypeId,
             Long generatedFromTemplateId,
-            String photoPath,
             LocalDate date
     ) {
         this.diaryProfileId = diaryProfileId;
