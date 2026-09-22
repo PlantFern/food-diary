@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.meals.domain.services;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
+import com.github.plantfern.foodDiary.food.api.apis.ProductApi;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealEntity;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealFoodRecordEntity;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +32,7 @@ public class MealFoodRecordService {
     private final MealPolicy mealPolicy;
     private final CurrentUser currentUser;
     private final MealTypeRepository mealTypeRepository;
+    private final ProductApi productApi;
     // ProductService / FoodApi — для quick nutrient product
 
     @Transactional
@@ -97,6 +100,39 @@ public class MealFoodRecordService {
                                 eatenAt
                         )
                 ).getId();
+    }
+
+    @Transactional
+    public Long addWithQuickProduct(
+            Long diaryProfileId,
+            Long mealId,
+            Long mealTypeId,
+            LocalDate date,
+            LocalTime eatenAt,
+            Float amount,
+            String description,
+            Float gramWeight,
+            Map<Long, Float> nutrients
+    ) {
+
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
+        mealPolicy.ensureIsOwner(currentUser, ownerId);
+
+        Long servingId = productApi.createNutrientRecordingProduct(
+                description,
+                gramWeight,
+                nutrients
+        );
+
+        return add(
+                diaryProfileId,
+                mealId,
+                mealTypeId,
+                date,
+                servingId,
+                amount,
+                eatenAt
+        );
     }
 
     @Transactional
