@@ -11,7 +11,6 @@ public record QuickProductCreateRequest(
         LocalDate date,
         LocalTime eatenAt,
         Float amount,
-        String name,
         String description,
         Float gramWeight,
         Map<Long, Float> nutrients
