@@ -45,7 +45,7 @@ public class MealEntity {
     )
     private MealTemplateEntity generatedFromTemplate;
 
-    @Column(name = "generated_from_template_id", nullable = false)
+    @Column(name = "generated_from_template_id")
     private Long generatedFromTemplateId;
 
     @Column(name = "photo_path")
