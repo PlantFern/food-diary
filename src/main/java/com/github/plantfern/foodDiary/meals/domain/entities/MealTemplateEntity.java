@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Setter
@@ -30,7 +31,7 @@ public class MealTemplateEntity {
     private String name;
 
     @Column(name = "scheduled_time", nullable = false)
-    private LocalDate scheduledTime;
+    private LocalTime scheduledTime;
 
     @Column(name = "frequency", nullable = false)
     private Long frequency;
@@ -57,7 +58,7 @@ public class MealTemplateEntity {
     public MealTemplateEntity(
             Long diaryProfileId,
             String name,
-            LocalDate scheduledTime,
+            LocalTime scheduledTime,
             Long frequency,
             Long startedAt
     ) {
