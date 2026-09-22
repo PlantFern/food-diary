@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Setter
@@ -49,6 +50,9 @@ public class MealEntity {
 
     @Column(name = "photo_path")
     private String photoPath;
+    
+    @Column (name = "date", nullable = false)
+    private LocalDate date;
 
     @Column(
             name = "created_at",
@@ -70,12 +74,14 @@ public class MealEntity {
             Long diaryProfileId,
             Long mealTypeId,
             Long generatedFromTemplateId,
-            String photoPath
+            String photoPath,
+            LocalDate date
     ) {
         this.diaryProfileId = diaryProfileId;
         this.mealTypeId = mealTypeId;
         this.generatedFromTemplateId = generatedFromTemplateId;
         this.photoPath = photoPath;
+        this.date = date;
     }
 
 

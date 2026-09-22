@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Setter
@@ -41,7 +42,7 @@ public class MealFoodRecordEntity {
             nullable = false,
             updatable = false
     )
-    private LocalDateTime eatenAt;
+    private LocalTime eatenAt;
 
     @Column(
             name = "created_at",
@@ -53,7 +54,7 @@ public class MealFoodRecordEntity {
 
     protected MealFoodRecordEntity() {}
 
-    public MealFoodRecordEntity(Long servingId, Long mealId, Float amount, LocalDateTime eatenAt) {
+    public MealFoodRecordEntity(Long servingId, Long mealId, Float amount, LocalTime eatenAt) {
         this.servingId = servingId;
         this.mealId = mealId;
         this.amount = amount;
