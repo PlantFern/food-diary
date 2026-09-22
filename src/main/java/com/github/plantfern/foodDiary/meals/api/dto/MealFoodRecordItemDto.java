@@ -8,6 +8,6 @@ public record MealFoodRecordItemDto(
         Float servingAmount,
         Float gramWeight,
         String servingUnitCode,
-        Float kcal
+        Float nutrient
 ) {
 }
