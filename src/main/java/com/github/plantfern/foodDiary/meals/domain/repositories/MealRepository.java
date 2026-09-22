@@ -18,8 +18,7 @@ public interface MealRepository extends JpaRepository<MealEntity, Long> {
             Long diaryProfileId, LocalDate date
     );
 
-            Long diaryProfileId,
-            LocalDateTime createdAt,
-            LocalDateTime createdAt2
+    Optional<MealEntity> findAllByDiaryProfileIdAndMealTypeIdAndDate(
+            Long diaryProfileId, Long mealTypeId, LocalDate date
     );
 }
