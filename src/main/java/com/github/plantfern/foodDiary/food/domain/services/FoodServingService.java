@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
 import com.github.plantfern.foodDiary.food.api.ItemType;
+import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
 import com.github.plantfern.foodDiary.food.api.dto.FoodServingDto;
 import com.github.plantfern.foodDiary.food.domain.entities.FoodServingEntity;
 import com.github.plantfern.foodDiary.food.domain.mappers.FoodServingMapper;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 @Service
-public class FoodServingService {
+public class FoodServingService implements FoodServingApi {
 
     private final FoodServingRepository foodServingRepository;
     private final ProductService productService;
@@ -68,4 +69,18 @@ public class FoodServingService {
     public boolean existsById(Long foodServingId) {
         return foodServingRepository.existsById(foodServingId);
     }
+
+
+    // region Override
+
+    @Override
+    public FoodServingDto getById(Long foodServingId) {
+        return foodServingRepository
+                .findById(foodServingId)
+                .map(foodServingMapper::toDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Serving with such id not found")
+                );
+    }
+    //endregion
 }
