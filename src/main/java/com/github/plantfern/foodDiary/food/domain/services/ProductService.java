@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.food.domain.services;
 
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
+import com.github.plantfern.foodDiary.food.api.apis.ProductApi;
 import com.github.plantfern.foodDiary.food.domain.entities.ProductDataSourceEntity;
 import com.github.plantfern.foodDiary.food.domain.entities.ProductEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.DataSourceRepository;
@@ -14,9 +15,11 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 @Service
-public class ProductService {
+public class ProductService implements ProductApi {
 
     private final CurrentUser currentUser;
     private final ProductRepository productRepository;
@@ -24,14 +27,18 @@ public class ProductService {
     private final ProductDataSourceRepository productDataSourceRepository;
     private final DataSourceRepository dataSourceRepository;
     private final FoodPolicy foodPolicy;
+    private final ProductNutrientService productNutrientService;
+    private final FoodServingService foodServingService;
 
-    public ProductService(CurrentUser currentUser, ProductRepository productRepository, EntityStatusRepository entityStatusRepository, ProductDataSourceRepository productDataSourceRepository, DataSourceRepository dataSourceRepository, FoodPolicy foodPolicy) {
+    public ProductService(CurrentUser currentUser, ProductRepository productRepository, EntityStatusRepository entityStatusRepository, ProductDataSourceRepository productDataSourceRepository, DataSourceRepository dataSourceRepository, FoodPolicy foodPolicy, ProductNutrientService productNutrientService, FoodServingService foodServingService) {
         this.currentUser = currentUser;
         this.productRepository = productRepository;
         this.entityStatusRepository = entityStatusRepository;
         this.productDataSourceRepository = productDataSourceRepository;
         this.dataSourceRepository = dataSourceRepository;
         this.foodPolicy = foodPolicy;
+        this.productNutrientService = productNutrientService;
+        this.foodServingService = foodServingService;
     }
 
     public Long create(
@@ -127,4 +134,34 @@ public class ProductService {
     public boolean existsById(Long productId) {
         return productRepository.existsById(productId);
     }
+
+
+    // region Override
+
+    @Override
+    public Long createNutrientRecordingProduct(
+            String description,
+            Float gramWeight,
+            Map<Long, Float> nutrients
+    ) {
+
+        var product = this.create(
+                description,
+                6L,
+                "",
+                DataSource.NUTRIENT_RECORDING,
+                ""
+        );
+
+        productNutrientService.addAllToProduct(product, nutrients);
+
+        return foodServingService.createForProduct(
+                product,
+                1L,
+                gramWeight,
+                1L,
+                null
+        ).id();
+    }
+    // end region
 }
