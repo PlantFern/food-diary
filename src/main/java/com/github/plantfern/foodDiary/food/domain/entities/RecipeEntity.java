@@ -40,7 +40,7 @@ public class RecipeEntity {
     @Column(name = "total_weight_grams")
     private Float totalWeightGrams;
 
-    @Column(name = "is_public")
+    @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +51,7 @@ public class RecipeEntity {
     )
     private EntityStatusEntity entityStatus;
 
-    @Column (name = "entity_status_id")
+    @Column (name = "entity_status_id", nullable = false)
     private Long entityStatusId;
 
     @Column(name = "created_by")

@@ -26,13 +26,13 @@ public class FoodServingEntity {
     @Column(name = "item_type", nullable = false)
     private ItemType itemType;
 
-    @Column(name = "item_id")
+    @Column(name = "item_id", nullable = false)
     private Long itemId;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private Float amount;
 
-    @Column(name = "gram_weight")
+    @Column(name = "gram_weight", nullable = false)
     private Float gramWeight;
 
     @ManyToOne(fetch = FetchType.LAZY)

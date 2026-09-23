@@ -62,7 +62,7 @@ public class ProductRequestEntity{
     )
     private String barcodePhotoPath;
 
-    @Column(name = "created_by")
+    @Column(name = "created_by", nullable = false)
     private Long createdById;
 
     @Column(

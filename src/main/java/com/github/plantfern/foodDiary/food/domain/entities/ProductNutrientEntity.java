@@ -33,7 +33,7 @@ public class ProductNutrientEntity {
     @Column(name = "nutrient_id", nullable = false)
     private Long nutrientId;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private Float amount;
 
 
