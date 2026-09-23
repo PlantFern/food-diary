@@ -12,5 +12,13 @@ public interface FoodServingApi {
 
     FoodServingDto getById(Long foodServingId);
 
-    Map<Long, ProductServingDto> getInfoByServingIds(Collection<Long> servingIds, Long acceptedNutrientId);
+    Map<Long, ProductServingDto> getInfoByServingIds(
+            Collection<Long> servingIds,
+            Long acceptedNutrientId
+    );
+
+    Map<Long, Map<Long, Float>> getNutrientsByServingIds(
+            Collection<Long> servingIds,
+            Collection<Long> nutrientIds
+    );
 }

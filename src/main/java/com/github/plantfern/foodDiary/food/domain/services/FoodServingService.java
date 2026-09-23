@@ -157,6 +157,30 @@ public class FoodServingService implements FoodServingApi {
 
         return result;
     }
+
+
+    @Override
+    public Map<Long, Map<Long, Float>> getNutrientsByServingIds(
+            Collection<Long> servingIds,
+            Collection<Long> nutrientIds
+    ) {
+
+        if(servingIds == null || servingIds.isEmpty())
+            return Map.of();
+
+        var servings = vFoodServingRepository.findAllByServingIdIn(servingIds);
+        Map<String, Map<Long, Float>> byItem = loadNutrientPer100g(servings, nutrientIds);
+
+        Map<Long, Map<Long, Float>> result = new HashMap<>();
+        for(var serving : servings){
+            result.put(
+                    serving.getServingId(),
+                    byItem.getOrDefault(serving.getItemType() + ":" + serving.getItemId(), Map.of())
+            );
+        }
+
+        return result;
+    }
     // endregion
 
     // region Private methods
