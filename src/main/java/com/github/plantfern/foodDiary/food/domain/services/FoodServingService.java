@@ -13,12 +13,14 @@ import com.github.plantfern.foodDiary.food.domain.repositories.ProductNutrientRe
 import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.ServingUnitRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 
+@AllArgsConstructor
 @Service
 public class FoodServingService implements FoodServingApi {
 
@@ -29,18 +31,8 @@ public class FoodServingService implements FoodServingApi {
     private final ProductRepository productRepository;
     private final ProductNutrientRepository productNutrientRepository;
     private final ServingUnitRepository servingUnitRepository;
-
-    public FoodServingService(
-            FoodServingRepository foodServingRepository,
-            ProductService productService, ServingUnitService servingUnitService, FoodServingMapper foodServingMapper, ProductRepository productRepository, ProductNutrientRepository productNutrientRepository, ServingUnitRepository servingUnitRepository) {
-        this.foodServingRepository = foodServingRepository;
-        this.productService = productService;
-        this.servingUnitService = servingUnitService;
-        this.foodServingMapper = foodServingMapper;
-        this.productRepository = productRepository;
-        this.productNutrientRepository = productNutrientRepository;
-        this.servingUnitRepository = servingUnitRepository;
-    }
+    private final VFoodServingRepository vFoodServingRepository;
+    private final VItemNutrientRepository vItemNutrientRepository;
 
     public FoodServingDto createForProduct(
             Long productId,
