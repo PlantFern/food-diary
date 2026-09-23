@@ -46,7 +46,7 @@ public class ProductController {
 
         var baseServing = foodServingService.createForProduct(
                 productId,
-                1L,
+                1F,
                 request.gramWeight(),
                 2L,
                 null

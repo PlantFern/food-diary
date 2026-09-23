@@ -157,7 +157,7 @@ public class ProductService implements ProductApi {
 
         return foodServingService.createForProduct(
                 product,
-                1L,
+                1F,
                 gramWeight,
                 1L,
                 null
