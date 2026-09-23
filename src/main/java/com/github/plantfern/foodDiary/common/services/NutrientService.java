@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,5 +37,13 @@ public class NutrientService {
                 .findFirstByIdNotIn(ids)
                 .map(NutrientEntity::getId)
                 .orElse(null);
+    }
+
+    public Set<Long> getAllByIdNotIn(Set<Long> ids) {
+        return nutrientRepository
+                .findAllByIdNotIn(ids)
+                .stream()
+                .map(NutrientEntity::getId)
+                .collect(Collectors.toSet());
     }
 }
