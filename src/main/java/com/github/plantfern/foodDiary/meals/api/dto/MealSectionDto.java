@@ -8,6 +8,6 @@ public record MealSectionDto(
         String mealTypeCode,
         Long generatedFromTemplateId,
         List<MealFoodRecordItemDto> records,
-        Float totalKcal
+        Float totalPrimaryNutrient
 ) {
 }
