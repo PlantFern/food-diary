@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface SleepLogRepository extends JpaRepository<SleepLogEntity, Long> {
 
-    Optional<SleepLogEntity> findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter
+    List<SleepLogEntity> findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter
             (Long diaryProfileId, LocalDateTime beganAt, LocalDateTime endedAt);
 
     List<SleepLogEntity> findAllByDiaryProfileIdAndBeganAtLessThanEqualAndEndedAtGreaterThanEqual(
