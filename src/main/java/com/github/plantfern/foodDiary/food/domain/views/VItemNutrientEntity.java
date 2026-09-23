@@ -20,7 +20,7 @@ public class VItemNutrientEntity {
 
     @Id
     @Column(name = "itemId")
-    private Long id;
+    private Long itemId;
 
     @Column(name = "itemType")
     private String itemType;
