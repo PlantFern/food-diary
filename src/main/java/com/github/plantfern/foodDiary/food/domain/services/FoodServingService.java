@@ -8,10 +8,8 @@ import com.github.plantfern.foodDiary.food.domain.entities.FoodServingEntity;
 import com.github.plantfern.foodDiary.food.domain.entities.ProductEntity;
 import com.github.plantfern.foodDiary.food.domain.entities.ServingUnitEntity;
 import com.github.plantfern.foodDiary.food.domain.mappers.FoodServingMapper;
-import com.github.plantfern.foodDiary.food.domain.repositories.FoodServingRepository;
-import com.github.plantfern.foodDiary.food.domain.repositories.ProductNutrientRepository;
-import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository;
-import com.github.plantfern.foodDiary.food.domain.repositories.ServingUnitRepository;
+import com.github.plantfern.foodDiary.food.domain.repositories.*;
+import com.github.plantfern.foodDiary.food.domain.views.VFoodServingEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -159,5 +157,42 @@ public class FoodServingService implements FoodServingApi {
 
         return result;
     }
-    //endregion
+    // endregion
+
+    // region Private methods
+
+    private Map<String, Map<Long, Float>> loadNutrientPer100g(
+            List<VFoodServingEntity> servings,
+            Collection<Long> nutrientIds
+    ) {
+
+        Map<String, Set<Long>> idsByType = new HashMap<>();
+
+        for(var serving : servings) {
+            idsByType.computeIfAbsent(
+                    serving.getItemType(), t -> new HashSet<>()).add(serving.getItemId()
+            );
+        }
+
+        Map<String, Map<Long, Float>> result = new HashMap<>();
+
+        for (var entry : idsByType.entrySet()) {
+            var rows = vItemNutrientRepository.findAllByItemTypeAndItemIdInAndNutrientIdIn(
+                    entry.getKey(),
+                    entry.getValue(),
+                    nutrientIds
+            );
+            for (var nutrient: rows) {
+                result
+                        .computeIfAbsent(
+                                nutrient.getItemType() + " : " +  nutrient.getItemId(),
+                                key -> new HashMap<>()
+                        )
+                        .put(nutrient.getNutrientId(), nutrient.getAmountPer100g());
+            }
+        }
+
+        return result;
+    }
+    // endregion
 }
