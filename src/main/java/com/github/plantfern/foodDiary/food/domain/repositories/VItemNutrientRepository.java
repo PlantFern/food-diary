@@ -8,6 +8,12 @@ import java.util.List;
 
 public interface VItemNutrientRepository extends JpaRepository<VItemNutrientEntity, Long> {
 
+    List<VItemNutrientEntity> findAllByItemTypeAndItemIdAndNutrientId(
+            String itemType,
+            Long itemId,
+            Long nutrientId
+    );
+
     List<VItemNutrientEntity> findAllByItemTypeAndItemIdAndNutrientIdIn(
             String itemType,
             Long itemId,
