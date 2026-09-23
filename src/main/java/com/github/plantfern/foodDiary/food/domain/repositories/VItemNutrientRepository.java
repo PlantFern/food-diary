@@ -18,9 +18,9 @@ public interface VItemNutrientRepository extends JpaRepository<VItemNutrientEnti
             Long nutrientId
     );
 
-    List<VItemNutrientEntity> findAllByItemTypeAndItemIdAndNutrientIdIn(
+    List<VItemNutrientEntity> findAllByItemTypeAndItemIdInAndNutrientIdIn(
             String itemType,
-            Long itemId,
+            Collection<Long> itemId,
             Collection<Long> nutrientId
     );
 }
