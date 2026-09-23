@@ -99,6 +99,36 @@ public class MealQueryService {
         return new DayMealsDto(date, sections, pendingTemplates);
     }
 
+    private Map<Long, Float> loadVisibleGoalTargets(Long diaryProfileId, Set<Long> hidden){
+
+        GoalDto goal;
+
+        try {
+            goal = goalApi.getActiveByDiaryProfileInternal(diaryProfileId);
+        } catch (EntityNotFoundException e) {
+            return Map.of();
+        }
+
+        if(goal == null || goal.nutrientSet() == null)
+            return Map.of();
+
+        Map<Long, Float> targets = new HashMap<>();
+
+        for(GoalNutrientDto goalNutrient : goal.nutrientSet()){
+
+            if (goalNutrient.nutrientId() == null) {
+                continue;
+            }
+
+            if (hidden.contains(goalNutrient.nutrientId()))
+                continue;
+
+            targets.put(goalNutrient.nutrientId(), goalNutrient.amount());
+        }
+
+        return targets;
+    }
+
     private MealFoodRecordItemDto toItemDto(
             VMealDayRecordEntity r,
             ProductServingDto productServing
