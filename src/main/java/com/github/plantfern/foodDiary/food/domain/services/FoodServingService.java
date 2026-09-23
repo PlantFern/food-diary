@@ -87,77 +87,46 @@ public class FoodServingService implements FoodServingApi {
     }
 
     @Override
-    public Map<Long, ProductServingDto> getInfoByServingIds(Collection<Long> servingIds, Long acceptedNutrientId) {
+    public Map<Long, ProductServingDto> getInfoByServingIds(
+            Collection<Long> servingIds,
+            Long acceptedNutrientId
+    ) {
 
         if( servingIds == null || servingIds.isEmpty())
             return Map.of();
 
-        var servings = foodServingRepository.findAllById(servingIds);
+        var servings = vFoodServingRepository.findAllByServingIdIn(servingIds);
+        if (servings.isEmpty())
+            return Map.of();
 
-        Set<Long> productIds = servings
+        Map<String, Float> nutrientByItem = loadNutrientPer100g(servings, Set.of(acceptedNutrientId))
+                .entrySet()
                 .stream()
-                .filter(s -> s.getItemType() == ItemType.PRODUCT)
-                .map(FoodServingEntity::getId)
-                .collect(Collectors.toSet());
-
-        Set<Long> unitIds = servings
-                .stream()
-                .map(FoodServingEntity::getServingUnitId)
-                .collect(Collectors.toSet());
-
-        Map<Long, ProductEntity> productsById = productIds.isEmpty()
-                ? Map.of()
-                : productRepository.findAllById(productIds)
-                .stream()
-                .collect(Collectors.toMap(ProductEntity::getId, p -> p));
-
-        Map<Long, ServingUnitEntity> unitsById = unitIds.isEmpty()
-                ? Map.of()
-                : servingUnitRepository.findAllById(unitIds)
-                .stream()
-                .collect(Collectors.toMap(ServingUnitEntity::getId, su -> su));
-
-        Map<Long, Float> nutrientPerProductId = new HashMap<>();
-        if(productsById != null && !productsById.isEmpty())
-            productNutrientRepository
-                    .findAllByProductIdInAndNutrientId(productIds, acceptedNutrientId)
-                    .forEach(
-                            productNutrient -> nutrientPerProductId
-                                    .put(
-                                            productNutrient.getProductId(), productNutrient.getAmount()
-                                    )
-                    );
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().getOrDefault(acceptedNutrientId, null)
+                ));
 
         Map<Long, ProductServingDto> result = new HashMap<>();
+        for(var serving : servings) {
+            String key = serving.getItemType() + ":" + serving.getItemId();
 
-        for(var serving: servings) {
-
-            Long productId = serving.getItemType() == ItemType.PRODUCT ? serving.getItemId() : null;
-
-            var productDescription = productId != null
-                    ? productsById.get(productId).getDescription()
-                    : null;
-
-            var unitCode = unitsById.get(serving.getServingUnitId()).getCode();
-
-            Float nutrientPer100g = productId != null
-                    ? nutrientPerProductId.get(productId)
-                    : null;
-
-            result.put(serving.getId(), new ProductServingDto(
-                    serving.getId(),
-                    serving.getId(),
-                    productDescription,
-                    serving.getAmount(),
-                    serving.getGramWeight(),
-                    unitCode,
-                    nutrientPer100g
-            ));
+            result.put(
+                    serving.getServingId(),
+                    new ProductServingDto(
+                            serving.getServingId(),
+                            serving.getItemId(),
+                            serving.getItemName(),
+                            serving.getServingAmount(),
+                            serving.getGramWeight(),
+                            serving.getServingUnitCode(),
+                            nutrientByItem.get(key)
+                    )
+            );
         }
 
         return result;
     }
-
 
     @Override
     public Map<Long, Map<Long, Float>> getNutrientsByServingIds(
