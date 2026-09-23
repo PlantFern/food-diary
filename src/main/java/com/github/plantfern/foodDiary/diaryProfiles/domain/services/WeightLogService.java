@@ -174,4 +174,15 @@ public class WeightLogService implements WeightLogApi {
 
         return foundEeightLogList;
     }
+
+    @Override
+    public WeightLogDto getLatestByDiaryProfileIdInternal(Long diaryProfileId) {
+
+        return weightLogRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .map(weightLogMapper::toDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Weight log for such diary profile id not found")
+                );
+    }
 }
