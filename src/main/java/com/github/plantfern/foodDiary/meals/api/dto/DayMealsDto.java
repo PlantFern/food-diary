@@ -5,6 +5,7 @@ import java.util.List;
 
 public record DayMealsDto(
         LocalDate date,
+        List<DayNutrientStatDto> targets,
         List<MealSectionDto> sections,
         List<MealTemplateListItemDto> pendingTemplates
 ) {
