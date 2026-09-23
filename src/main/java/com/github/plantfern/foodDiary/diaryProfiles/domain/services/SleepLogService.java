@@ -180,4 +180,21 @@ public class SleepLogService implements SleepLogApi {
                 .map(sleepLogMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public List<SleepLogDto> getByDiaryProfileIdAndDateInternal(Long diaryProfileId, LocalDate interval) {
+
+        var localDateTimeEarlier = LocalDateTime.of(interval, LocalTime.MIN);
+        var localDateTimeLater = localDateTimeEarlier.plusDays(1);
+
+        return sleepLogRepository
+                .findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter(
+                        diaryProfileId,
+                        localDateTimeLater,
+                        localDateTimeLater
+                )
+                .stream()
+                .map(sleepLogMapper::toDto)
+                .toList();
+    }
 }
