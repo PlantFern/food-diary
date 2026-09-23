@@ -44,7 +44,7 @@ public class FoodServingService implements FoodServingApi {
 
     public FoodServingDto createForProduct(
             Long productId,
-            Long amount,
+            Float amount,
             Float gramWeight,
             Long servingUnitId,
             String description

@@ -30,7 +30,7 @@ public class FoodServingEntity {
     private Long itemId;
 
     @Column(name = "amount")
-    private Long amount;
+    private Float amount;
 
     @Column(name = "gram_weight")
     private Float gramWeight;
@@ -68,7 +68,7 @@ public class FoodServingEntity {
     public FoodServingEntity(
             Long itemId,
             ItemType itemType,
-            Long amount,
+            Float amount,
             Float gramWeight,
             Long servingUnitId,
             String description
