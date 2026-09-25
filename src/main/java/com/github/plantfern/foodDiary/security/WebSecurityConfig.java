@@ -24,7 +24,7 @@ public class WebSecurityConfig{
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login", "/registration").permitAll()
 
-                    .requestMatchers("/diary_profile/**").hasRole("DIARY_PROFILE")
+                    .requestMatchers("/diary-profile/**").hasRole("DIARY_PROFILE")
                     .requestMatchers("/observer/**").hasAnyRole("OBSERVER", "SPECIALIST", "ADMINISTRATOR")
                     .requestMatchers("/specialist/**").hasRole("SPECIALIST")
 
