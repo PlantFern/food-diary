@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
         @UniqueConstraint(
                 name = "unique_email_deleted_at",
                 columnNames = {"email", "deleted_at"}
+        ),
+        @UniqueConstraint(
+                name = "unique_email_deleted_at",
+                columnNames = {"login", "deleted_at"}
         )
     }
 )
@@ -80,6 +84,13 @@ public class UserEntity {
         this.email = email;
         this.hashPassword = hashPassword;
     }
+
+    public UserEntity(String email, String login, String hashPassword) {
+        this.email = email;
+        this.login = login;
+        this.hashPassword = hashPassword;
+    }
+
 
 
     public void addRole(RoleEntity role){
