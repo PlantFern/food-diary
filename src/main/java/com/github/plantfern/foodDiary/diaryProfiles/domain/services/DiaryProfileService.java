@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+
 @Service
 @Transactional
 public class DiaryProfileService implements DiaryProfileApi {
@@ -58,7 +59,7 @@ public class DiaryProfileService implements DiaryProfileApi {
 
 
     @Transactional
-    public void create(Float height, LocalDate birthDate, Long genderId){
+    public DiaryProfileDto create(Float height, LocalDate birthDate, Long genderId){
         var actorUser = currentUser.requireId();
 
         if (diaryProfileRepository.existsByUserId(actorUser)){
@@ -77,16 +78,20 @@ public class DiaryProfileService implements DiaryProfileApi {
                 )
         );
 
-        diaryProfileRepository.save(new DiaryProfileEntity(
-                actorUser,
-                height,
-                birthDate,
-                gender
-        ));
+        return mapper.toDto(
+                diaryProfileRepository.save(
+                        new DiaryProfileEntity(
+                        actorUser,
+                        height,
+                        birthDate,
+                        gender
+                        )
+                )
+        );
     }
 
     @Transactional
-    public void update(
+    public DiaryProfileDto update(
             Long id,
             Float height,
             LocalDate birthDate,
@@ -111,7 +116,7 @@ public class DiaryProfileService implements DiaryProfileApi {
                                     "Gender with id: " + genderId + "doesn't exist"
                             )));
 
-        diaryProfileRepository.save(profile);
+        return mapper.toDto(diaryProfileRepository.save(profile));
     }
 
     @Transactional(readOnly = true)
