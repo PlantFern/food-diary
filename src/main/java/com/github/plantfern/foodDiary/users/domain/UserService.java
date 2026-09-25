@@ -93,15 +93,34 @@ public class UserService implements UserApi {
         return targetUser;
     }
 
-    public void registerInternal(String email, String password) {
+    public void register(
+            String email,
+            String password,
+            String login
+    ) {
+
         if(userRepository.existsByEmail(email)){
             throw new IllegalArgumentException("Email already registered");
         }
 
-        UserEntity user = new UserEntity(
-                email,
-                passwordEncoder.encode(password)
-        );
+        UserEntity user;
+
+        if(!login.isEmpty()) {
+            if (userRepository.existsByLogin(login))
+                throw new IllegalArgumentException("Login already used");
+
+            user = new UserEntity(
+                    email,
+                    passwordEncoder.encode(password),
+                    login
+            );
+        }
+        else {
+            user = new UserEntity(
+                    email,
+                    passwordEncoder.encode(password)
+            );
+        }
 
         userRepository.save(user);
     }
