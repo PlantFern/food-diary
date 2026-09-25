@@ -93,7 +93,7 @@ public class UserService implements UserApi {
         return targetUser;
     }
 
-    public void register(
+    public UserDto register(
             String email,
             String password,
             String login
@@ -122,7 +122,7 @@ public class UserService implements UserApi {
             );
         }
 
-        userRepository.save(user);
+        return userMapper.toDto(userRepository.save(user));
     }
 
     @Transactional
