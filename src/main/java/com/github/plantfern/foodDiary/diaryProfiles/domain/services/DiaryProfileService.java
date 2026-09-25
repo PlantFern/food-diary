@@ -1,27 +1,40 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
+import com.github.plantfern.foodDiary.diaryProfiles.api.ActivityLevel;
+import com.github.plantfern.foodDiary.diaryProfiles.api.Gender;
+import com.github.plantfern.foodDiary.diaryProfiles.api.GoalType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileCreated;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfileEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.DiaryProfileRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GenderRepository;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepository;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.WeightLogRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
 
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+
+import static java.lang.Math.max;
 
 
 @Service
@@ -36,6 +49,8 @@ public class DiaryProfileService implements DiaryProfileApi {
     private final DiaryProfileMapper mapper;
 
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final GoalRepository goalRepository;
+    private final WeightLogRepository weightLogRepository;
 
     @Autowired
     public DiaryProfileService(
@@ -46,8 +61,8 @@ public class DiaryProfileService implements DiaryProfileApi {
             CurrentUser currentUser,
             DiaryProfilePolicy diaryProfilePolicy,
 
-            ApplicationEventPublisher applicationEventPublisher
-    ){
+            ApplicationEventPublisher applicationEventPublisher,
+            GoalRepository goalRepository, WeightLogRepository weightLogRepository){
         this.diaryProfileRepository = diaryProfileRepository;
         this.genderRepository = genderRepository;
         this.mapper = mapper;
@@ -55,6 +70,8 @@ public class DiaryProfileService implements DiaryProfileApi {
         this.currentUser = currentUser;
         this.diaryProfilePolicy = diaryProfilePolicy;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.goalRepository = goalRepository;
+        this.weightLogRepository = weightLogRepository;
     }
 
 
@@ -88,6 +105,72 @@ public class DiaryProfileService implements DiaryProfileApi {
                         )
                 )
         );
+    }
+
+    @Transactional
+    public DiaryProfileDto createWithCalculatedGoal(
+            @NotNull Float height,
+            @NotNull LocalDate birthDate,
+            @NotNull Long genderId,
+            @NotNull Float weight,
+            @NotNull ActivityLevel activityLevel,
+            @NotNull GoalType goalType
+    ){
+
+        var diaryProfileDto = create(height, birthDate, genderId);
+
+        var gender = genderRepository
+                .findById(genderId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Gender not found")
+                );
+
+        var currentAge = LocalDate.now().minusYears(birthDate.getYear()).getYear();
+        float bmr;
+        if(gender.getCode().equals(Gender.FEMALE.name()))
+            bmr = 10F * weight + 6.25F * height - 5F * currentAge - 161F;
+        else
+            bmr = 10F * weight + 6.25F * height - 5F * currentAge + 5F;
+
+        float tdee = bmr * activityLevel.getCoefficient();
+
+        float targetCalories = tdee * (1 + goalType.getCalorieAdjustment());
+
+        float proteinAmount = goalType.getProteinRatio() * weight;
+        float proteinKcal = proteinAmount * 4;
+
+        float fatAmount = goalType.getFatRation() * weight;
+        float fatKcal = fatAmount * 9;
+
+        float carbAmount = max(targetCalories - proteinKcal - fatKcal, 0) / 4;
+
+        var goal = goalRepository.save(
+                new GoalEntity(
+                        diaryProfileDto.id(),
+                        null,
+                        LocalDate.now(),
+                        null,
+                        currentUser.requireId()
+                )
+        );
+        goal.setGoalNutrientSet(
+                Set.of(
+                        new GoalNutrientEntity(goal.getId(), 1L, targetCalories),
+                        new GoalNutrientEntity(goal.getId(), 2L, proteinAmount),
+                        new GoalNutrientEntity(goal.getId(), 3L, fatAmount),
+                        new GoalNutrientEntity(goal.getId(), 4L, carbAmount)
+                )
+        );
+        goalRepository.saveAndFlush(goal);
+
+        weightLogRepository.save(
+                new WeightLogEntity(
+                        diaryProfileDto.id(),
+                        weight
+                )
+        );
+
+        return diaryProfileDto;
     }
 
     @Transactional

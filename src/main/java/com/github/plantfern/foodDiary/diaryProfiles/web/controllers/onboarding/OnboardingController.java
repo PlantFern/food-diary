@@ -1,8 +1,10 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.onboarding;
 
 
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.DiaryProfileService;
+import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ExtendedProfileDataRequest;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileDataRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +36,19 @@ public class OnboardingController {
         );
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/create-and-calculate-goal")
+    public ResponseEntity<DiaryProfileDto> createDiaryWithCalculatedGoal(
+            @RequestBody ExtendedProfileDataRequest extendedProfileDataRequest
+    ){
+        return ResponseEntity.ok(diaryProfileService.createWithCalculatedGoal(
+                extendedProfileDataRequest.height(),
+                extendedProfileDataRequest.birthDate(),
+                extendedProfileDataRequest.genderId(),
+                extendedProfileDataRequest.weight(),
+                extendedProfileDataRequest.activityLevel(),
+                extendedProfileDataRequest.goalType()
+        ));
     }
 }
