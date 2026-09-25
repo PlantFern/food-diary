@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.users.domain;
 
+
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import com.github.plantfern.foodDiary.users.api.UserDto;
@@ -84,6 +85,11 @@ public class UserService implements UserApi {
         userPolicy.ensureCanGet(currentUser, targetUser.id());
 
         return targetUser;
+    }
+
+    public UserDto getMyProfile() {
+
+        return this.getByIdInternal(currentUser.requireId());
     }
 
     @Transactional

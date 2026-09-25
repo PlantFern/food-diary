@@ -2,7 +2,6 @@ package com.github.plantfern.foodDiary.users.web.controllers.user;
 
 
 import com.github.plantfern.foodDiary.users.api.UserDto;
-import com.github.plantfern.foodDiary.users.domain.UserMapper;
 import com.github.plantfern.foodDiary.users.domain.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +26,11 @@ public class UserController {
     public ResponseEntity<UserDto> getById(@PathVariable Long userId){
 
         return ResponseEntity.ok(this.userService.getById(userId));
+    }
+
+    @GetMapping("/my-profile")
+    public ResponseEntity<UserDto> getMyProfile() {
+
+        return ResponseEntity.ok(userService.getMyProfile());
     }
 }
