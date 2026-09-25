@@ -62,12 +62,14 @@ public class UserService implements UserApi {
 
     @Transactional(readOnly = true)
     public List<UserEntity> getAll() {
+
         return userRepository
                 .findAllByDeletedAtIsNull();
     }
 
     @Transactional
     public boolean hasRole(java.lang.Long userId, RoleName role) {
+
         return userRepository.findById(userId)
                 .map(user -> user.getUserRoles().stream()
                         .anyMatch(ur -> ur.getRole().getName().equals(role)))
@@ -75,8 +77,9 @@ public class UserService implements UserApi {
     }
 
     @Transactional
-    public UserDto findById(Long targetUserId) {
-        var targetUser = this.findByIdInternal(targetUserId);
+    public UserDto getById(Long targetUserId) {
+
+        var targetUser = this.getByIdInternal(targetUserId);
 
         userPolicy.ensureCanGet(currentUser, targetUser.id());
 
@@ -84,9 +87,9 @@ public class UserService implements UserApi {
     }
 
     @Transactional
-    public UserDto findByEmail(String email) {
+    public UserDto getByEmail(String email) {
 
-        var targetUser = findByEmailInternal(email);
+        var targetUser = getByEmailInternal(email);
 
         userPolicy.ensureCanGet(currentUser, targetUser.id());
 
@@ -141,12 +144,13 @@ public class UserService implements UserApi {
     @Override
     @Transactional(readOnly = true)
     public boolean existsByIdInternal(java.lang.Long userId){
+
         return userRepository.existsById(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto findByIdInternal(Long targetUserId) {
+    public UserDto getByIdInternal(Long targetUserId) {
 
         UserEntity targetUser = userRepository
                 .findById(targetUserId)
@@ -157,7 +161,7 @@ public class UserService implements UserApi {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto findByEmailInternal(String email) {
+    public UserDto getByEmailInternal(String email) {
 
         return userMapper.toDto(
                 userRepository

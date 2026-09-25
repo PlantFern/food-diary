@@ -10,8 +10,8 @@ public interface UserApi {
 
     boolean existsByIdInternal(Long id);
 
-    UserDto findByIdInternal(Long id);
-    UserDto findByEmailInternal(String email);
+    UserDto getByIdInternal(Long id);
+    UserDto getByEmailInternal(String email);
 
     void assignRolesInternal(Long userId, Set<RoleName> roles);
 } // UserApi
