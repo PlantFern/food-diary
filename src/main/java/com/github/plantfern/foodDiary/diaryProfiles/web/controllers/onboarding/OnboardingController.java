@@ -25,7 +25,7 @@ public class OnboardingController {
 
     @PostMapping("")
     public ResponseEntity<Void> createDiary(
-            @RequestParam ProfileDataRequest profileDataRequest
+            @RequestBody ProfileDataRequest profileDataRequest
     ){
         diaryProfileService.create(
                 profileDataRequest.height(),
