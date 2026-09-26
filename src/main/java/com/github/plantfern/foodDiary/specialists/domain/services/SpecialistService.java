@@ -7,12 +7,14 @@ import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMappe
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.SpecialistRepository;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
+import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Service
