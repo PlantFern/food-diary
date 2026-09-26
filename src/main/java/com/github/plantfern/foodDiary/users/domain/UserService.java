@@ -56,6 +56,7 @@ public class UserService implements UserApi {
     } // UserService
 
 
+    @Transactional
     public void save(UserEntity user){
         userRepository.save(user);
     }
@@ -68,7 +69,7 @@ public class UserService implements UserApi {
                 .findAllByDeletedAtIsNull();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean hasRole(java.lang.Long userId, RoleName role) {
 
         return userRepository.findById(userId)
@@ -87,12 +88,13 @@ public class UserService implements UserApi {
         return targetUser;
     }
 
+    @Transactional(readOnly = true)
     public UserDto getMyProfile() {
 
         return this.getByIdInternal(currentUser.requireId());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDto getByEmail(String email) {
 
         var targetUser = getByEmailInternal(email);
@@ -102,6 +104,7 @@ public class UserService implements UserApi {
         return targetUser;
     }
 
+    @Transactional(readOnly = true)
     public UserDto register(
             String email,
             String password,
@@ -177,6 +180,7 @@ public class UserService implements UserApi {
     }
 
     @Override
+    @Transactional
     public void assignRolesInternal(Long targetUserId, Set<RoleName> roles) {
 
         UserEntity targetUser = userRepository
