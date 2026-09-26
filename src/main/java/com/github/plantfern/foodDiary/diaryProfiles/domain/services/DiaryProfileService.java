@@ -6,7 +6,6 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.ActivityLevel;
 import com.github.plantfern.foodDiary.diaryProfiles.api.Gender;
 import com.github.plantfern.foodDiary.diaryProfiles.api.GoalType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
-import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
 import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileCreated;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
@@ -22,6 +21,8 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfile
 
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 
+import com.github.plantfern.foodDiary.users.api.RoleName;
+import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
 
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.Math.max;
 
@@ -53,6 +53,7 @@ public class DiaryProfileService implements DiaryProfileApi {
     private final GoalRepository goalRepository;
     private final WeightLogRepository weightLogRepository;
     private final NutrientService nutrientService;
+    private final UserApi userApi;
 
     @Autowired
     public DiaryProfileService(
@@ -66,7 +67,8 @@ public class DiaryProfileService implements DiaryProfileApi {
             ApplicationEventPublisher applicationEventPublisher,
             GoalRepository goalRepository,
             WeightLogRepository weightLogRepository,
-            NutrientService nutrientService){
+            NutrientService nutrientService,
+            UserApi userApi){
         this.diaryProfileRepository = diaryProfileRepository;
         this.genderRepository = genderRepository;
         this.mapper = mapper;
@@ -77,6 +79,7 @@ public class DiaryProfileService implements DiaryProfileApi {
         this.goalRepository = goalRepository;
         this.weightLogRepository = weightLogRepository;
         this.nutrientService = nutrientService;
+        this.userApi = userApi;
     }
 
 
@@ -100,6 +103,7 @@ public class DiaryProfileService implements DiaryProfileApi {
                 )
         );
 
+        userApi.assignRolesInternal(currentUser.requireId(), Set.of(RoleName.DIARY_PROFILE));
         return mapper.toDto(
                 diaryProfileRepository.save(
                         new DiaryProfileEntity(
