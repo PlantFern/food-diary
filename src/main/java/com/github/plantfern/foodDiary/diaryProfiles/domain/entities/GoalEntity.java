@@ -41,7 +41,7 @@ public class GoalEntity {
     private Long diaryProfileId;
 
     @Column(name = "planned_weight")
-    private Long plannedWeight;
+    private Float plannedWeight;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -80,7 +80,7 @@ public class GoalEntity {
 
     public GoalEntity(
             Long diaryProfileId,
-            Long plannedWeight,
+            Float plannedWeight,
             LocalDate startDate,
             LocalDate plannedEndDate,
             Long createdById
