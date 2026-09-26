@@ -1,10 +1,12 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
+import com.github.plantfern.foodDiary.common.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.ActivityLevel;
 import com.github.plantfern.foodDiary.diaryProfiles.api.Gender;
 import com.github.plantfern.foodDiary.diaryProfiles.api.GoalType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
+import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
 import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileCreated;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
@@ -23,16 +25,15 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.max;
 
@@ -51,6 +52,7 @@ public class DiaryProfileService implements DiaryProfileApi {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final GoalRepository goalRepository;
     private final WeightLogRepository weightLogRepository;
+    private final NutrientService nutrientService;
 
     @Autowired
     public DiaryProfileService(
@@ -62,7 +64,9 @@ public class DiaryProfileService implements DiaryProfileApi {
             DiaryProfilePolicy diaryProfilePolicy,
 
             ApplicationEventPublisher applicationEventPublisher,
-            GoalRepository goalRepository, WeightLogRepository weightLogRepository){
+            GoalRepository goalRepository,
+            WeightLogRepository weightLogRepository,
+            NutrientService nutrientService){
         this.diaryProfileRepository = diaryProfileRepository;
         this.genderRepository = genderRepository;
         this.mapper = mapper;
@@ -72,6 +76,7 @@ public class DiaryProfileService implements DiaryProfileApi {
         this.applicationEventPublisher = applicationEventPublisher;
         this.goalRepository = goalRepository;
         this.weightLogRepository = weightLogRepository;
+        this.nutrientService = nutrientService;
     }
 
 
@@ -170,6 +175,63 @@ public class DiaryProfileService implements DiaryProfileApi {
                         weight
                 )
         );
+
+        return diaryProfileDto;
+    }
+
+    @Transactional
+    public DiaryProfileDto createWithGoal(
+            @Null Float height,
+            @Null LocalDate birthDate,
+            @Null Long genderId,
+            @Null Float weight,
+            @Null Float plannedWeight,
+            @Null LocalDate plannedEndDate,
+            Map<Long, Float> goalNutrientMap
+    ) {
+
+        var diaryProfileDto = create(height, birthDate, genderId);
+
+        if(weight != null)
+            weightLogRepository.save(
+                    new WeightLogEntity(
+                            diaryProfileDto.id(),
+                            weight
+                    )
+            );
+
+        var goal = goalRepository.save(
+                new GoalEntity(
+                        diaryProfileDto.id(),
+                        plannedWeight,
+                        LocalDate.now(),
+                        plannedEndDate,
+                        currentUser.requireId()
+                )
+        );
+
+        var setOfNutrients = goalNutrientMap
+                .keySet();
+
+        if (!nutrientService.existsAllByIdIn(setOfNutrients))
+            throw new EntityNotFoundException("Nutrients not found");
+
+        goalNutrientMap.forEach( (goalNutrientKey, goalNutrientValue) -> {
+
+                    if (goalNutrientValue < 0)
+                        throw new IllegalArgumentException("Amount of nutrient must me greater then or equal 0");
+
+                    goal.getGoalNutrientSet().add(
+                            new GoalNutrientEntity(
+                                    goal.getId(),
+                                    goalNutrientKey,
+                                    goalNutrientValue
+                            )
+                    );
+                }
+        );
+
+        goalRepository.save(goal);
 
         return diaryProfileDto;
     }
