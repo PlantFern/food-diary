@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/specialist/relations")
+@RequestMapping("/specialist/{specialistId}/relations")
 public class SpecialistRelationsController {
 
     private final UserRelationService userRelationService;
@@ -31,29 +31,29 @@ public class SpecialistRelationsController {
         return ResponseEntity.ok(userRelationMapper.toDto( userRelationService.getById(id)));
     }
 
-    @GetMapping("/{specialistId}")
+    @GetMapping("")
     public ResponseEntity<List<UserRelationDto>> getAll(@PathVariable Long specialistId) {
 
         return ResponseEntity.ok(userRelationService.getBySpecialistId(specialistId));
     }
 
-    @PostMapping("/activate")
-    public ResponseEntity<Void> activate(@RequestParam Long id){
-        userRelationService.activate(id);
+    @PostMapping("/userRelationId/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long userRelationId){
+        userRelationService.activate(userRelationId);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/cancel")
-    public ResponseEntity<Void> cancel(@RequestParam Long id){
-        userRelationService.cancel(id);
+    @PostMapping("/userRelationId/cancel")
+    public ResponseEntity<Void> cancel(@PathVariable Long userRelationId){
+        userRelationService.cancel(userRelationId);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/end")
-    public ResponseEntity<Void> end(@RequestParam Long id){
-        userRelationService.deactivate(id);
+    @PostMapping("/userRelationId/end")
+    public ResponseEntity<Void> end(@PathVariable Long userRelationId){
+        userRelationService.deactivate(userRelationId);
 
         return ResponseEntity.ok().build();
     }
