@@ -20,15 +20,19 @@ import java.util.Map;
 public class ProductNutrientService {
 
 
-    private final ProductService productService;
     private final NutrientService nutrientService;
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
     private final ProductNutrientRepository productNutrientRepository;
     private final ProductRepository productRepository;
 
-    public ProductNutrientService(ProductService productService, NutrientService nutrientService, FoodPolicy foodPolicy, CurrentUser currentUser, ProductNutrientRepository productNutrientRepository, ProductRepository productRepository) {
-        this.productService = productService;
+    public ProductNutrientService(
+            NutrientService nutrientService,
+            FoodPolicy foodPolicy,
+            CurrentUser currentUser,
+            ProductNutrientRepository productNutrientRepository,
+            ProductRepository productRepository
+    ) {
         this.nutrientService = nutrientService;
         this.foodPolicy = foodPolicy;
         this.currentUser = currentUser;
@@ -41,7 +45,10 @@ public class ProductNutrientService {
         if(amount < 0)
             throw new IllegalArgumentException("Amount cannot be less than 0");
 
-        var product = productService.getById(productId);
+        var product = productRepository.findById(productId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Product not found")
+                );
 
         var nutrient = nutrientService.getById(nutrientId);
 

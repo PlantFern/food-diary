@@ -23,12 +23,9 @@ import java.util.stream.Collectors;
 public class FoodServingService implements FoodServingApi {
 
     private final FoodServingRepository foodServingRepository;
-    private final ProductService productService;
     private final ServingUnitService servingUnitService;
     private final FoodServingMapper foodServingMapper;
     private final ProductRepository productRepository;
-    private final ProductNutrientRepository productNutrientRepository;
-    private final ServingUnitRepository servingUnitRepository;
     private final VFoodServingRepository vFoodServingRepository;
     private final VItemNutrientRepository vItemNutrientRepository;
 
@@ -49,7 +46,7 @@ public class FoodServingService implements FoodServingApi {
         if(!servingUnitService.existsById(servingUnitId))
             throw new EntityNotFoundException("Serving unit not found");
 
-        if(!productService.existsById(productId))
+        if(!productRepository.existsById(productId))
             throw new EntityNotFoundException("Product not found");
 
         return foodServingMapper.toDto(foodServingRepository.save(

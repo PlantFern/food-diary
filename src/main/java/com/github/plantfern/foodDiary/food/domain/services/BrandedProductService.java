@@ -4,22 +4,28 @@ import com.github.plantfern.foodDiary.food.api.dto.BrandedProductDto;
 import com.github.plantfern.foodDiary.food.domain.entities.BrandedProductEntity;
 import com.github.plantfern.foodDiary.food.domain.mappers.BrandedProductMapper;
 import com.github.plantfern.foodDiary.food.domain.repositories.BrandedProductRepository;
+import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BrandedProductService {
 
-    private final ProductService productService;
     private final FoodServingService foodServingService;
     private final BrandedProductMapper brandedProductMapper;
     private final BrandedProductRepository brandedProductRepository;
+    private final ProductRepository productRepository;
 
-    public BrandedProductService(ProductService productService, FoodServingService foodServingService, BrandedProductMapper brandedProductMapper, BrandedProductRepository brandedProductRepository) {
-        this.productService = productService;
+    public BrandedProductService(
+            FoodServingService foodServingService,
+            BrandedProductMapper brandedProductMapper,
+            BrandedProductRepository brandedProductRepository,
+            ProductRepository productRepository
+    ) {
         this.foodServingService = foodServingService;
         this.brandedProductMapper = brandedProductMapper;
         this.brandedProductRepository = brandedProductRepository;
+        this.productRepository = productRepository;
     }
 
     public BrandedProductDto create(
@@ -31,7 +37,7 @@ public class BrandedProductService {
         if(barcode.isEmpty())
             throw new IllegalArgumentException("Barcode cannot be empty");
 
-        if(!productService.existsById(productId))
+        if(!productRepository.existsById(productId))
             throw new EntityNotFoundException("Product not found");
 
         if(!foodServingService.existsById(baseServingId))
