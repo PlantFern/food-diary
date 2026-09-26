@@ -17,14 +17,12 @@ import java.util.List;
 public class RelationModerationController {
 
     private final UserRelationService userRelationService;
-    private final UserRelationMapper userRelationMapper;
 
     public RelationModerationController(
-            UserRelationService userRelationService,
-            UserRelationMapper userRelationMapper)
+            UserRelationService userRelationService
+    )
     {
         this.userRelationService = userRelationService;
-        this.userRelationMapper = userRelationMapper;
     }
 
 
