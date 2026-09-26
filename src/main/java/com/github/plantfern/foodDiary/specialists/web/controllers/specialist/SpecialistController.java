@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/specialist/specialists")
+@RequestMapping("/specialist/{specialistId}")
 public class SpecialistController {
 
     private final SpecialistService specialistService;
