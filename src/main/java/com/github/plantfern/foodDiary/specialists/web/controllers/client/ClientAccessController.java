@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/client/specialists")
+@RequestMapping("/diary-profile/{diaryProfileId}/specialists")
 public class ClientAccessController {
 
     private final UserRelationService userRelationService;
@@ -21,23 +21,23 @@ public class ClientAccessController {
         this.userRelationService = userRelationService;
     }
 
-    @GetMapping("{diaryProfileId}")
+    @GetMapping
     public ResponseEntity<List<UserRelationDto>> getAllRelations(@PathVariable Long diaryProfileId) {
 
         return ResponseEntity.ok(userRelationService.getByDiaryProfileId(diaryProfileId));
     }
 
-    @PutMapping("/initiate")
-    public ResponseEntity<Void> initiate(@RequestParam Long id){
+    @PutMapping("/initiate/{userRelationId}")
+    public ResponseEntity<Void> initiate(@PathVariable Long userRelationId){
 
-        userRelationService.activate(id);
+        userRelationService.activate(userRelationId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/end")
-    public ResponseEntity<Void> end(@RequestParam Long id){
+    @PostMapping("/end/{userRelationId}")
+    public ResponseEntity<Void> end(@PathVariable Long userRelationId){
 
-        userRelationService.deactivate(id);
+        userRelationService.deactivate(userRelationId);
         return ResponseEntity.ok().build();
     }
 }
