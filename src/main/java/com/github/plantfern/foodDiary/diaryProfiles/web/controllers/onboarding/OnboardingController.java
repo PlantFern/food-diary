@@ -42,11 +42,13 @@ public class OnboardingController {
     public ResponseEntity<DiaryProfileDto> createDiaryWithCalculatedGoal(
             @RequestBody ExtendedProfileDataRequest extendedProfileDataRequest
     ){
+
         return ResponseEntity.ok(diaryProfileService.createWithCalculatedGoal(
                 extendedProfileDataRequest.height(),
                 extendedProfileDataRequest.birthDate(),
                 extendedProfileDataRequest.genderId(),
                 extendedProfileDataRequest.weight(),
+                extendedProfileDataRequest.plannedWeight(),
                 extendedProfileDataRequest.activityLevel(),
                 extendedProfileDataRequest.goalType()
         ));

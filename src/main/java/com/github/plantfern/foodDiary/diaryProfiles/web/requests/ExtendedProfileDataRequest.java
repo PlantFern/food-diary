@@ -11,6 +11,7 @@ public record ExtendedProfileDataRequest(
         @NotNull LocalDate birthDate,
         @NotNull Long genderId,
         @NotNull Float weight,
+        @NotNull Float plannedWeight,
         @NotNull ActivityLevel activityLevel,
         @NotNull GoalType goalType
 ) {

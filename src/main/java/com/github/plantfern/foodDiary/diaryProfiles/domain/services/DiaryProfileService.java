@@ -113,6 +113,7 @@ public class DiaryProfileService implements DiaryProfileApi {
             @NotNull LocalDate birthDate,
             @NotNull Long genderId,
             @NotNull Float weight,
+            @NotNull Float plannedWeight,
             @NotNull ActivityLevel activityLevel,
             @NotNull GoalType goalType
     ){
@@ -147,7 +148,7 @@ public class DiaryProfileService implements DiaryProfileApi {
         var goal = goalRepository.save(
                 new GoalEntity(
                         diaryProfileDto.id(),
-                        null,
+                        plannedWeight,
                         LocalDate.now(),
                         null,
                         currentUser.requireId()
