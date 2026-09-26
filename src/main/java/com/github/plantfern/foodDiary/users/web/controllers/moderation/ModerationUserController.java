@@ -4,6 +4,7 @@ import com.github.plantfern.foodDiary.users.api.UserDto;
 import com.github.plantfern.foodDiary.users.domain.UserMapper;
 import com.github.plantfern.foodDiary.users.domain.UserService;
 import com.github.plantfern.foodDiary.users.web.requests.RoleRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +30,8 @@ public class ModerationUserController {
 
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getById(@PathVariable Long userId){
+    public ResponseEntity<UserDto> getById(
+            @PathVariable Long userId){
         return ResponseEntity.ok(this.userService.getById(userId));
     }
 
@@ -44,7 +46,9 @@ public class ModerationUserController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     @PostMapping("/{targetUserId}/role")
-    public ResponseEntity<Void> addRoleFor(@PathVariable Long targetUserId ,@ModelAttribute RoleRequest request) {
+    public ResponseEntity<Void> addRoleFor(
+            @PathVariable Long targetUserId ,
+            @Valid @ModelAttribute RoleRequest request) {
         userService.assignRoles(targetUserId, Set.of(request.roleName()));
         return ResponseEntity.noContent().build();
     }

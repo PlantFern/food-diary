@@ -1,7 +1,8 @@
 package com.github.plantfern.foodDiary.users.web.requests;
 
 import com.github.plantfern.foodDiary.users.api.RoleName;
+import jakarta.validation.constraints.NotBlank;
 
 
-public record RoleRequest(RoleName roleName) {
+public record RoleRequest(@NotBlank RoleName roleName) {
 }
