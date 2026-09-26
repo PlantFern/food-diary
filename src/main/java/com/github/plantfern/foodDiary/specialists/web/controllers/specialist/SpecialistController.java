@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/specialist/specialists")
-@PreAuthorize("hasAnyRole('SPECIALIST')")
 public class SpecialistController {
 
     private final SpecialistService specialistService;
