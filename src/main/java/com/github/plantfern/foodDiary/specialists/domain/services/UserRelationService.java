@@ -71,7 +71,7 @@ public class UserRelationService implements UserRelationApi {
     @Transactional
     public void create(Long diaryProfileId, Long specialistId, RelationType relationType) {
 
-        var specialist = specialistService.findById(specialistId);
+        var specialist = specialistService.getById(specialistId);
         var diaryProfileOwnerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
 
         userRelationPolicy.ensureCanCreate(
@@ -96,7 +96,7 @@ public class UserRelationService implements UserRelationApi {
                 );
 
         var specialist = specialistService
-                .findById(userRelation.getSpecialistId());
+                .getById(userRelation.getSpecialistId());
         var diaryProfileOwnerId = diaryProfileApi.
                 getOwnerUserIdInternal(userRelation.getDiaryProfileId());
 
@@ -129,7 +129,7 @@ public class UserRelationService implements UserRelationApi {
                 .orElseThrow(
                         () -> new EntityExistsException("user relation not found")
                 );
-        var specialistId = specialistService.findById(userRelation.getSpecialistId());
+        var specialistId = specialistService.getById(userRelation.getSpecialistId());
 
         userRelationPolicy.ensureCanActivateOrReject(
                 currentUser,
@@ -152,7 +152,7 @@ public class UserRelationService implements UserRelationApi {
                 .orElseThrow(
                         () -> new EntityExistsException("user relation not found")
                 );
-        var specialistId = specialistService.findById(userRelation.getSpecialistId());
+        var specialistId = specialistService.getById(userRelation.getSpecialistId());
 
         userRelationPolicy.ensureCanEnd(
                 currentUser,
@@ -212,7 +212,7 @@ public class UserRelationService implements UserRelationApi {
     @Transactional(readOnly = true)
     public List<UserRelationDto> getBySpecialistId(Long specialistId) {
 
-        var specialistUserId = specialistService.findById(specialistId).userId();
+        var specialistUserId = specialistService.getById(specialistId).userId();
 
         userRelationPolicy.ensureSpecialistAccess(currentUser, specialistUserId);
 

@@ -63,7 +63,7 @@ public class SpecialistService implements SpecialistApi {
 
     @Override
     @Transactional(readOnly = true)
-    public SpecialistDto findById(Long targetId) {
+    public SpecialistDto getById(Long targetId) {
         return specialistRepository
                 .findById(targetId)
                 .map(specialistMapper::toDto)
@@ -74,7 +74,7 @@ public class SpecialistService implements SpecialistApi {
 
     @Override
     @Transactional(readOnly = true)
-    public SpecialistDto findByUserId(Long targetId) {
+    public SpecialistDto getByUserId(Long targetId) {
         return specialistMapper.toDto(specialistRepository
                 .findByUserId(targetId)
         );
@@ -82,7 +82,7 @@ public class SpecialistService implements SpecialistApi {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SpecialistDto> findAll() {
+    public List<SpecialistDto> getAll() {
         return specialistMapper.toListDto(specialistRepository
                 .findAll()
                 .stream()

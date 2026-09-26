@@ -9,8 +9,8 @@ import java.util.List;
 
 @Component
 public interface SpecialistApi {
-    SpecialistDto findById(Long targetId);
-    SpecialistDto findByUserId(Long targetId);
+    SpecialistDto getById(Long targetId);
+    SpecialistDto getByUserId(Long targetId);
 
-    List<SpecialistDto> findAll();
+    List<SpecialistDto> getAll();
 }

@@ -24,11 +24,11 @@ public class PublicSpecialistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SpecialistDto> getSpecialist(@PathVariable Long id){
-        return ResponseEntity.ok(specialistService.findById(id));
+        return ResponseEntity.ok(specialistService.getById(id));
     }
 
     @GetMapping("")
     public ResponseEntity<List<SpecialistDto>> getAllSpecialists(){
-        return ResponseEntity.ok(specialistService.findAll());
+        return ResponseEntity.ok(specialistService.getAll());
     }
 }
