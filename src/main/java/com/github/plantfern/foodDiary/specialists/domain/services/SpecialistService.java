@@ -40,6 +40,7 @@ public class SpecialistService implements SpecialistApi {
         this.specialistRepository = specialistRepository;
     }
 
+    @Transactional
     public void create(){
         var userId = currentUser.requireId();
         if(specialistRepository.findByUserId(userId) != null)
@@ -49,6 +50,7 @@ public class SpecialistService implements SpecialistApi {
         specialistRepository.save(new SpecialistEntity(userId));
     }
 
+    @Transactional
     public void updateActivity(){
         var specialist = specialistRepository.findByUserId(currentUser.requireId());
         if(specialist == null)
