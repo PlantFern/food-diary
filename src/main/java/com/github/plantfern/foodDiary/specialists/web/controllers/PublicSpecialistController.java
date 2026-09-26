@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/specialists")
+@RequestMapping("/specialists")
 public class PublicSpecialistController {
 
     private final SpecialistService specialistService;
