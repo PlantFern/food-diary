@@ -2,12 +2,11 @@ package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
 
 import com.github.plantfern.foodDiary.meals.domain.services.MealService;
-import com.github.plantfern.foodDiary.meals.web.requests.MealCreateRequest;
+import com.github.plantfern.foodDiary.meals.web.requests.MealTemplateApplyRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalTime;
 
 
 @RestController
@@ -24,17 +23,15 @@ public class MealController {
     public ResponseEntity<Long> applyTemplate(
             @PathVariable Long diaryProfileId,
             @PathVariable Long templateId,
-            @RequestParam Long mealTypeId,
-            @RequestParam java.time.LocalDate mealDate,
-            @RequestParam LocalTime eatenAt
+            @Valid @ModelAttribute MealTemplateApplyRequest request
     ) {
         return ResponseEntity.ok(
                 mealService.applyTemplate(
                         diaryProfileId,
-                        mealTypeId,
+                        request.mealTypeId(),
                         templateId,
-                        mealDate,
-                        eatenAt
+                        request.mealDate(),
+                        request.eatenAt()
                 )
         );
     }
