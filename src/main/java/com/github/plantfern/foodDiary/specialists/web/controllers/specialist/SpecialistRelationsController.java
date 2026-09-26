@@ -25,10 +25,10 @@ public class SpecialistRelationsController {
     }
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserRelationDto> getUserRelation(@PathVariable Long id){
+    @GetMapping("/{userRelationId}")
+    public ResponseEntity<UserRelationDto> getUserRelation(@PathVariable Long userRelationId){
 
-        return ResponseEntity.ok(userRelationMapper.toDto( userRelationService.getById(id)));
+        return ResponseEntity.ok(userRelationMapper.toDto( userRelationService.getById(userRelationId)));
     }
 
     @GetMapping("")
@@ -37,21 +37,21 @@ public class SpecialistRelationsController {
         return ResponseEntity.ok(userRelationService.getBySpecialistId(specialistId));
     }
 
-    @PostMapping("/userRelationId/activate")
+    @PostMapping("/{userRelationId}/activate")
     public ResponseEntity<Void> activate(@PathVariable Long userRelationId){
         userRelationService.activate(userRelationId);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/userRelationId/cancel")
+    @PostMapping("/{userRelationId}/cancel")
     public ResponseEntity<Void> cancel(@PathVariable Long userRelationId){
         userRelationService.cancel(userRelationId);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/userRelationId/end")
+    @PostMapping("/{userRelationId}/end")
     public ResponseEntity<Void> end(@PathVariable Long userRelationId){
         userRelationService.deactivate(userRelationId);
 
