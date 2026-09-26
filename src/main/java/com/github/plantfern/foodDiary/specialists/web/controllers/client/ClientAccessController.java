@@ -2,7 +2,6 @@ package com.github.plantfern.foodDiary.specialists.web.controllers.client;
 
 
 import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
-import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
 import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +14,11 @@ import java.util.List;
 public class ClientAccessController {
 
     private final UserRelationService userRelationService;
-    private final UserRelationMapper userRelationMapper;
 
     public ClientAccessController(
-            UserRelationService userRelationService,
-            UserRelationMapper userRelationMapper
+            UserRelationService userRelationService
     ) {
         this.userRelationService = userRelationService;
-        this.userRelationMapper = userRelationMapper;
     }
 
     @GetMapping("{diaryProfileId}")
