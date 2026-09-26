@@ -47,7 +47,7 @@ public class MealController {
 
     @DeleteMapping("/{mealId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void softDelete(@PathVariable Long mealId) {
+    public void delete(@PathVariable Long mealId) {
         mealService.softDelete(mealId);
     }
 }
