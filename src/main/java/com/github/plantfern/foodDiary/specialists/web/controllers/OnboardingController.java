@@ -1,28 +1,26 @@
-package com.github.plantfern.foodDiary.specialists.web.controllers.specialist;
+package com.github.plantfern.foodDiary.specialists.web.controllers;
 
 
 import com.github.plantfern.foodDiary.specialists.domain.services.SpecialistService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@AllArgsConstructor
+
 @RestController
-@RequestMapping("/specialist/{specialistId}")
-public class SpecialistController {
+@RequestMapping("/specialists")
+public class OnboardingController {
 
     private final SpecialistService specialistService;
 
-    public SpecialistController(
-            SpecialistService specialistService
-    ) {
-        this.specialistService = specialistService;
-    }
 
-    @PostMapping("/changeState")
-    public ResponseEntity<Void> changeActivity(){
-        specialistService.updateActivity();
+    @PostMapping("/")
+    public ResponseEntity<Void> createSpecialist(){
+        specialistService.create();
 
         return ResponseEntity.ok().build();
     }
