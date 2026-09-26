@@ -26,8 +26,7 @@ public class WebSecurityConfig{
                     .requestMatchers("/users/my-profile").authenticated()
 
                     .requestMatchers("/diary-profile/**").hasRole("DIARY_PROFILE")
-                    .requestMatchers("/observer/**").hasAnyRole("OBSERVER", "SPECIALIST", "ADMINISTRATOR")
-                    .requestMatchers("/specialist/**").hasRole("SPECIALIST")
+                    .requestMatchers("/specialist/**").hasAnyRole("SPECIALIST", "MODERATOR", "ADMINISTRATOR")
 
                     .requestMatchers("/moderator/**").hasAnyRole("MODERATOR", "ADMINISTRATOR")
                     .requestMatchers("/admin/**").hasRole("ADMINISTRATOR")

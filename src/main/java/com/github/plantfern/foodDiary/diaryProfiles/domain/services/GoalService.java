@@ -36,7 +36,7 @@ public class GoalService implements GoalApi {
     @Transactional
     public GoalDto create(
             Long diaryProfileId,
-            Long plannedWeight,
+            Float plannedWeight,
             LocalDate startDate,
             LocalDate plannedEndDate,
             List<GoalNutrientRequest> goalNutrientList
@@ -92,7 +92,7 @@ public class GoalService implements GoalApi {
     @Transactional
     public GoalDto update(
             Long goalId,
-            Long plannedWeight,
+            Float plannedWeight,
             LocalDate startDate,
             LocalDate plannedEndDate,
             List<GoalNutrientRequest> goalNutrientList

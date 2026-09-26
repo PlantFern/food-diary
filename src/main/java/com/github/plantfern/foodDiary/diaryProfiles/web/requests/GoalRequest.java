@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record GoalRequest(
-        Long plannedWeight,
+        Float plannedWeight,
         LocalDate startDate,
         LocalDate plannedEndDate,
         List<GoalNutrientRequest> nutrientGoals
