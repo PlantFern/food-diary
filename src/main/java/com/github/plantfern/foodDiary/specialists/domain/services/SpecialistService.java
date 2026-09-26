@@ -43,6 +43,7 @@ public class SpecialistService implements SpecialistApi {
         if(specialistRepository.findByUserId(userId) != null)
             throw new IllegalStateException("Specialist already exists");
 
+        userApi.assignRolesInternal(currentUser.requireId(), Set.of(RoleName.SPECIALIST));
         specialistRepository.save(new SpecialistEntity(userId));
     }
 
