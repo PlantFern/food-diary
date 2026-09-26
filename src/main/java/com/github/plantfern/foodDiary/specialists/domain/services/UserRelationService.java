@@ -168,7 +168,7 @@ public class UserRelationService implements UserRelationApi {
         userRelationRepository.save(userRelation);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserRelationEntity findById(Long userRelationId) {
         var userRelation = userRelationRepository
                 .findById(userRelationId)
@@ -187,6 +187,7 @@ public class UserRelationService implements UserRelationApi {
         return userRelation;
     }
 
+    @Transactional(readOnly = true)
     public List<UserRelationDto> findAll() {
 
         userRelationPolicy.ensureCanGetAll(currentUser);
@@ -225,6 +226,7 @@ public class UserRelationService implements UserRelationApi {
     //region Internal methods
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserRelationDto> findByDiaryProfileIdInternal(Long diaryProfileId) {
         return userRelationRepository
                 .findAllByDiaryProfileId(diaryProfileId)
@@ -233,6 +235,7 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserRelationDto> findBySpecialistIdInternal(Long specialistId) {
         return userRelationRepository
                 .findAllBySpecialistId(specialistId)
@@ -241,7 +244,7 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public boolean existsByDiaryProfileIdAndSpecialistIdInternal(
             Long diaryProfileId,
             Long specialistId
