@@ -4,10 +4,12 @@ package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 import com.github.plantfern.foodDiary.meals.domain.services.MealTemplateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
 
+@Validated
 @RestController
 @RequestMapping("/api/meals/diary-profile/{diaryProfileId}/templates")
 public class MealTemplateController {

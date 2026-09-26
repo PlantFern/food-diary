@@ -4,13 +4,15 @@ package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 import com.github.plantfern.foodDiary.meals.api.dto.DayMealsDto;
 import com.github.plantfern.foodDiary.meals.domain.services.MealQueryService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
 
+@Validated
 @RestController
-@RequestMapping("/api/meals/diary-profile/{diaryProfileId}")
+@RequestMapping("/api/diary-profile/{diaryProfileId}/meals")
 public class MealQueryController {
 
     private final MealQueryService mealQueryService;

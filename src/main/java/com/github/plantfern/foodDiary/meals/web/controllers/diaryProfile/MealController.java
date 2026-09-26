@@ -6,9 +6,11 @@ import com.github.plantfern.foodDiary.meals.web.requests.MealTemplateApplyReques
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/diary-profile/{diaryProfileId}/meals")
 public class MealController {
