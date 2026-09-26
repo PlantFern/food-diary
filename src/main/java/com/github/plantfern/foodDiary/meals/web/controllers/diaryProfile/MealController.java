@@ -11,7 +11,7 @@ import java.time.LocalTime;
 
 
 @RestController
-@RequestMapping("/api/meals/diary-profile/{diaryProfileId}")
+@RequestMapping("/api/diary-profile/{diaryProfileId}/meals")
 public class MealController {
 
     private final MealService mealService;
