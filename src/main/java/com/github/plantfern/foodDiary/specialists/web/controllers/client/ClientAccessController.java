@@ -1,14 +1,17 @@
 package com.github.plantfern.foodDiary.specialists.web.controllers.client;
 
 
+import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/diary-profile/{diaryProfileId}/specialists")
 public class ClientAccessController {
@@ -27,10 +30,14 @@ public class ClientAccessController {
         return ResponseEntity.ok(userRelationService.getByDiaryProfileId(diaryProfileId));
     }
 
-    @PutMapping("/initiate/{userRelationId}")
-    public ResponseEntity<Void> initiate(@PathVariable Long userRelationId){
+    @PutMapping("/spacialist/{specialistId}/initiate")
+    public ResponseEntity<Void> initiate(
+            @PathVariable Long diaryProfileId,
+            @PathVariable Long specialistId,
+            @RequestParam RelationType relationType
+    ){
 
-        userRelationService.activate(userRelationId);
+        userRelationService.create(diaryProfileId, specialistId, relationType);
         return ResponseEntity.ok().build();
     }
 
