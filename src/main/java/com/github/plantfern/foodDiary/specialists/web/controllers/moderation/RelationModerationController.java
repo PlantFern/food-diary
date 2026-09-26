@@ -32,18 +32,18 @@ public class RelationModerationController {
     @GetMapping("/getAll")
     public ResponseEntity<List<UserRelationDto>> getUserRelations(){
 
-        return ResponseEntity.ok(userRelationService.findAll());
+        return ResponseEntity.ok(userRelationService.getAll());
     }
 
     @GetMapping("/by-diary-profile/{diaryProfileId}")
     public ResponseEntity<List<UserRelationDto>> getAllByDiaryProfile(@PathVariable Long diaryProfileId) {
 
-        return ResponseEntity.ok(userRelationService.findBySpecialistId(diaryProfileId));
+        return ResponseEntity.ok(userRelationService.getBySpecialistId(diaryProfileId));
     }
 
     @GetMapping("/by-specialist/{specialistId}")
     public ResponseEntity<List<UserRelationDto>> getAllBySpecialist(@PathVariable Long specialistId) {
 
-        return ResponseEntity.ok(userRelationService.findBySpecialistId(specialistId));
+        return ResponseEntity.ok(userRelationService.getBySpecialistId(specialistId));
     }
 }

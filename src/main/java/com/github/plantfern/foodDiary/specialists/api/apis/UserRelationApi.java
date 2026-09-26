@@ -8,8 +8,8 @@ import java.util.List;
 
 @Component
 public interface UserRelationApi {
-    List<UserRelationDto> findByDiaryProfileIdInternal(Long diaryProfileId);
-    List<UserRelationDto> findBySpecialistIdInternal(Long specialistId);
+    List<UserRelationDto> getByDiaryProfileIdInternal(Long diaryProfileId);
+    List<UserRelationDto> getBySpecialistIdInternal(Long specialistId);
 
     boolean existsByDiaryProfileIdAndSpecialistIdInternal
             (Long diaryProfileId,

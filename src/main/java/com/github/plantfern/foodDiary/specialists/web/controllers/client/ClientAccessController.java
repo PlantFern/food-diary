@@ -5,7 +5,6 @@ import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
 import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class ClientAccessController {
     @GetMapping("{diaryProfileId}")
     public ResponseEntity<List<UserRelationDto>> getAllRelations(@PathVariable Long diaryProfileId) {
 
-        return ResponseEntity.ok(userRelationService.findByDiaryProfileId(diaryProfileId));
+        return ResponseEntity.ok(userRelationService.getByDiaryProfileId(diaryProfileId));
     }
 
     @PutMapping("/initiate")

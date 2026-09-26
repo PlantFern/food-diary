@@ -2,7 +2,6 @@ package com.github.plantfern.foodDiary.specialists.web.controllers.specialist;
 
 import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
-import com.github.plantfern.foodDiary.specialists.domain.services.SpecialistService;
 import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +28,13 @@ public class SpecialistRelationsController {
     @GetMapping("/{id}")
     public ResponseEntity<UserRelationDto> getUserRelation(@PathVariable Long id){
 
-        return ResponseEntity.ok(userRelationMapper.toDto( userRelationService.findById(id)));
+        return ResponseEntity.ok(userRelationMapper.toDto( userRelationService.getById(id)));
     }
 
     @GetMapping("/{specialistId}")
     public ResponseEntity<List<UserRelationDto>> getAll(@PathVariable Long specialistId) {
 
-        return ResponseEntity.ok(userRelationService.findBySpecialistId(specialistId));
+        return ResponseEntity.ok(userRelationService.getBySpecialistId(specialistId));
     }
 
     @PostMapping("/activate")

@@ -169,7 +169,7 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Transactional(readOnly = true)
-    public UserRelationEntity findById(Long userRelationId) {
+    public UserRelationEntity getById(Long userRelationId) {
         var userRelation = userRelationRepository
                 .findById(userRelationId)
                 .orElseThrow(
@@ -188,7 +188,7 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Transactional(readOnly = true)
-    public List<UserRelationDto> findAll() {
+    public List<UserRelationDto> getAll() {
 
         userRelationPolicy.ensureCanGetAll(currentUser);
 
@@ -200,17 +200,17 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Transactional(readOnly = true)
-    public List<UserRelationDto> findByDiaryProfileId(Long diaryProfileId) {
+    public List<UserRelationDto> getByDiaryProfileId(Long diaryProfileId) {
 
         var diaryProfileUserId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
 
         userRelationPolicy.ensureClientAccess(currentUser, diaryProfileUserId);
 
-        return findByDiaryProfileIdInternal(diaryProfileId);
+        return getByDiaryProfileIdInternal(diaryProfileId);
     }
 
     @Transactional(readOnly = true)
-    public List<UserRelationDto> findBySpecialistId(Long specialistId) {
+    public List<UserRelationDto> getBySpecialistId(Long specialistId) {
 
         var specialistUserId = specialistService.findById(specialistId).userId();
 
@@ -227,7 +227,7 @@ public class UserRelationService implements UserRelationApi {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserRelationDto> findByDiaryProfileIdInternal(Long diaryProfileId) {
+    public List<UserRelationDto> getByDiaryProfileIdInternal(Long diaryProfileId) {
         return userRelationRepository
                 .findAllByDiaryProfileId(diaryProfileId)
                 .stream().map(userRelationMapper::toDto)
@@ -236,7 +236,7 @@ public class UserRelationService implements UserRelationApi {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserRelationDto> findBySpecialistIdInternal(Long specialistId) {
+    public List<UserRelationDto> getBySpecialistIdInternal(Long specialistId) {
         return userRelationRepository
                 .findAllBySpecialistId(specialistId)
                 .stream().map(userRelationMapper::toDto)
