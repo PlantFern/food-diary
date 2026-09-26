@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/moderation/specialists")
+@RequestMapping("/moderation/specialists")
 @PreAuthorize("hasAnyRole('SPECIALIST')")
 public class RelationModerationController {
 
