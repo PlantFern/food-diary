@@ -104,7 +104,7 @@ public class UserService implements UserApi {
         return targetUser;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto register(
             String email,
             String password,
