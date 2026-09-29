@@ -117,14 +117,14 @@ public class UserService implements UserApi {
 
         UserEntity user;
 
-        if(!login.isEmpty()) {
+        if(login != null && !login.isEmpty()) {
             if (userRepository.existsByLogin(login))
                 throw new IllegalArgumentException("Login already used");
 
             user = new UserEntity(
                     email,
-                    passwordEncoder.encode(password),
-                    login
+                    login,
+					passwordEncoder.encode(password)
             );
         }
         else {
