@@ -104,7 +104,7 @@ public class UserService implements UserApi {
         return targetUser;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto register(
             String email,
             String password,
@@ -124,7 +124,7 @@ public class UserService implements UserApi {
             user = new UserEntity(
                     email,
                     login,
-					passwordEncoder.encode(password)
+                    passwordEncoder.encode(password)
             );
         }
         else {
