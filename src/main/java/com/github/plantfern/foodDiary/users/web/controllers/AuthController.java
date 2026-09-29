@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.users.web.controllers;
 
 import com.github.plantfern.foodDiary.users.api.UserDto;
 import com.github.plantfern.foodDiary.users.domain.UserService;
+import com.github.plantfern.foodDiary.users.web.requests.RegisterRequest;
 import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,14 @@ public class AuthController {
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDto> createUserAccount(@ModelAttribute String email,
-                                                     @ModelAttribute String password,
-                                                     @ModelAttribute @Null String login
-    ){
+    public ResponseEntity<UserDto> createUserAccount(@RequestBody RegisterRequest request    ){
 
         return ResponseEntity.ok(
                 userService.register(
-                        email,
-                        password,
-                        login)
+                        request.email(),
+                        request.password(),
+                        request.login()
+                )
         );
     }
 }
