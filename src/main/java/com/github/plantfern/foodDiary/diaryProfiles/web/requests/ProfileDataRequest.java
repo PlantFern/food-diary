@@ -5,6 +5,6 @@ import java.time.LocalDate;
 public record ProfileDataRequest(
         Float height,
         LocalDate birthDate,
-        Long genderCode
+        Long genderId
 ) {
 }
