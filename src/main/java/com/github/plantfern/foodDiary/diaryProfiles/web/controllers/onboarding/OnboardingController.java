@@ -27,16 +27,14 @@ public class OnboardingController {
 
 
     @PostMapping("")
-    public ResponseEntity<Void> createDiary(
+    public ResponseEntity<DiaryProfileDto> createDiary(
             @RequestBody ProfileDataRequest profileDataRequest
     ){
-        diaryProfileService.create(
+        return ResponseEntity.ok(diaryProfileService.create(
                 profileDataRequest.height(),
                 profileDataRequest.birthDate(),
                 profileDataRequest.genderCode()
-        );
-
-        return ResponseEntity.ok().build();
+        ));
     }
 
     @PostMapping("/create-and-calculate-goal")
