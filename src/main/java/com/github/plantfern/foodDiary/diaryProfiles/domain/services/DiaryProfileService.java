@@ -164,12 +164,12 @@ public class DiaryProfileService implements DiaryProfileApi {
                 )
         );
         goal.setGoalNutrientSet(
-                Set.of(
+                new HashSet<>(Set.of(
                         new GoalNutrientEntity(goal.getId(), 1L, targetCalories),
                         new GoalNutrientEntity(goal.getId(), 2L, proteinAmount),
                         new GoalNutrientEntity(goal.getId(), 3L, fatAmount),
                         new GoalNutrientEntity(goal.getId(), 4L, carbAmount)
-                )
+                ))
         );
         goalRepository.saveAndFlush(goal);
 
