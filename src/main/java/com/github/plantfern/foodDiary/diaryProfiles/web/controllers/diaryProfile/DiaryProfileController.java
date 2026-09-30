@@ -38,7 +38,7 @@ public class DiaryProfileController {
                 diaryProfileId,
                 profileDataRequest.height(),
                 profileDataRequest.birthDate(),
-                profileDataRequest.genderCode()
+                profileDataRequest.genderId()
         );
 
         return ResponseEntity.ok().build();

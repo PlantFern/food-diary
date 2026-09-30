@@ -33,7 +33,7 @@ public class OnboardingController {
         return ResponseEntity.ok(diaryProfileService.create(
                 profileDataRequest.height(),
                 profileDataRequest.birthDate(),
-                profileDataRequest.genderCode()
+                profileDataRequest.genderId()
         ));
     }
 
