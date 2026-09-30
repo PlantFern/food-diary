@@ -124,7 +124,7 @@ public class UserService implements UserApi {
             user = new UserEntity(
                     email,
                     login,
-					passwordEncoder.encode(password)
+                    passwordEncoder.encode(password)
             );
         }
         else {
