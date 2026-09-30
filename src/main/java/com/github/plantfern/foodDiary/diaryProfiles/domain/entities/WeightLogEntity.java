@@ -38,7 +38,7 @@ public class WeightLogEntity {
     private Float weight;
 
     @Column(
-            name = "createdAt",
+            name = "created_at",
             nullable = false,
             updatable = false
     )
