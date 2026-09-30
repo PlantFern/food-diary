@@ -2,6 +2,9 @@ package com.github.plantfern.foodDiary.web;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +18,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.List;
 
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -23,6 +28,10 @@ public class GlobalExceptionHandler {
             EntityNotFoundException ex,
             HttpServletRequest request
     ) {
+	log.warn(
+		 "Not found at {}: {}",
+		 request.getRequestURI(),
+		 ex.getMessage());
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
@@ -31,6 +40,10 @@ public class GlobalExceptionHandler {
             IllegalArgumentException ex,
             HttpServletRequest request
     ) {
+	log.warn(
+		 "Bad request at {}: {}",
+		 request.getRequestURI(),
+		 ex.getMessage());
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
@@ -39,6 +52,11 @@ public class GlobalExceptionHandler {
             AccessDeniedException ex,
             HttpServletRequest request
     ) {
+
+	log.warn(
+		 "Access denied at {}: {}",
+		 request.getRequestURI(),
+		 ex.getMessage());
         return build(HttpStatus.FORBIDDEN, ex.getMessage(), request);
     }
 
@@ -47,6 +65,11 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+
+	log.warn(
+		 "Unauthorized at {}: {}",
+		 request.getRequestURI(),
+		 ex.getMessage());
         return build(HttpStatus.UNAUTHORIZED, "Authentication required", request);
     }
 
@@ -60,6 +83,11 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(fe -> new ErrorResponse.FieldError(fe.getField(), fe.getDefaultMessage()))
                 .toList();
+
+	log.warn(
+		 "Validation failed at {}: {}",
+		 request.getRequestURI(),
+		 fieldErrors);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -83,6 +111,11 @@ public class GlobalExceptionHandler {
                 .map(fe -> new ErrorResponse.FieldError(fe.getField(), fe.getDefaultMessage()))
                 .toList();
 
+	log.warn(
+		 "Not found at {}: {}",
+		 request.getRequestURI(),
+		 fieldErrors);
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(
@@ -99,8 +132,14 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException ex,
             HttpServletRequest request
     ) {
+
         String message = "Invalid value for parameter '" + ex.getName() + "'";
-        return build(HttpStatus.BAD_REQUEST, message, request);
+        
+	log.warn(
+		 "Tipe mismatch at {}: {}",
+		 request.getRequestURI(),
+		 message);
+	return build(HttpStatus.BAD_REQUEST, message, request);
     }
 
     @ExceptionHandler(Exception.class)
@@ -108,6 +147,11 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
+
+	log.warn(
+		 "Unhandled error at {}",
+		 request.getRequestURI(),
+		 ex);
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal service error", request);
     }
 
