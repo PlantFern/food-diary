@@ -72,6 +72,11 @@ public class SpecialistService implements SpecialistApi {
                 );
     }
 
+    @Transactional(readOnly = true)
+    public SpecialistDto getByCurrentUser() {
+        return getById(currentUser.requireId());
+    }
+
     @Override
     @Transactional(readOnly = true)
     public SpecialistDto getByUserId(Long targetId) {
