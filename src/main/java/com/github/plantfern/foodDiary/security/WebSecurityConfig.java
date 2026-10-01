@@ -30,16 +30,15 @@ public class WebSecurityConfig{
             .csrf(AbstractHttpConfigurer::disable) // для тестирования в Postman
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login", "/registration").permitAll()
-                    .requestMatchers("/users/my-profile").authenticated()
+                    .requestMatchers("api/users/my-profile", "/api/diary/profile/onboarding/**").authenticated()
 
-                    .requestMatchers("/diary-profile/**").hasRole("DIARY_PROFILE")
-                    .requestMatchers("/specialist/**").hasAnyRole("SPECIALIST", "MODERATOR", "ADMINISTRATOR")
+                    .requestMatchers("/api/diary-profile/**").hasRole("DIARY_PROFILE")
+                    .requestMatchers("/api/specialist/**").hasAnyRole("SPECIALIST", "MODERATOR", "ADMINISTRATOR")
 
                     .requestMatchers("/moderator/**").hasAnyRole("MODERATOR", "ADMINISTRATOR")
                     .requestMatchers("/admin/**").hasRole("ADMINISTRATOR")
                     .anyRequest().authenticated()
             )
-            // для Postman и SPA
             .httpBasic(Customizer.withDefaults()) // Пока что Basic auth
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
