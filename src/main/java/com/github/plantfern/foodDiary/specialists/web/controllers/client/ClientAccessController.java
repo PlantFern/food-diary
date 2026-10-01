@@ -13,7 +13,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/diary-profile/{diaryProfileId}/specialists")
+@RequestMapping("/api/diary-profile/{diaryProfileId}/specialists")
 public class ClientAccessController {
 
     private final UserRelationService userRelationService;

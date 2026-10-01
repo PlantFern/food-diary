@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/specialist/{specialistId}/relations")
+@RequestMapping("/api/specialist/{specialistId}/relations")
 public class SpecialistRelationsController {
 
     private final UserRelationService userRelationService;

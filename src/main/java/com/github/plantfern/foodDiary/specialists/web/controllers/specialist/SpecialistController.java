@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/specialist/{specialistId}")
+@RequestMapping("/api/specialist/{specialistId}")
 public class SpecialistController {
 
     private final SpecialistService specialistService;
