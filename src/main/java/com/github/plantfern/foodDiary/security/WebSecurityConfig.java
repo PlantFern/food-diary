@@ -16,8 +16,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -27,30 +25,31 @@ public class WebSecurityConfig{
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults())
-            .csrf(AbstractHttpConfigurer::disable) // для тестирования в Postman
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login", "/registration").permitAll()
-                    .requestMatchers("/api/users/my-profile", "/api/diary/profile/onboarding/**").authenticated()
-
+                    .requestMatchers(
+                            "/api/users/my-profile",
+                            "/api/diary-profile/onboarding/**"
+                    ).authenticated()
                     .requestMatchers("/api/diary-profile/**").hasRole("DIARY_PROFILE")
                     .requestMatchers("/api/specialist/**").hasAnyRole("SPECIALIST", "MODERATOR", "ADMINISTRATOR")
-
                     .requestMatchers("/moderator/**").hasAnyRole("MODERATOR", "ADMINISTRATOR")
                     .requestMatchers("/admin/**").hasRole("ADMINISTRATOR")
                     .anyRequest().authenticated()
             )
-            .httpBasic(Customizer.withDefaults()) // Пока что Basic auth
+            .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-			.exceptionHandling(ex -> ex
-				.authenticationEntryPoint((request, response, authException) -> {
-					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					response.setContentType("application/json");
-					response.getWriter().write("""
-						{"status": 401, "error": "Unauthorized", "message": "Authentication required"}
-					""");
-				}));
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("""
+                        {"status": 401, "error": "Unauthorized", "message": "Authentication required"}
+                    """);
+                }));
 
         return http.build();
     }
