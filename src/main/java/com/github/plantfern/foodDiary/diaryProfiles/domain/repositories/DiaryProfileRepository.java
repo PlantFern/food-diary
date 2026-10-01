@@ -15,6 +15,8 @@ import java.util.List;
 public interface DiaryProfileRepository extends JpaRepository<DiaryProfileEntity, Long> {
     boolean existsByUserId(Long userId);
 
+    Optional<DiaryProfileEntity> findByUserId(Long userId);
+
     @Query("""
         select dp.userId
         from DiaryProfileEntity dp
