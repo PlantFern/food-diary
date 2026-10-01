@@ -23,7 +23,7 @@ public class DiaryProfileController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("/my-profile")
     public ResponseEntity<DiaryProfileDto> getMyProfile(){
 
         var response = diaryProfileService.getByCurrentUser();
