@@ -306,6 +306,12 @@ public class DiaryProfileService implements DiaryProfileApi {
     }
 
     @Transactional(readOnly = true)
+    public DiaryProfileDto getByCurrentUser(){
+
+        return getByIdInternal(currentUser.requireId());
+    }
+
+    @Transactional(readOnly = true)
     DiaryProfileEntity getById(Long diaryProfileId) {
 
         return diaryProfileRepository

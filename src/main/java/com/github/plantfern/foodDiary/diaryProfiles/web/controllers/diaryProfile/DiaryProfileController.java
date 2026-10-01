@@ -23,9 +23,10 @@ public class DiaryProfileController {
     }
 
 
-    @GetMapping("/{diaryProfileId}")
-    public ResponseEntity<DiaryProfileDto> findDiary(@PathVariable Long diaryProfileId){
-        var response = diaryProfileService.getByIdWithPolicy( diaryProfileId );
+    @GetMapping("")
+    public ResponseEntity<DiaryProfileDto> getMyProfile(){
+
+        var response = diaryProfileService.getByCurrentUser();
 
         return ResponseEntity.ok(response);
     }
