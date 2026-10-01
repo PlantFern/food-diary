@@ -30,7 +30,7 @@ public class WebSecurityConfig{
             .csrf(AbstractHttpConfigurer::disable) // для тестирования в Postman
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login", "/registration").permitAll()
-                    .requestMatchers("api/users/my-profile", "/api/diary/profile/onboarding/**").authenticated()
+                    .requestMatchers("/api/users/my-profile", "/api/diary/profile/onboarding/**").authenticated()
 
                     .requestMatchers("/api/diary-profile/**").hasRole("DIARY_PROFILE")
                     .requestMatchers("/api/specialist/**").hasAnyRole("SPECIALIST", "MODERATOR", "ADMINISTRATOR")
