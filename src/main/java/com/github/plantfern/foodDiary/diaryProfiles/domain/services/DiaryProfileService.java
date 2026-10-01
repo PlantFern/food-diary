@@ -307,8 +307,13 @@ public class DiaryProfileService implements DiaryProfileApi {
 
     @Transactional(readOnly = true)
     public DiaryProfileDto getByCurrentUser(){
-
-        return getByIdInternal(currentUser.requireId());
+        return diaryProfileRepository.findByUserId(currentUser.requireId())
+                .map(mapper::toDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Diary profile for current user not found"
+                        )
+                );
     }
 
     @Transactional(readOnly = true)
