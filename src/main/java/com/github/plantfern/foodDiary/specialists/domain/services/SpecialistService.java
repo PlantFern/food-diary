@@ -74,7 +74,11 @@ public class SpecialistService implements SpecialistApi {
 
     @Transactional(readOnly = true)
     public SpecialistDto getByCurrentUser() {
-        return getById(currentUser.requireId());
+        var specialist = specialistRepository.findByUserId(currentUser.requireId());
+        if (specialist == null) {
+            throw new EntityNotFoundException("Specialist for current user not found");
+        }
+        return specialistMapper.toDto(specialist);
     }
 
     @Override
