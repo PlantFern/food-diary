@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 
 public record MealFoodRecordCreateRequest(
-        @NotNull @Positive Long mealId,
+        Long mealId,
         @NotNull @Positive Long mealTypeId,
         @NotNull @Positive Long servingId,
         @NotNull @Positive Float amount,

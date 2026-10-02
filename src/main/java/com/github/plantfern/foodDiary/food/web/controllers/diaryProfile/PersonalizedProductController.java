@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/food/products")
 public class PersonalizedProductController {
 
     private final ProductQueryService productQueryService;
