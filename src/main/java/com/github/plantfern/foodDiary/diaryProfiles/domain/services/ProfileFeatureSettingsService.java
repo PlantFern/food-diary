@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
-import com.github.plantfern.foodDiary.common.services.NutrientService;
+import com.github.plantfern.foodDiary.common.domain.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.ProfileFeatureSettingsApi;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileHiddenNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service

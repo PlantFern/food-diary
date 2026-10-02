@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
 
-import com.github.plantfern.foodDiary.common.services.NutrientService;
+import com.github.plantfern.foodDiary.common.domain.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.ProfileFeatureSettingsApi;
 import com.github.plantfern.foodDiary.food.api.ItemType;

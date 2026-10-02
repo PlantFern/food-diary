@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
 
-import com.github.plantfern.foodDiary.common.services.NutrientService;
+import com.github.plantfern.foodDiary.common.domain.services.NutrientService;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.domain.entities.ProductNutrientEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.ProductNutrientRepository;

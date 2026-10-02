@@ -1,7 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
-import com.github.plantfern.foodDiary.common.services.NutrientService;
+import com.github.plantfern.foodDiary.common.domain.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.ActivityLevel;
 import com.github.plantfern.foodDiary.diaryProfiles.api.Gender;
 import com.github.plantfern.foodDiary.diaryProfiles.api.GoalType;

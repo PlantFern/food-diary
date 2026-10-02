@@ -1,9 +1,8 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
-import com.github.plantfern.foodDiary.common.services.NutrientService;
+import com.github.plantfern.foodDiary.common.domain.services.NutrientService;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.GoalApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
-import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.GoalMapper;
