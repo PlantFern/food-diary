@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -61,6 +62,12 @@ public class FileService {
                 .orElseThrow(
                         () -> new FileNotFoundException("File not found.")
                 );
+    }
+
+    @Transactional(readOnly = true)
+    public List<UploadedFileEntity> getEntities(List<Long> ids){
+        return uploadFileRepository
+                .findAllById(ids);
     }
 
     @Transactional

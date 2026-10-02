@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.common.storage;
 
 
+import com.github.plantfern.foodDiary.common.storage.domain.UploadedFileEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -45,5 +48,31 @@ public class FileController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(entity.getContentType()))
                 .body(resource);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FileUploadResponse>> getFiles(
+            @RequestParam List<Long> ids
+    ) {
+
+        var files = fileService.getEntities(ids);
+
+        return ResponseEntity.ok(
+                files
+                        .stream()
+                        .map(this::toResponse)
+                        .toList()
+        );
+    }
+
+    private FileUploadResponse toResponse(UploadedFileEntity uploadedFileEntity) {
+
+        return new FileUploadResponse(
+                uploadedFileEntity.getId(),
+                "/api/files/" + uploadedFileEntity.getId(),
+                uploadedFileEntity.getOriginalName(),
+                uploadedFileEntity.getContentType(),
+                uploadedFileEntity.getSize()
+        );
     }
 }
