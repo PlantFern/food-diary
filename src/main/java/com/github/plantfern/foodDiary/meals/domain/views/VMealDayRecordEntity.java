@@ -13,14 +13,13 @@ import java.time.LocalTime;
 
 
 @Getter
-
 @Entity
 @Immutable
 @Table(name = "v_meal_day_records")
 public class VMealDayRecordEntity {
 
     @Id
-    @Column(name = "record_id")
+    @Column(name = "id")
     private Long recordId;
 
     @Column(name = "meal_id")
@@ -55,4 +54,3 @@ public class VMealDayRecordEntity {
 
     protected VMealDayRecordEntity() {}
 }
-
