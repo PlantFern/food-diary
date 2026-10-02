@@ -29,6 +29,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,33 +88,34 @@ public class DiaryProfileService implements DiaryProfileApi {
     public DiaryProfileDto create(Float height, LocalDate birthDate, Long genderId){
         var actorUser = currentUser.requireId();
 
-        if (diaryProfileRepository.existsByUserId(actorUser)){
+        if (diaryProfileRepository.existsByUserId(actorUser)) {
             throw new IllegalStateException("Diary profile for user already exists");
         }
 
-        applicationEventPublisher.publishEvent(
-                new DiaryProfileCreated(
-                        actorUser
-                )
-                );
-
         var gender = genderRepository.findById(genderId).orElseThrow(
                 () -> new EntityNotFoundException(
-                        "Gender with id: " + genderId + "doesn't exist"
+                        "Gender with id: " + genderId + " doesn't exist"
                 )
         );
 
-        userApi.assignRolesInternal(currentUser.requireId(), Set.of(RoleName.DIARY_PROFILE));
-        return mapper.toDto(
-                diaryProfileRepository.save(
-                        new DiaryProfileEntity(
-                        actorUser,
-                        height,
-                        birthDate,
-                        gender
-                        )
-                )
-        );
+        DiaryProfileEntity saved;
+        try {
+            saved = diaryProfileRepository.save(
+                    new DiaryProfileEntity(
+                            actorUser,
+                            height,
+                            birthDate,
+                            gender
+                    )
+            );
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalStateException("Diary profile for user already exists", ex);
+        }
+
+        userApi.assignRolesInternal(actorUser, Set.of(RoleName.DIARY_PROFILE));
+        applicationEventPublisher.publishEvent(new DiaryProfileCreated(actorUser));
+
+        return mapper.toDto(saved);
     }
 
     @Transactional
