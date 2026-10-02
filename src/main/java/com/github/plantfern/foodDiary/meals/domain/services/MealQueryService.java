@@ -57,7 +57,7 @@ public class MealQueryService {
                 : Set.of();
 
         boolean sleepEnabled = settings.showSleep();
-        boolean weightEnabled =  settings.showWeight();
+        boolean weightEnabled = settings.showWeight();
 
         Map<Long, Float> targetByNutrientId = loadVisibleGoalTargets(diaryProfileId, hiddenNutrientIds);
 
@@ -89,12 +89,12 @@ public class MealQueryService {
 
         Map<Long, Float> factByNutrientId = new HashMap<>();
 
-        for(var meal : meals) {
+        for (var meal : meals) {
 
             var serving = productServingMap.get(meal.getServingId());
             var nutrientAmountPer100g = nutrientsByServing.getOrDefault(meal.getServingId(), Map.of());
 
-            if(serving == null || serving.gramWeight() == null || meal.getAmount() == null)
+            if (serving == null || serving.gramWeight() == null || meal.getAmount() == null)
                 continue;
 
             float grams = meal.getAmount() * serving.gramWeight() * serving.servingAmount();
@@ -116,7 +116,7 @@ public class MealQueryService {
                                     .getOrDefault(nutrientId, 0F);
                             String code = nutrientService.getById(nutrientId).getCode();
                             Float remaining = (target == null) ? null : target - fact;
-                            Float percent = (target == null || target == 0f) ? null : fact/target *100f;
+                            Float percent = (target == null || target == 0f) ? null : fact / target * 100f;
                             return new DayNutrientStatDto(
                                     nutrientId,
                                     code,
@@ -129,10 +129,14 @@ public class MealQueryService {
                 )
                 .toList();
 
-        var byMeal = meals.stream()
-                .collect(Collectors.groupingBy(VMealDayRecordEntity::getMealId));
+        var byMealType = meals.stream()
+                .collect(Collectors.groupingBy(
+                        VMealDayRecordEntity::getMealTypeId,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
 
-        List<MealSectionDto> sections = byMeal
+        List<MealSectionDto> sections = byMealType
                 .values()
                 .stream()
                 .map(mealRows -> {
@@ -193,10 +197,10 @@ public class MealQueryService {
                 weightEnabled,
                 sleepForDay,
                 weightLog
-                );
+        );
     }
 
-    private Map<Long, Float> loadVisibleGoalTargets(Long diaryProfileId, Set<Long> hidden){
+    private Map<Long, Float> loadVisibleGoalTargets(Long diaryProfileId, Set<Long> hidden) {
 
         GoalDto goal;
 
@@ -206,12 +210,12 @@ public class MealQueryService {
             return Map.of();
         }
 
-        if(goal == null || goal.nutrientSet() == null)
+        if (goal == null || goal.nutrientSet() == null)
             return Map.of();
 
         Map<Long, Float> targets = new HashMap<>();
 
-        for(GoalNutrientDto goalNutrient : goal.nutrientSet()){
+        for (GoalNutrientDto goalNutrient : goal.nutrientSet()) {
 
             if (goalNutrient.nutrientId() == null) {
                 continue;
