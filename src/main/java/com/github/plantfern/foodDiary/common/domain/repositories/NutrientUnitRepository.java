@@ -1,7 +1,7 @@
-package com.github.plantfern.foodDiary.common.repositories;
+package com.github.plantfern.foodDiary.common.domain.repositories;
 
 
-import com.github.plantfern.foodDiary.common.entities.NutrientUnitEntity;
+import com.github.plantfern.foodDiary.common.domain.entities.NutrientUnitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

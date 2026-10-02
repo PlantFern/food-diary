@@ -1,4 +1,4 @@
-package com.github.plantfern.foodDiary.common.entities;
+package com.github.plantfern.foodDiary.common.domain.entities;
 
 
 import jakarta.persistence.*;

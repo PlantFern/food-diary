@@ -1,8 +1,8 @@
-package com.github.plantfern.foodDiary.common.services;
+package com.github.plantfern.foodDiary.common.domain.services;
 
 
-import com.github.plantfern.foodDiary.common.entities.NutrientEntity;
-import com.github.plantfern.foodDiary.common.repositories.NutrientRepository;
+import com.github.plantfern.foodDiary.common.domain.entities.NutrientEntity;
+import com.github.plantfern.foodDiary.common.domain.repositories.NutrientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
