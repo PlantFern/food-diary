@@ -18,6 +18,7 @@ import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityExistsException;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,11 +81,21 @@ public class UserRelationService implements UserRelationApi {
                 specialist.userId()
         );
 
-        userRelationRepository.save(new UserRelationEntity(
-                diaryProfileId,
-                specialistId,
-                relationType
-        ));
+        if (Boolean.TRUE.equals(
+                userRelationRepository.existsByDiaryProfileIdAndSpecialistId(diaryProfileId, specialistId)
+        )) {
+            throw new IllegalStateException("Relation between this profile and specialist already exists");
+        }
+
+        try {
+            userRelationRepository.save(new UserRelationEntity(
+                    diaryProfileId,
+                    specialistId,
+                    relationType
+            ));
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalStateException("Relation between this profile and specialist already exists", ex);
+        }
     }
 
     @Transactional

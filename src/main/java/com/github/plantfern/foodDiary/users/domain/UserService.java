@@ -12,6 +12,7 @@ import com.github.plantfern.foodDiary.users.domain.security.RoleAssignmentPolicy
 import com.github.plantfern.foodDiary.users.domain.security.SecurityCurrentUser;
 import com.github.plantfern.foodDiary.users.domain.security.UserPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,7 @@ public class UserService implements UserApi {
         this.userPolicy = userPolicy;
 
         this.passwordEncoder = passwordEncoder;
-    } // UserService
+    }
 
 
     @Transactional
@@ -111,36 +112,38 @@ public class UserService implements UserApi {
             String login
     ) {
 
-        if(userRepository.existsByEmail(email)){
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email already registered");
+        }
+
+        if (login != null && !login.isEmpty() && userRepository.existsByLogin(login)) {
+            throw new IllegalArgumentException("Login already used");
         }
 
         UserEntity user;
 
-        if(login != null && !login.isEmpty()) {
-            if (userRepository.existsByLogin(login))
-                throw new IllegalArgumentException("Login already used");
-
+        if (login != null && !login.isEmpty()) {
             user = new UserEntity(
                     email,
                     login,
                     passwordEncoder.encode(password)
             );
-        }
-        else {
+        } else {
             user = new UserEntity(
                     email,
                     passwordEncoder.encode(password)
             );
         }
 
-        return userMapper.toDto(userRepository.save(user));
+        try {
+            return userMapper.toDto(userRepository.save(user));
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalArgumentException("Email or login already registered", ex);
+        }
     }
 
     @Transactional
     public void assignRoles(Long targetUserId, Set<RoleName> roles){
-
-        var actorUserId = currentUser.requireId();
 
         roleAssignmentPolicy.ensureCanAssign(currentUser, targetUserId, roles);
 
@@ -193,4 +196,4 @@ public class UserService implements UserApi {
         userRepository.save(targetUser);
     }
     //endregion
-} // UserService
+}

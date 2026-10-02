@@ -10,6 +10,7 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,18 +44,22 @@ public class SpecialistService implements SpecialistApi {
     @Transactional
     public void create(){
         var userId = currentUser.requireId();
-        if(specialistRepository.findByUserId(userId) != null)
+        if (specialistRepository.existsByUserId(userId)) {
             throw new IllegalStateException("Specialist already exists");
+        }
 
-        userApi.assignRolesInternal(currentUser.requireId(), Set.of(RoleName.SPECIALIST));
-        specialistRepository.save(new SpecialistEntity(userId));
+        userApi.assignRolesInternal(userId, Set.of(RoleName.SPECIALIST));
+        try {
+            specialistRepository.save(new SpecialistEntity(userId));
+        } catch (DataIntegrityViolationException ex) {
+            throw new IllegalStateException("Specialist already exists", ex);
+        }
     }
 
     @Transactional
     public void updateActivity(){
-        var specialist = specialistRepository.findByUserId(currentUser.requireId());
-        if(specialist == null)
-            throw new EntityNotFoundException("Specialist doesn't exist");
+        var specialist = specialistRepository.findByUserId(currentUser.requireId())
+                .orElseThrow(() -> new EntityNotFoundException("Specialist doesn't exist"));
 
         specialist.setIsActive(!specialist.getIsActive());
         specialistRepository.save(specialist);
@@ -74,19 +79,17 @@ public class SpecialistService implements SpecialistApi {
 
     @Transactional(readOnly = true)
     public SpecialistDto getByCurrentUser() {
-        var specialist = specialistRepository.findByUserId(currentUser.requireId());
-        if (specialist == null) {
-            throw new EntityNotFoundException("Specialist for current user not found");
-        }
-        return specialistMapper.toDto(specialist);
+        return specialistRepository.findByUserId(currentUser.requireId())
+                .map(specialistMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Specialist for current user not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public SpecialistDto getByUserId(Long targetId) {
-        return specialistMapper.toDto(specialistRepository
-                .findByUserId(targetId)
-        );
+        return specialistRepository.findByUserId(targetId)
+                .map(specialistMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Specialist not found"));
     }
 
     @Override
