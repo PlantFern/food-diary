@@ -5,6 +5,12 @@ spring:
     runtime:
       flyway-enabled: false
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+      file-size-threshold: 1MB
+
   jpa:
     hibernate:
       naming:
@@ -15,3 +21,13 @@ spring:
 
   profiles:
     active: local
+
+  app:
+    storage:
+      location: ./uploads
+      max-size: 5242880
+      allow-types:
+        - image/jpeg
+        - image/png
+        - image/webp
+        - image/gif
