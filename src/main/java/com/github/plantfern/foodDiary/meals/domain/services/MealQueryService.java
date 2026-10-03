@@ -56,8 +56,8 @@ public class MealQueryService {
                 ? settings.hiddenNutrientIds()
                 : Set.of();
 
-        boolean sleepEnabled = settings.showSleep();
-        boolean weightEnabled = settings.showWeight();
+        boolean sleepEnabled = Boolean.TRUE.equals(settings.showSleep());
+        boolean weightEnabled = Boolean.TRUE.equals(settings.showWeight());
 
         Map<Long, Float> targetByNutrientId = loadVisibleGoalTargets(diaryProfileId, hiddenNutrientIds);
 
@@ -71,6 +71,10 @@ public class MealQueryService {
         Long primaryNutrientId = headerNutrientIds.isEmpty()
                 ? nutrientService.getFirstByIdNotIn(hiddenNutrientIds)
                 : headerNutrientIds.getFirst();
+
+        if (primaryNutrientId == null) {
+            primaryNutrientId = 1L;
+        }
 
         Set<Long> statNutrientIds = new HashSet<>(headerNutrientIds);
         statNutrientIds.add(primaryNutrientId);
@@ -184,7 +188,12 @@ public class MealQueryService {
                 ? weightLogApi.getLatestByDiaryProfileIdInternal(diaryProfileId)
                 : null;
 
-        String primaryCode = nutrientService.getById(primaryNutrientId).getCode();
+        String primaryCode;
+        try {
+            primaryCode = nutrientService.getById(primaryNutrientId).getCode();
+        } catch (EntityNotFoundException e) {
+            primaryCode = "NUTRIENT";
+        }
 
         return new DayMealsDto(
                 date,
@@ -198,6 +207,50 @@ public class MealQueryService {
                 sleepForDay,
                 weightLog
         );
+    }
+
+    public List<RecentDayFoodGroupDto> getRecentWeek(Long diaryProfileId) {
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
+        mealPolicy.ensureCanGet(currentUser, ownerId);
+
+        LocalDate to = LocalDate.now();
+        LocalDate from = to.minusDays(6);
+
+        var rows = vMealDayRecordRepository
+                .findAllByDiaryProfileIdAndMealDateBetween(diaryProfileId, from, to);
+
+        var servingIds = rows.stream()
+                .map(VMealDayRecordEntity::getServingId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Map<Long, ProductServingDto> servingMap = servingIds.isEmpty()
+                ? Map.of()
+                : foodServingApi.getInfoByServingIds(servingIds, 1L);
+
+        Map<LocalDate, List<RecentFoodItemDto>> byDate = new LinkedHashMap<>();
+        for (int i = 0; i < 7; i++) {
+            byDate.put(to.minusDays(i), new ArrayList<>());
+        }
+
+        for (var row : rows) {
+            if (row.getMealDate() == null) continue;
+            var serving = servingMap.get(row.getServingId());
+            String name = serving != null && serving.productDescription() != null
+                    ? serving.productDescription()
+                    : "Food #" + row.getRecordId();
+            byDate.computeIfAbsent(row.getMealDate(), d -> new ArrayList<>())
+                    .add(new RecentFoodItemDto(
+                            row.getRecordId(),
+                            name,
+                            row.getMealTypeCode()
+                    ));
+        }
+
+        return byDate.entrySet().stream()
+                .filter(e -> !e.getValue().isEmpty())
+                .map(e -> new RecentDayFoodGroupDto(e.getKey(), e.getValue()))
+                .toList();
     }
 
     private Map<Long, Float> loadVisibleGoalTargets(Long diaryProfileId, Set<Long> hidden) {
