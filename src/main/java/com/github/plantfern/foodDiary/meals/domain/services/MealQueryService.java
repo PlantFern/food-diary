@@ -61,12 +61,14 @@ public class MealQueryService {
 
         Map<Long, Float> targetByNutrientId = loadVisibleGoalTargets(diaryProfileId, hiddenNutrientIds);
 
-        List<Long> headerNutrientIds = targetByNutrientId
-                .keySet()
-                .stream()
-                .sorted()
-                .limit(HEADER_TARGET_LIMIT)
-                .toList();
+        List<Long> headerNutrientIds = new ArrayList<>(
+                targetByNutrientId
+                        .keySet()
+                        .stream()
+                        .sorted()
+                        .limit(HEADER_TARGET_LIMIT)
+                        .toList()
+        );
 
         Long primaryNutrientId = headerNutrientIds.isEmpty()
                 ? nutrientService.getFirstByIdNotIn(hiddenNutrientIds)
@@ -74,6 +76,10 @@ public class MealQueryService {
 
         if (primaryNutrientId == null) {
             primaryNutrientId = 1L;
+        }
+
+        if (!headerNutrientIds.contains(primaryNutrientId)) {
+            headerNutrientIds.add(0, primaryNutrientId);
         }
 
         Set<Long> statNutrientIds = new HashSet<>(headerNutrientIds);
@@ -101,7 +107,8 @@ public class MealQueryService {
             if (serving == null || serving.gramWeight() == null || meal.getAmount() == null)
                 continue;
 
-            float grams = meal.getAmount() * serving.gramWeight() * serving.servingAmount();
+            Float servingAmount = serving.servingAmount() != null ? serving.servingAmount() : 1f;
+            float grams = meal.getAmount() * serving.gramWeight() * servingAmount;
             for (Long nutrientId : statNutrientIds) {
                 Float amountPer100g = nutrientAmountPer100g.get(nutrientId);
                 if (amountPer100g == null)
@@ -118,7 +125,12 @@ public class MealQueryService {
                             var target = targetByNutrientId.get(nutrientId);
                             var fact = factByNutrientId
                                     .getOrDefault(nutrientId, 0F);
-                            String code = nutrientService.getById(nutrientId).getCode();
+                            String code;
+                            try {
+                                code = nutrientService.getById(nutrientId).getCode();
+                            } catch (EntityNotFoundException e) {
+                                code = "NUTRIENT";
+                            }
                             Float remaining = (target == null) ? null : target - fact;
                             Float percent = (target == null || target == 0f) ? null : fact / target * 100f;
                             return new DayNutrientStatDto(
@@ -292,7 +304,11 @@ public class MealQueryService {
                 && productServing.gramWeight() != null
                 && productServing.nutrientPer100g() != null
                 && r.getAmount() != null) {
-            nutrient = (r.getAmount() * productServing.gramWeight() / 100f) * productServing.nutrientPer100g();
+            float servingAmount = productServing.servingAmount() != null
+                    ? productServing.servingAmount()
+                    : 1f;
+            nutrient = (r.getAmount() * productServing.gramWeight() * servingAmount / 100f)
+                    * productServing.nutrientPer100g();
         }
 
         return new MealFoodRecordItemDto(
