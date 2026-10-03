@@ -22,12 +22,12 @@ spring:
   profiles:
     active: local
 
-  app:
-    storage:
-      location: ./uploads
-      max-size: 5242880
-      allow-types:
-        - image/jpeg
-        - image/png
-        - image/webp
-        - image/gif
+app:
+  storage:
+    location: ./uploads
+    max-size: 5242880
+    allow-types:
+      - image/jpeg
+      - image/png
+      - image/webp
+      - image/gif

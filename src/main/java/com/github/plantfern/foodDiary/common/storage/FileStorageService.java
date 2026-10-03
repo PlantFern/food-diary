@@ -5,8 +5,6 @@ import com.github.plantfern.foodDiary.common.storage.exceptionHandlers.FileStora
 import com.github.plantfern.foodDiary.common.storage.exceptionHandlers.FileTooLargeException;
 import com.github.plantfern.foodDiary.common.storage.exceptionHandlers.InvalidFileTypeException;
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -15,27 +13,27 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 
 @Service
 public class FileStorageService {
 
     private final StorageProperties properties;
-    @NotNull
     private Path rootLocation;
+
+    public FileStorageService(StorageProperties properties) {
+        this.properties = properties;
+    }
 
     public String store(MultipartFile file) {
 
         if (file.isEmpty())
             throw new FileStorageException("File is empty");
 
-        if (!properties.allowTypes().contains(file.getContentType()))
+        if (properties.allowTypes() == null
+                || !properties.allowTypes().contains(file.getContentType()))
             throw new InvalidFileTypeException("Type " + file.getContentType() + " is not allowed");
 
         if (file.getSize() > properties.maxSize())
@@ -50,6 +48,9 @@ public class FileStorageService {
         String storeName = UUID.randomUUID() + extension;
 
         Path filePath = rootLocation.resolve(storeName).normalize();
+
+        if (!filePath.startsWith(rootLocation))
+            throw new FileStorageException("Cannot access file outside storage dir");
 
         try {
             file.transferTo(filePath);
@@ -95,6 +96,12 @@ public class FileStorageService {
 
     @PostConstruct
     public void init() {
+        String location = properties.location();
+        if (location == null || location.isBlank()) {
+            location = "./uploads";
+        }
+        this.rootLocation = Paths.get(location).toAbsolutePath().normalize();
+
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
