@@ -19,7 +19,7 @@ import java.time.LocalTime;
 public class VMealDayRecordEntity {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "record_id")
     private Long recordId;
 
     @Column(name = "meal_id")
