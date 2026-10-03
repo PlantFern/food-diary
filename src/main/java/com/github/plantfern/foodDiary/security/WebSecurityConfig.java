@@ -30,6 +30,7 @@ public class WebSecurityConfig{
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login", "/registration").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/specialists", "/api/specialists/").authenticated()
                     .requestMatchers(
                             "/api/users/my-profile",
                             "/api/diary-profile/onboarding/**"
