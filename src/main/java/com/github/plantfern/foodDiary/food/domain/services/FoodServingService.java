@@ -106,7 +106,7 @@ public class FoodServingService implements FoodServingApi {
 
         Map<Long, ProductServingDto> result = new HashMap<>();
         for(var serving : servings) {
-            String key = serving.getItemType() + ":" + serving.getItemId();
+            String key = itemKey(serving.getItemType(), serving.getItemId());
 
             result.put(
                     serving.getServingId(),
@@ -141,7 +141,7 @@ public class FoodServingService implements FoodServingApi {
         for(var serving : servings){
             result.put(
                     serving.getServingId(),
-                    byItem.getOrDefault(serving.getItemType() + ":" + serving.getItemId(), Map.of())
+                    byItem.getOrDefault(itemKey(serving.getItemType(), serving.getItemId()), Map.of())
             );
         }
 
@@ -150,6 +150,10 @@ public class FoodServingService implements FoodServingApi {
     // endregion
 
     // region Private methods
+
+    private static String itemKey(String itemType, Long itemId) {
+        return itemType + ":" + itemId;
+    }
 
     private Map<String, Map<Long, Float>> loadNutrientPer100g(
             List<VFoodServingEntity> servings,
@@ -175,7 +179,7 @@ public class FoodServingService implements FoodServingApi {
             for (var nutrient: rows) {
                 result
                         .computeIfAbsent(
-                                nutrient.getItemType() + " : " +  nutrient.getItemId(),
+                                itemKey(nutrient.getItemType(), nutrient.getItemId()),
                                 key -> new HashMap<>()
                         )
                         .put(nutrient.getNutrientId(), nutrient.getAmountPer100g());
