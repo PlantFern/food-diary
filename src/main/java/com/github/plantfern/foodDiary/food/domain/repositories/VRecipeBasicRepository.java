@@ -32,7 +32,10 @@ public interface VRecipeBasicRepository extends JpaRepository<VRecipeBasicEntity
                             on favorite.itemId = recipe.recipeId
                             and favorite.itemType = com.github.plantfern.foodDiary.food.api.ItemType.RECIPE
                             and favorite.diaryProfileId = :diaryProfileId
-            where recipe.entityStatusCode = 'ACTIVE'
+            where (
+                    recipe.entityStatusCode is null
+                    or recipe.entityStatusCode <> 'ARCHIVED'
+                )
                 and (
                     recipe.isPublic = true
                         or recipe.createdById = :currentUserId
@@ -40,7 +43,7 @@ public interface VRecipeBasicRepository extends JpaRepository<VRecipeBasicEntity
                 and (
                     :query is null
                         or lower(recipe.recipeName) like lower(concat('%', cast(:query as string), '%'))
-                        or lower(recipe.recipeDescription) like lower(concat('%', cast(:query as string), '%'))
+                        or lower(coalesce(recipe.recipeDescription, '')) like lower(concat('%', cast(:query as string), '%'))
                     )
                 and (:onlyFavorites = false or favorite.id is not null)
                 and (:onlyMy = false or recipe.createdById = :currentUserId)
@@ -63,7 +66,7 @@ public interface VRecipeBasicRepository extends JpaRepository<VRecipeBasicEntity
                 from VRecipeBasicEntity recipe
                 where (:query is null
                         or lower(recipe.recipeName) like lower(concat('%', cast(:query as string), '%'))
-                        or lower(recipe.recipeDescription) like lower(concat('%', cast(:query as string), '%'))
+                        or lower(coalesce(recipe.recipeDescription, '')) like lower(concat('%', cast(:query as string), '%'))
                 )
     """)
     List<RecipeListItemDto> findList(
