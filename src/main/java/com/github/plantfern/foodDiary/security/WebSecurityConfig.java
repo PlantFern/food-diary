@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +29,7 @@ public class WebSecurityConfig{
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/login", "/registration").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
                     .requestMatchers(
                             "/api/users/my-profile",
                             "/api/diary-profile/onboarding/**"

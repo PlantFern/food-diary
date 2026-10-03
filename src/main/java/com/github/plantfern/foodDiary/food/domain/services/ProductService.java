@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
 
+import com.github.plantfern.foodDiary.common.storage.FileService;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.api.apis.ProductApi;
@@ -14,6 +15,8 @@ import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -29,8 +32,19 @@ public class ProductService implements ProductApi {
     private final FoodPolicy foodPolicy;
     private final ProductNutrientService productNutrientService;
     private final FoodServingService foodServingService;
+    private final FileService fileService;
 
-    public ProductService(CurrentUser currentUser, ProductRepository productRepository, EntityStatusRepository entityStatusRepository, ProductDataSourceRepository productDataSourceRepository, DataSourceRepository dataSourceRepository, FoodPolicy foodPolicy, ProductNutrientService productNutrientService, FoodServingService foodServingService) {
+    public ProductService(
+            CurrentUser currentUser,
+            ProductRepository productRepository,
+            EntityStatusRepository entityStatusRepository,
+            ProductDataSourceRepository productDataSourceRepository,
+            DataSourceRepository dataSourceRepository,
+            FoodPolicy foodPolicy,
+            ProductNutrientService productNutrientService,
+            FoodServingService foodServingService,
+            FileService fileService
+    ) {
         this.currentUser = currentUser;
         this.productRepository = productRepository;
         this.entityStatusRepository = entityStatusRepository;
@@ -39,6 +53,7 @@ public class ProductService implements ProductApi {
         this.foodPolicy = foodPolicy;
         this.productNutrientService = productNutrientService;
         this.foodServingService = foodServingService;
+        this.fileService = fileService;
     }
 
     public Long create(
@@ -85,6 +100,24 @@ public class ProductService implements ProductApi {
         return productRepository
                 .save(savedProduct)
                 .getId();
+    }
+
+    @Transactional
+    public String setPhoto(Long productId, MultipartFile file) {
+        var product = getById(productId);
+        boolean hasPhoto = product.getPhotoPath() != null && !product.getPhotoPath().isBlank();
+
+        if (hasPhoto) {
+            foodPolicy.ensureModeration(currentUser);
+        } else {
+            foodPolicy.ensureIsOwner(currentUser, product.getCreatedById());
+        }
+
+        var uploaded = fileService.upload(file);
+        String path = "/api/files/" + uploaded.getId();
+        product.setPhotoPath(path);
+        productRepository.save(product);
+        return path;
     }
 
     public void activateProduct(Long productId) {
@@ -136,8 +169,6 @@ public class ProductService implements ProductApi {
     }
 
 
-    // region Override
-
     @Override
     public Long createNutrientRecordingProduct(
             String description,
@@ -163,5 +194,4 @@ public class ProductService implements ProductApi {
                 null
         ).id();
     }
-    // end region
 }

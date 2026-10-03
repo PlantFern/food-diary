@@ -26,7 +26,7 @@ public class MealService {
     private final MealTemplateFoodRecordRepository mealTemplateFoodRecordRepository;
     private final MealFoodRecordRepository mealFoodRecordRepository;
     private final DiaryProfileApi diaryProfileApi;
-    private final MealPolicy mealPolicy; // или Food/Meal policy
+    private final MealPolicy mealPolicy;
     private final CurrentUser currentUser;
 
     @Transactional
@@ -102,6 +102,15 @@ public class MealService {
                     .orElseThrow(() -> new EntityNotFoundException("Meal type not found"));
             meal.setMealTypeId(mealTypeId);
         }
+        meal.setPhotoPath(photoPath);
+        mealRepository.save(meal);
+    }
+
+    @Transactional
+    public void updatePhoto(Long mealId, String photoPath) {
+        var meal = getById(mealId);
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
+        mealPolicy.ensureIsOwner(currentUser, ownerId);
         meal.setPhotoPath(photoPath);
         mealRepository.save(meal);
     }

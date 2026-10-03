@@ -1,13 +1,16 @@
 package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
 
+import com.github.plantfern.foodDiary.common.storage.FileService;
 import com.github.plantfern.foodDiary.meals.domain.services.MealService;
 import com.github.plantfern.foodDiary.meals.web.requests.MealTemplateApplyRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Validated
@@ -16,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class MealController {
 
     private final MealService mealService;
+    private final FileService fileService;
 
-    public MealController(MealService mealService) {
+    public MealController(MealService mealService, FileService fileService) {
         this.mealService = mealService;
+        this.fileService = fileService;
     }
 
     @PostMapping("/from-template/{templateId}")
@@ -38,13 +43,16 @@ public class MealController {
         );
     }
 
-    @PatchMapping("/{mealId}/photo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setPhoto(
+    @PatchMapping(value = "/{mealId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> setPhoto(
+            @PathVariable Long diaryProfileId,
             @PathVariable Long mealId,
-            @RequestParam String photoPath
+            @RequestParam("file") MultipartFile file
     ) {
-        mealService.update(mealId, null, photoPath);
+        var uploaded = fileService.upload(file);
+        String path = "/api/files/" + uploaded.getId();
+        mealService.updatePhoto(mealId, path);
+        return ResponseEntity.ok(path);
     }
 
     @DeleteMapping("/{mealId}")
