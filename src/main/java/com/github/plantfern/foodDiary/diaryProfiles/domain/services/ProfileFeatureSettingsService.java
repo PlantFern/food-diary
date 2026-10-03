@@ -74,7 +74,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         )
                 );
 
-        if(hiddenNutrients.isEmpty())
+        if(hiddenNutrients == null || hiddenNutrients.isEmpty())
             return profileFeatureSettingsMapper.toDto(profileFeatureSettings);
 
         var profileFeatureSettingsId = profileFeatureSettings.getId();
@@ -131,7 +131,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         );
         profileFeatureSettingsRepository.save(oldSettings);
 
-        if(hiddenNutrients.isEmpty())
+        if(hiddenNutrients == null || hiddenNutrients.isEmpty())
             return profileFeatureSettingsMapper.toDto(newSettings);
 
         for(Long nutrientId : hiddenNutrients) {
@@ -271,8 +271,6 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                 .toList();
     }
 
-    //region Internal methods
-
     @Override
     @Transactional(readOnly = true)
     public ProfileFeatureSettingsDto getActiveByDiaryProfileInternal(Long diaryProfileId) {
@@ -280,9 +278,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         return profileFeatureSettingsRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
                 .map(profileFeatureSettingsMapper::toDto)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("settings with such diary profile id not found")
-                );
+                .orElseGet(() -> defaultSettings(diaryProfileId));
     }
 
     @Override
@@ -297,5 +293,20 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         return profileFeatureSettingsMapper.toDto(settings);
     }
-    //endregion
+
+    private static ProfileFeatureSettingsDto defaultSettings(Long diaryProfileId) {
+        return new ProfileFeatureSettingsDto(
+                null,
+                diaryProfileId,
+                false,
+                false,
+                false,
+                false,
+                false,
+                null,
+                null,
+                null,
+                Set.of()
+        );
+    }
 }

@@ -19,37 +19,37 @@ import java.time.LocalTime;
 public class VMealDayRecordEntity {
 
     @Id
-    @Column(name = "record_id")
+    @Column(name = "recordId")
     private Long recordId;
 
-    @Column(name = "meal_id")
+    @Column(name = "mealId")
     private Long mealId;
 
-    @Column(name = "serving_id")
+    @Column(name = "servingId")
     private Long servingId;
 
     @Column(name = "amount")
     private Float amount;
 
-    @Column(name = "eaten_at")
+    @Column(name = "eatenAt")
     private LocalTime eatenAt;
 
-    @Column(name = "diary_profile_id")
+    @Column(name = "diaryProfileId")
     private Long diaryProfileId;
 
-    @Column(name = "meal_type_id")
+    @Column(name = "mealTypeId")
     private Long mealTypeId;
 
-    @Column(name = "meal_date")
+    @Column(name = "mealDate")
     private LocalDate mealDate;
 
-    @Column(name = "generated_from_template_id")
+    @Column(name = "generatedFromTemplateId")
     private Long generatedFromTemplateId;
 
-    @Column(name = "meal_photo_path")
+    @Column(name = "photoPath")
     private String mealPhotoPath;
 
-    @Column(name = "meal_type_code")
+    @Column(name = "mealTypeCode")
     private String mealTypeCode;
 
     protected VMealDayRecordEntity() {}

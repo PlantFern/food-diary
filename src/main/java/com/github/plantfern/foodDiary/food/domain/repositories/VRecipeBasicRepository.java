@@ -42,16 +42,16 @@ public interface VRecipeBasicRepository extends JpaRepository<VRecipeBasicEntity
                         or lower(recipe.recipeName) like lower(concat('%', cast(:query as string), '%'))
                         or lower(recipe.recipeDescription) like lower(concat('%', cast(:query as string), '%'))
                     )
-                and ( :favorites = false or favorite.id is not null)
-                and ( :onlyMy = false or recipe.createdById = :currentUserId)
-                    order by case when favorite.id is not null then true else false end
+                and (:onlyFavorites = false or favorite.id is not null)
+                and (:onlyMy = false or recipe.createdById = :currentUserId)
+                    order by case when favorite.id is not null then 0 else 1 end
             """)
     List<PersonalizedRecipeListItemDto> findPersonalizedList(
             @Param("diaryProfileId") Long diaryProfileId,
             @Param("currentUserId") Long currentUserId,
             @Param("query") @Nullable String query,
             @Param("onlyFavorites") boolean onlyFavorites,
-            @Param("OnlyMy") boolean onlyMy
+            @Param("onlyMy") boolean onlyMy
     );
 
     @Query("""

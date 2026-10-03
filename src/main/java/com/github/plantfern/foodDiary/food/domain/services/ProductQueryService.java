@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 
 @Transactional
 @Service
@@ -66,11 +68,14 @@ public class ProductQueryService {
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
         var settings = profileFeatureSettingsApi.getActiveByDiaryProfileInternal(diaryProfileId);
-        var hiddenNutrientIds = settings.hiddenNutrientIds();
-        var accepted = nutrientService.getFirstByIdNotIn(hiddenNutrientIds);
-        var checkedAccepted = hiddenNutrientIds != null
-                ? accepted
-                : 1L;
+        Set<Long> hiddenNutrientIds = settings.hiddenNutrientIds() != null
+                ? settings.hiddenNutrientIds()
+                : Set.of();
+
+        Long mainNutrientId = nutrientService.getFirstByIdNotIn(hiddenNutrientIds);
+        if (mainNutrientId == null) {
+            mainNutrientId = 1L;
+        }
 
         var req = request != null
                 ? request
@@ -83,7 +88,7 @@ public class ProductQueryService {
 
         return vProductBasicRepository.findPersonalizedList(
                 diaryProfileId,
-                checkedAccepted,
+                mainNutrientId,
                 currentUser.requireId(),
                 (req.query() == null
                         || req.query().isBlank())
@@ -127,13 +132,14 @@ public class ProductQueryService {
         var diaryProfile = diaryProfileApi.getByIdInternal(diaryProfileId);
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
-        var hiddenNutrientIds = profileFeatureSettingsApi
-                .getActiveByDiaryProfileInternal(diaryProfileId)
-                .hiddenNutrientIds();
+        var settings = profileFeatureSettingsApi.getActiveByDiaryProfileInternal(diaryProfileId);
+        Set<Long> hiddenNutrientIds = settings.hiddenNutrientIds() != null
+                ? settings.hiddenNutrientIds()
+                : Set.of();
 
         var productNutrients = vProductNutrientRepository.findPersonalizedByProductId(
-                diaryProfile.id(),
-                hiddenNutrientIds
+                productId,
+                hiddenNutrientIds.isEmpty() ? null : hiddenNutrientIds
         );
 
         var foundProductServings = foodServingService
@@ -147,7 +153,7 @@ public class ProductQueryService {
                         productId,
                         currentUser.requireId()
                 )
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         boolean isFavorite = favoriteFoodRepository.existsByDiaryProfileIdAndItemTypeAndItemId(
                 diaryProfileId,
@@ -163,7 +169,7 @@ public class ProductQueryService {
                 vProductBasic.entityStatusCode(),
                 vProductBasic.dataSourceCode(),
                 vProductBasic.isPublic(),
-                vProductBasic.isFavorite(),
+                isFavorite,
                 foundProductServings,
                 productNutrients
         );

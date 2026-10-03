@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
 
+import com.github.plantfern.foodDiary.meals.api.dto.MealTemplateListItemDto;
 import com.github.plantfern.foodDiary.meals.domain.services.MealTemplateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,16 +9,25 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping("/api/meals/diary-profile/{diaryProfileId}/templates")
+@RequestMapping({
+        "/api/meals/diary-profile/{diaryProfileId}/templates",
+        "/api/diary-profile/{diaryProfileId}/meal-templates"
+})
 public class MealTemplateController {
 
     private final MealTemplateService mealTemplateService;
 
     public MealTemplateController(MealTemplateService mealTemplateService) {
         this.mealTemplateService = mealTemplateService;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<MealTemplateListItemDto>> list(@PathVariable Long diaryProfileId) {
+        return ResponseEntity.ok(mealTemplateService.listByDiaryProfile(diaryProfileId));
     }
 
     @PostMapping("")

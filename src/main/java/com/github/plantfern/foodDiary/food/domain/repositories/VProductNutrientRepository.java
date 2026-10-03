@@ -4,7 +4,6 @@ package com.github.plantfern.foodDiary.food.domain.repositories;
 import com.github.plantfern.foodDiary.food.api.dto.ProductNutrientItemDto;
 import com.github.plantfern.foodDiary.food.domain.views.VProductNutrientEntity;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Null;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,12 +25,12 @@ public interface VProductNutrientRepository extends JpaRepository<VProductNutrie
     )
     from VProductNutrientEntity vProductNutrient
     where vProductNutrient.productId = :productId
-      and ( :hiddenNutrients is null
+      and (:hiddenNutrients is null
           or vProductNutrient.nutrientId not in :hiddenNutrients)
     """)
     List<ProductNutrientItemDto> findPersonalizedByProductId(
             @Param("productId") Long productId,
-            @Param("acceptedNutrients") @Nullable Set<Long> hiddenNutrients
+            @Param("hiddenNutrients") @Nullable Set<Long> hiddenNutrients
     );
 
     @Query("""
@@ -45,6 +44,6 @@ public interface VProductNutrientRepository extends JpaRepository<VProductNutrie
     where vProductNutrient.productId = :productId
     """)
     List<ProductNutrientItemDto> findByProductId(
-            Long productId
+            @Param("productId") Long productId
     );
 }

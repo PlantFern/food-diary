@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.meals.domain.services;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
+import com.github.plantfern.foodDiary.meals.api.dto.MealTemplateListItemDto;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealTemplateEntity;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealTemplateFoodRecordEntity;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.List;
 
 
 @Service
@@ -27,6 +29,23 @@ public class MealTemplateService {
     private final DiaryProfileApi diaryProfileApi;
     private final MealPolicy mealPolicy;
     private final CurrentUser currentUser;
+
+    @Transactional(readOnly = true)
+    public List<MealTemplateListItemDto> listByDiaryProfile(Long diaryProfileId) {
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
+        mealPolicy.ensureIsOwner(currentUser, ownerId);
+
+        return mealTemplateRepository.findAllByDiaryProfileId(diaryProfileId).stream()
+                .map(t -> new MealTemplateListItemDto(
+                        t.getId(),
+                        t.getName(),
+                        t.getScheduledTime(),
+                        t.getFrequency(),
+                        null,
+                        null
+                ))
+                .toList();
+    }
 
     @Transactional
     public Long create(

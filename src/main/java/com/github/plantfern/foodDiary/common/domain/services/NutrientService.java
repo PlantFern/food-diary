@@ -33,13 +33,27 @@ public class NutrientService {
     }
 
     public Long getFirstByIdNotIn(Set<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return nutrientRepository.findAll().stream()
+                    .findFirst()
+                    .map(NutrientEntity::getId)
+                    .orElse(1L);
+        }
         return nutrientRepository
                 .findFirstByIdNotIn(ids)
                 .map(NutrientEntity::getId)
-                .orElse(null);
+                .orElseGet(() -> nutrientRepository.findAll().stream()
+                        .findFirst()
+                        .map(NutrientEntity::getId)
+                        .orElse(1L));
     }
 
     public Set<Long> getAllByIdNotIn(Set<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return nutrientRepository.findAll().stream()
+                    .map(NutrientEntity::getId)
+                    .collect(Collectors.toSet());
+        }
         return nutrientRepository
                 .findAllByIdNotIn(ids)
                 .stream()
