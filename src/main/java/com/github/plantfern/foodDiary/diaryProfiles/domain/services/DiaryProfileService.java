@@ -13,6 +13,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEnt
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.DiaryProfileEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GenderEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.DiaryProfileRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GenderRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepository;
@@ -92,11 +93,14 @@ public class DiaryProfileService implements DiaryProfileApi {
             throw new IllegalStateException("Diary profile for user already exists");
         }
 
-        var gender = genderRepository.findById(genderId).orElseThrow(
-                () -> new EntityNotFoundException(
-                        "Gender with id: " + genderId + " doesn't exist"
-                )
-        );
+        GenderEntity gender = null;
+        if (genderId != null) {
+            gender = genderRepository.findById(genderId).orElseThrow(
+                    () -> new EntityNotFoundException(
+                            "Gender with id: " + genderId + " doesn't exist"
+                    )
+            );
+        }
 
         DiaryProfileEntity saved;
         try {
@@ -261,12 +265,14 @@ public class DiaryProfileService implements DiaryProfileApi {
 
         profile.setHeight(height);
         profile.setBirthDate(birthDate);
-        profile.setGender(
-                this.genderRepository
-                    .findById(genderId)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                                    "Gender with id: " + genderId + "doesn't exist"
-                            )));
+        if (genderId != null) {
+            profile.setGender(
+                    this.genderRepository
+                        .findById(genderId)
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                        "Gender with id: " + genderId + "doesn't exist"
+                                )));
+        }
 
         return mapper.toDto(diaryProfileRepository.save(profile));
     }
