@@ -2,12 +2,14 @@ package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
 
 import com.github.plantfern.foodDiary.meals.api.dto.DayMealsDto;
+import com.github.plantfern.foodDiary.meals.api.dto.RecentDayFoodGroupDto;
 import com.github.plantfern.foodDiary.meals.domain.services.MealQueryService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Validated
@@ -28,5 +30,10 @@ public class MealQueryController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         return mealQueryService.getDay(diaryProfileId, date);
+    }
+
+    @GetMapping("/recent-week")
+    public List<RecentDayFoodGroupDto> getRecentWeek(@PathVariable Long diaryProfileId) {
+        return mealQueryService.getRecentWeek(diaryProfileId);
     }
 }

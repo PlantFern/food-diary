@@ -15,6 +15,10 @@ public interface VMealDayRecordRepository extends JpaRepository<VMealDayRecordEn
             Long diaryProfileId,
             LocalDate mealDate
     );
+
+    List<VMealDayRecordEntity> findAllByDiaryProfileIdAndMealDateBetween(
+            Long diaryProfileId,
+            LocalDate from,
+            LocalDate to
+    );
 }
-
-
