@@ -112,25 +112,31 @@ public class UserService implements UserApi {
             String login
     ) {
 
-        if (userRepository.existsByEmail(email)) {
+        var emailNormalized = email.trim().toLowerCase();
+        var loginNormalized =
+                login != null && !login.isEmpty()
+                        ? login.trim().toLowerCase()
+                        : login;
+
+        if (userRepository.existsByEmailIgnoreCase(emailNormalized)) {
             throw new IllegalArgumentException("Email already registered");
         }
 
-        if (login != null && !login.isEmpty() && userRepository.existsByLogin(login)) {
+        if (userRepository.existsByLoginIgnoreCase(loginNormalized)) {
             throw new IllegalArgumentException("Login already used");
         }
 
         UserEntity user;
 
-        if (login != null && !login.isEmpty()) {
+        if (loginNormalized != null && !loginNormalized.isEmpty()) {
             user = new UserEntity(
-                    email,
-                    login,
+                    emailNormalized,
+                    loginNormalized,
                     passwordEncoder.encode(password)
             );
         } else {
             user = new UserEntity(
-                    email,
+                    emailNormalized,
                     passwordEncoder.encode(password)
             );
         }
