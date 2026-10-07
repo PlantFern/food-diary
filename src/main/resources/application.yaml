@@ -13,14 +13,14 @@ spring:
 
   jpa:
     hibernate:
+      ddl-auto: validate
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
   flyway:
-    enabled: false
-
-  profiles:
-    active: local
+    enabled: true
+    locations: classpath:db/migration,
+                classpath:db/seed
 
 app:
   storage:
