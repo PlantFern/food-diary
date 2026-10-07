@@ -14,6 +14,34 @@
 - Создание шаблонов приёмов пищи
 - Добавление еды и рецептов в избранное
 
+
+## Настройки и профили
+
+### Требования
+- JDK 25
+- MySQL 8+
+
+### Переменные окружения
+
+Copy the template and adjust values for your local setup:
+
+```bash
+    cp .env.example .env
+```
+
+### Запуск
+
+```bash
+    ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### Профили
+
+Активный профиль передается через свойство `spring-boot.run.profiles`.
+Допустимые профили:
+
+- `dev` - дополнительно загружает тестовые данные из `db/devdata`
+
 ## Технический стек
 
 - **Язык**: Java 21

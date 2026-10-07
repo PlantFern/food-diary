@@ -13,6 +13,33 @@ It supports multiple user roles, enabling trainers, doctors, and dietitians to r
 - Schedule meal templates
 - Mark foods and recipes as favorites
 
+## Configuration & profiles
+
+### Requirements
+- JDK 25
+- MySQL 8+
+
+### Environment variables
+
+Copy the template and adjust values for your local setup:
+
+```bash
+    cp .env.example .env
+```
+
+### Running
+
+```bash
+    ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### Profiles
+
+The active profile is passed via the  `spring-boot.run.profiles` property.
+Available profiles:
+
+- `dev` - additionally loads test data from `db/devdata`
+
 ## Tech Stack
 - **Language:** Java 21
 - **Framework:** Spring Boot 4.1 + Spring Modulith
@@ -21,4 +48,3 @@ It supports multiple user roles, enabling trainers, doctors, and dietitians to r
 - **Mapping:** MapStruct
 - **Template engine:** Thymeleaf
 - **Build tool:** Maven
-
