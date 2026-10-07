@@ -9,7 +9,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="user_visibility")
+@Table(
+        name="user_visibility",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name="unique_actor_user_id_target_user_id",
+                        columnNames={"actor_user_id", "target_user_id"}
+                )
+        }
+)
 public class UserVisibilityEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
