@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
                 columnNames = {"email", "deleted_at"}
         ),
         @UniqueConstraint(
-                name = "unique_email_deleted_at",
+                name = "unique_login_deleted_at",
                 columnNames = {"login", "deleted_at"}
         )
     }
@@ -37,7 +37,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String email;
 
     @Column(
