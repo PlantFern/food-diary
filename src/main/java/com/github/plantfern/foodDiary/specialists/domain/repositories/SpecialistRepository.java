@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface SpecialistRepository extends JpaRepository<SpecialistEntity, Long> {
     Optional<SpecialistEntity> findByUserId(Long userId);
 
+    Optional<SpecialistEntity> findTopByUserIdAndDeletedAtIsNotNullOrderByDeletedAtDesc(Long userId);
+
     boolean existsByUserId(Long userId);
 }

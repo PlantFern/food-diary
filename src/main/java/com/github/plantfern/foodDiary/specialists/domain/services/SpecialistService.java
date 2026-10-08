@@ -121,6 +121,27 @@ public class SpecialistService implements SpecialistApi {
         specialistRepository.delete(specialist);
     }
 
+    public void restore(){
+
+        var userId = currentUser.requireId();
+
+        if(specialistRepository.existsByUserId(userId)) {
+            throw new IllegalStateException("Specialist already exists");
+        }
+
+        var specialistFound = specialistRepository
+                .findTopByUserIdAndDeletedAtIsNotNullOrderByDeletedAtDesc(currentUser.requireId())
+                .orElseThrow(() -> new IllegalStateException("Deleted specialist doesn't exist"));
+
+        specialistFound.restore();
+
+        specialistFound.setIsActive(false);
+
+        userApi.assignRolesInternal(userId, Set.of(RoleName.SPECIALIST));
+
+        specialistRepository.save(specialistFound);
+    }
+
 
     @Override
     @Transactional(readOnly = true)
