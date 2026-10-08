@@ -87,14 +87,26 @@ public class UserRelationService implements UserRelationApi {
             throw new IllegalStateException("Relation between this profile and specialist already exists");
         }
 
-        var userRelationStatus = userRelationStatusRepository.getByCode(UserRelationStatus.PENDING.name());
+        var endedStatus = userRelationStatusRepository.getByCode(
+                UserRelationStatus.ENDED.name()
+        );
+
+        if(!userRelationRepository.findAllBySpecialistIdAndDiaryProfileIdAndUserRelationStatusEntityAndRelationType(
+                diaryProfileId,
+                specialistId,
+                endedStatus,
+                RelationType.SPECIALIST
+        ).isEmpty())
+            throw new IllegalStateException("Relation with specialist relation type already exists");
+
+        var pendingStatus = userRelationStatusRepository.getByCode(UserRelationStatus.PENDING.name());
 
         try {
             userRelationRepository.save(new UserRelationEntity(
                     diaryProfileId,
                     specialistId,
                     relationType,
-                    userRelationStatus
+                    pendingStatus
             ));
         } catch (DataIntegrityViolationException ex) {
             throw new IllegalStateException("Relation between this profile and specialist already exists", ex);

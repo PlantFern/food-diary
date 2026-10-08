@@ -20,6 +20,13 @@ public interface UserRelationRepository extends JpaRepository<UserRelationEntity
             RelationType relationType,
             UserRelationStatusEntity userRelationStatusEntity);
 
+    List<UserRelationEntity> findAllBySpecialistIdAndDiaryProfileIdAndUserRelationStatusEntityAndRelationType(
+            Long specialistId,
+            Long diaryProfileId,
+            UserRelationStatusEntity userRelationStatusEntity,
+            RelationType relationType
+    );
+
     List<UserRelationEntity> findAllByDiaryProfileId(Long profileId);
 
     Boolean existsByDiaryProfileIdAndSpecialistId(Long diaryProfileId, Long specialistId);
