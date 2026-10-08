@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.users.domain;
 
 
+import com.github.plantfern.foodDiary.users.domain.entities.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,11 +30,33 @@ public class UserVisibilityEntity {
     )
     private Long actorUserId;
 
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(
+            name = "actor_user_id",
+            insertable = false,
+            updatable = false
+    )
+    private UserEntity actorUser;
+
     @Column(
             name="target_user_id",
             nullable = false
     )
     private Long targetUserId;
+
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
+    @JoinColumn(
+            name = "target_user_id",
+            insertable = false,
+            updatable = false
+    )
+    private UserEntity targetUser;
 
     @Column(
             name="is_extended",
