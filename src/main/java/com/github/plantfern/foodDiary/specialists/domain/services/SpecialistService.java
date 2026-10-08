@@ -27,18 +27,20 @@ public class SpecialistService implements SpecialistApi {
 
     private final SpecialistMapper specialistMapper;
     private final SpecialistRepository specialistRepository;
+    private final SpecialistPolicy specialistPolicy;
 
     public SpecialistService(
             UserApi userApi,
             SpecialistRepository specialistRepository,
             SpecialistMapper specialistMapper,
-            CurrentUser currentUser
-    ){
+            CurrentUser currentUser,
+            SpecialistPolicy specialistPolicy){
         this.userApi = userApi;
         this.currentUser = currentUser;
 
         this.specialistMapper = specialistMapper;
         this.specialistRepository = specialistRepository;
+        this.specialistPolicy = specialistPolicy;
     }
 
     @Transactional
@@ -58,6 +60,7 @@ public class SpecialistService implements SpecialistApi {
 
     @Transactional
     public void updateActivity(){
+
         var specialist = specialistRepository.findByUserId(currentUser.requireId())
                 .orElseThrow(() -> new EntityNotFoundException("Specialist doesn't exist"));
 
@@ -67,6 +70,9 @@ public class SpecialistService implements SpecialistApi {
 
     @Transactional
     public void approved(){
+
+        specialistPolicy.ensureCanModerate(currentUser);
+
         var specialist = specialistRepository.findByUserId(currentUser.requireId())
                 .orElseThrow(() -> new EntityNotFoundException("Specialist doesn't exist"));
 
