@@ -27,7 +27,6 @@ public class DiaryProfileEntity {
     private Long id;
 
     @Column(
-            name="user_id",
             nullable=false,
             unique = true
     )
