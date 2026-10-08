@@ -49,11 +49,13 @@ public class UserRelationEntity {
     public UserRelationEntity(
             Long diaryProfileId,
             Long specialistId,
-            RelationType relationType
+            RelationType relationType,
+            UserRelationStatusEntity userRelationStatusEntity
     ) {
         this.diaryProfileId = diaryProfileId;
         this.specialistId = specialistId;
         this.relationType = relationType;
+        this.userRelationStatusEntity = userRelationStatusEntity;
     }
 
 
