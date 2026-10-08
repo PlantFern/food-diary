@@ -245,5 +245,22 @@ public class UserService implements UserApi {
         targetUser.addRoles(newRoles);
         userRepository.save(targetUser);
     }
+
+    @Override
+    @Transactional
+    public void removeRole(Long targetUserId, RoleName role){
+
+        UserEntity targetUser = userRepository
+                .findById(targetUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        var roleFounded = roleRepository
+                .findByName(role)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Role not found")
+                );
+        targetUser.removeRole(roleFounded);
+        userRepository.save(targetUser);
+    }
     //endregion
 }
