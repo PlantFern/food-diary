@@ -15,4 +15,5 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, Lo
     Optional<SpecialistEntity> findTopByUserIdAndDeletedAtIsNotNullOrderByDeletedAtDesc(Long userId);
 
     boolean existsByUserId(Long userId);
+    boolean existsByUserIdAndDeletedAtIsNull(Long userId);
 }

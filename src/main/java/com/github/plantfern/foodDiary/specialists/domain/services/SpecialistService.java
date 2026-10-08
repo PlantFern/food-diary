@@ -55,7 +55,7 @@ public class SpecialistService implements SpecialistApi {
     @Transactional
     public void create(){
         var userId = currentUser.requireId();
-        if (specialistRepository.existsByUserId(userId)) {
+        if (specialistRepository.existsByUserIdAndDeletedAtIsNull(userId)) {
             throw new IllegalStateException("Specialist already exists");
         }
 
