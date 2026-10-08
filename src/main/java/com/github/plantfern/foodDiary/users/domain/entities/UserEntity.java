@@ -42,7 +42,6 @@ public class UserEntity {
 
     @Column(
             nullable = true,
-            unique = true,
             length = 30
     )
     private String login;
