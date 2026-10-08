@@ -27,8 +27,8 @@ public class DiaryProfileEntity {
     private Long id;
 
     @Column(
-            nullable=false,
-            unique = true
+            name="user_id",
+            nullable=false
     )
     private Long userId;
 
@@ -48,9 +48,6 @@ public class DiaryProfileEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 
 
     @ManyToOne(
@@ -108,15 +105,5 @@ public class DiaryProfileEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public void softDelete(){
-        if (deletedAt == null) {
-            deletedAt = LocalDateTime.now();
-        }
-    }
-
-    public void restore() {
-        deletedAt = null;
     }
 }
