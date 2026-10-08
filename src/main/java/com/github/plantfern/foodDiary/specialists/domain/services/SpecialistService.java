@@ -4,6 +4,7 @@ package com.github.plantfern.foodDiary.specialists.domain.services;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.api.apis.SpecialistApi;
 import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.api.events.SpecialistDeletedEvent;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMapper;
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
@@ -14,6 +15,7 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,7 @@ public class SpecialistService implements SpecialistApi {
     private final SpecialistRepository specialistRepository;
     private final SpecialistPolicy specialistPolicy;
     private final UserRelationRepository userRelationRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
 
     public SpecialistService(
@@ -41,7 +44,8 @@ public class SpecialistService implements SpecialistApi {
             SpecialistMapper specialistMapper,
             CurrentUser currentUser,
             SpecialistPolicy specialistPolicy,
-            UserRelationRepository userRelationRepository){
+            UserRelationRepository userRelationRepository,
+            ApplicationEventPublisher applicationEventPublisher){
         this.userApi = userApi;
         this.currentUser = currentUser;
 
@@ -49,6 +53,7 @@ public class SpecialistService implements SpecialistApi {
         this.specialistRepository = specialistRepository;
         this.specialistPolicy = specialistPolicy;
         this.userRelationRepository = userRelationRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 
@@ -101,6 +106,11 @@ public class SpecialistService implements SpecialistApi {
 
         specialist.softDelete();
         specialist.setIsActive(false);
+
+        applicationEventPublisher.publishEvent(new SpecialistDeletedEvent(
+                userId,
+                specialist.getDeletedAt()
+        ));
 
         var userRelations = userRelationRepository.findAllBySpecialistId(specialist.getId());
 
