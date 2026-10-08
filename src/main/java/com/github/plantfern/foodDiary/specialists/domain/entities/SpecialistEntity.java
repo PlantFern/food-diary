@@ -24,8 +24,7 @@ public class SpecialistEntity{
 
     @Column(
             name="user_id",
-            nullable=false,
-            unique = true
+            nullable=false
     )
     private Long userId;
 
