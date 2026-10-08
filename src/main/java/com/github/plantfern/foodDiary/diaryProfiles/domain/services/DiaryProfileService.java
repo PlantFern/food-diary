@@ -89,7 +89,7 @@ public class DiaryProfileService implements DiaryProfileApi {
     public DiaryProfileDto create(Float height, LocalDate birthDate, Long genderId){
         var actorUser = currentUser.requireId();
 
-        if (diaryProfileRepository.existsByUserId(actorUser)) {
+        if (diaryProfileRepository.existsByUserIdAndDeletedAtIsNull(actorUser)) {
             throw new IllegalStateException("Diary profile for user already exists");
         }
 

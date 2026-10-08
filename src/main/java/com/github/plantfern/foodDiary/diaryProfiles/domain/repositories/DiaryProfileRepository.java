@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public interface DiaryProfileRepository extends JpaRepository<DiaryProfileEntity, Long> {
     boolean existsByUserId(Long userId);
+    boolean existsByUserIdAndDeletedAtIsNull(Long userId);
 
     Optional<DiaryProfileEntity> findByUserId(Long userId);
 
