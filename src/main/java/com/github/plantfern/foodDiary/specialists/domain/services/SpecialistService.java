@@ -127,7 +127,7 @@ public class SpecialistService implements SpecialistApi {
 
         userApi.removeRoleInternal(userId, RoleName.SPECIALIST);
 
-        specialistRepository.delete(specialist);
+        specialistRepository.save(specialist);
     }
 
     public void restore(){
