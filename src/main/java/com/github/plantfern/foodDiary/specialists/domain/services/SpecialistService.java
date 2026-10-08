@@ -9,7 +9,6 @@ import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMappe
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.SpecialistRepository;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationRepository;
-import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationStatusRepository;
 import com.github.plantfern.foodDiary.specialists.domain.security.SpecialistPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
@@ -116,7 +115,7 @@ public class SpecialistService implements SpecialistApi {
             }
         }
 
-        userApi.removeRole(userId, RoleName.SPECIALIST);
+        userApi.removeRoleInternal(userId, RoleName.SPECIALIST);
 
         specialistRepository.delete(specialist);
     }

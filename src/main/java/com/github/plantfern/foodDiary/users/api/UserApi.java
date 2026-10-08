@@ -14,5 +14,5 @@ public interface UserApi {
     UserDto getByEmailInternal(String email);
 
     void assignRolesInternal(Long userId, Set<RoleName> roles);
-    void removeRole(Long userId, RoleName role);
+    void removeRoleInternal(Long userId, RoleName role);
 } // UserApi

@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -248,7 +247,7 @@ public class UserService implements UserApi {
 
     @Override
     @Transactional
-    public void removeRole(Long targetUserId, RoleName role){
+    public void removeRoleInternal(Long targetUserId, RoleName role){
 
         UserEntity targetUser = userRepository
                 .findById(targetUserId)
