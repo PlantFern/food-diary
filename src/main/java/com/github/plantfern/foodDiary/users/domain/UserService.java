@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -156,12 +157,55 @@ public class UserService implements UserApi {
         assignRolesInternal(targetUserId, roles);
     }
 
+    @Transactional
+    public void softDelete(UserEntity user){
+
+        var email = user.getEmail();
+        var login = user.getLogin();
+
+        user.softDelete();
+
+        var prefix = "deleted_" + user.getId() + "_";
+
+        user.setEmail(prefix + email);
+        if(login != null && !login.isBlank())
+            user.setLogin(prefix + login);
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void restore(UserEntity user){
+
+        var email = user.getEmail();
+        var login = user.getLogin();
+
+        var prefix = "deleted_" + user.getId() + "_";
+        var prefixLength = prefix.length();
+
+        if(email.startsWith(prefix)){
+            email = email.substring(prefixLength);
+        }
+        if(userRepository.existsByEmailIgnoreCase(email))
+            throw new IllegalStateException("Email already in use");
+        if(login != null && !login.isBlank()) {
+            if (login.startsWith(prefix)) {
+                login = login.substring(prefixLength);
+            }
+            if (userRepository.existsByLoginIgnoreCase(login))
+                login = null;
+        }
+        user.setEmail(email);
+        user.restore();
+        userRepository.save(user);
+    }
+
 
     //region internal methods
 
     @Override
     @Transactional(readOnly = true)
-    public boolean existsByIdInternal(java.lang.Long userId){
+    public boolean existsByIdInternal(Long userId){
 
         return userRepository.existsById(userId);
     }
