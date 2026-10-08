@@ -55,7 +55,7 @@ public class SpecialistEntity{
     }
 
     @OneToMany(
-            mappedBy = "specialist",   // имя поля в UserRelationEntity
+            mappedBy = "specialist",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
