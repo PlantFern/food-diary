@@ -1,11 +1,16 @@
 package com.github.plantfern.foodDiary.specialists.domain.services;
 
 
+import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.api.apis.SpecialistApi;
 import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMapper;
 import com.github.plantfern.foodDiary.specialists.domain.entities.SpecialistEntity;
 import com.github.plantfern.foodDiary.specialists.domain.repositories.SpecialistRepository;
+import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationRepository;
+import com.github.plantfern.foodDiary.specialists.domain.repositories.UserRelationStatusRepository;
+import com.github.plantfern.foodDiary.specialists.domain.security.SpecialistPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.RoleName;
 import com.github.plantfern.foodDiary.users.api.UserApi;
@@ -28,20 +33,25 @@ public class SpecialistService implements SpecialistApi {
     private final SpecialistMapper specialistMapper;
     private final SpecialistRepository specialistRepository;
     private final SpecialistPolicy specialistPolicy;
+    private final UserRelationRepository userRelationRepository;
+
 
     public SpecialistService(
             UserApi userApi,
             SpecialistRepository specialistRepository,
             SpecialistMapper specialistMapper,
             CurrentUser currentUser,
-            SpecialistPolicy specialistPolicy){
+            SpecialistPolicy specialistPolicy,
+            UserRelationRepository userRelationRepository){
         this.userApi = userApi;
         this.currentUser = currentUser;
 
         this.specialistMapper = specialistMapper;
         this.specialistRepository = specialistRepository;
         this.specialistPolicy = specialistPolicy;
+        this.userRelationRepository = userRelationRepository;
     }
+
 
     @Transactional
     public void create(){
@@ -78,6 +88,37 @@ public class SpecialistService implements SpecialistApi {
 
         specialist.setIsApproved(!specialist.getIsApproved());
         specialistRepository.save(specialist);
+    }
+
+    @Transactional
+    public void softDelete(){
+
+        var userId = currentUser.requireId();
+
+        var specialist = specialistRepository.findByUserId(currentUser.requireId())
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Specialist not found")
+                );
+
+        specialist.softDelete();
+        specialist.setIsActive(false);
+
+        var userRelations = userRelationRepository.findAllBySpecialistId(specialist.getId());
+
+        for (UserRelationEntity userRelation : userRelations) {
+
+            if(userRelation.getUserRelationStatusEntity().getCode().equals(UserRelationStatus.PENDING.name())){
+                userRelation.getUserRelationStatusEntity().setCode(UserRelationStatus.CANCELED.name());
+            }
+
+            if(userRelation.getUserRelationStatusEntity().getCode().equals(UserRelationStatus.ACTIVE.name())){
+                userRelation.getUserRelationStatusEntity().setCode(UserRelationStatus.ENDED.name());
+            }
+        }
+
+        userApi.removeRole(userId, RoleName.SPECIALIST);
+
+        specialistRepository.delete(specialist);
     }
 
 
