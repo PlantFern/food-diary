@@ -11,6 +11,9 @@ public interface UserVisibilityRepository extends JpaRepository<UserVisibilityEn
 
     void deleteByActorUserIdAndTargetUserId(Long actorUserId, Long targetUserId);
 
+    void deleteByTargetUserId(Long targetUserId);
+    void deleteByActorUserId(Long actorUserId);
+
     boolean existsByIsExtendedTrueAndActorUserIdAndTargetUserId(
             Long actorUserId,
             Long targetUserId);
