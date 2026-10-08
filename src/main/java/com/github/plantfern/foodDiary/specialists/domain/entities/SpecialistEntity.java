@@ -31,7 +31,7 @@ public class SpecialistEntity{
     @Column(
             name="is_active"
     )
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column (name = "is_approved")
     private Boolean isApproved;
