@@ -18,17 +18,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(
-    name = "users",
-    uniqueConstraints = {
-        @UniqueConstraint(
-                name = "unique_email_deleted_at",
-                columnNames = {"email", "deleted_at"}
-        ),
-        @UniqueConstraint(
-                name = "unique_login_deleted_at",
-                columnNames = {"login", "deleted_at"}
-        )
-    }
+    name = "users"
 )
 public class UserEntity {
 
@@ -37,10 +27,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(
+            nullable = false,
+            unique = true
+    )
     private String email;
 
     @Column(
+            unique = true,
             nullable = true,
             length = 30
     )
