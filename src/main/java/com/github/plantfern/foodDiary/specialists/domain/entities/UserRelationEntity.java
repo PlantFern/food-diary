@@ -16,7 +16,6 @@ import lombok.Setter;
 @Table(
         name="user_relations",
         uniqueConstraints = {
-                // 1. Техническая уникальность: пара (user + specialist) не может дублироваться
                 @UniqueConstraint(name = "unique_user_relations_diary_profile_id_specialist_id",
                         columnNames = {"diary_profile_id", "specialist_id"})
         })
