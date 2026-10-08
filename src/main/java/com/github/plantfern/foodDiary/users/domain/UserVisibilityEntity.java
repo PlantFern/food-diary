@@ -63,4 +63,17 @@ public class UserVisibilityEntity {
             nullable=false
     )
     private Boolean isExtended;
+
+
+    protected UserVisibilityEntity() {}
+
+    public UserVisibilityEntity(
+            Long actorUserId,
+            Long targetUserId,
+            Boolean isExtended
+    ) {
+        this.actorUserId = actorUserId;
+        this.targetUserId = targetUserId;
+        this.isExtended = isExtended;
+    }
 }
