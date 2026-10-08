@@ -7,6 +7,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.Gender;
 import com.github.plantfern.foodDiary.diaryProfiles.api.GoalType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileCreated;
+import com.github.plantfern.foodDiary.diaryProfiles.api.events.DiaryProfileDeletedEvent;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEntity;
@@ -275,6 +276,40 @@ public class DiaryProfileService implements DiaryProfileApi {
         }
 
         return mapper.toDto(diaryProfileRepository.save(profile));
+    }
+
+    @Transactional
+    public void softDelete(){
+
+        var userId = currentUser.requireId();
+        var diaryProfile = diaryProfileRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Diary profile doesn't exist"));
+
+        diaryProfile.softDelete();
+        userApi.removeRoleInternal(userId, RoleName.DIARY_PROFILE);
+
+        applicationEventPublisher.publishEvent(new DiaryProfileDeletedEvent(
+                diaryProfile.getId(),
+                userId,
+                diaryProfile.getDeletedAt()
+        ));
+
+        diaryProfileRepository.save(diaryProfile);
+    }
+
+    @Transactional
+    public void restore(){
+
+        var userId = currentUser.requireId();
+        var diaryProfile = diaryProfileRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Diary profile doesn't exist"));
+
+        diaryProfile.restore();
+        userApi.assignRolesInternal(userId, Set.of(RoleName.DIARY_PROFILE));
+
+        diaryProfileRepository.save(diaryProfile);
     }
 
     @Transactional(readOnly = true)
