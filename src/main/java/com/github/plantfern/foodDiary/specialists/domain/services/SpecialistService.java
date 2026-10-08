@@ -65,6 +65,15 @@ public class SpecialistService implements SpecialistApi {
         specialistRepository.save(specialist);
     }
 
+    @Transactional
+    public void approved(){
+        var specialist = specialistRepository.findByUserId(currentUser.requireId())
+                .orElseThrow(() -> new EntityNotFoundException("Specialist doesn't exist"));
+
+        specialist.setIsApproved(!specialist.getIsApproved());
+        specialistRepository.save(specialist);
+    }
+
 
     @Override
     @Transactional(readOnly = true)
