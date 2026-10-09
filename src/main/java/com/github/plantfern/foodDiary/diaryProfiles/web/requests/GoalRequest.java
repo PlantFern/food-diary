@@ -12,6 +12,6 @@ public record GoalRequest(
         @NotNull @Min(30) Float plannedWeight,
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate plannedEndDate,
-        @NotEmpty List<GoalNutrientRequest> nutrientGoals
+        List<GoalNutrientRequest> nutrientGoals
 ) {
 }
