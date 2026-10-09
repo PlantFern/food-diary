@@ -7,8 +7,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 public record ProfileDataRequest(
-        @Min(50) @NotNull Float height,
-        @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthDate,
-        @NotNull Long genderId
+        @Min(50) Float height,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthDate,
+        Long genderId
 ) {
 }
