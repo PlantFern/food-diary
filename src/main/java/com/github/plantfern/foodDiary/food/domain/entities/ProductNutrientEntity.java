@@ -11,7 +11,15 @@ import lombok.Setter;
 @Getter
 
 @Entity
-@Table(name = "product_nutrients")
+@Table(
+        name = "product_nutrients",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_product_id_nutrient_id",
+                        columnNames = {"product_id", "nutrient_id"}
+                )
+        }
+)
 public class ProductNutrientEntity {
 
     @Setter(AccessLevel.NONE)
