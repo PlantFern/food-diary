@@ -11,7 +11,7 @@ public record RecipeCreateRequest(
         @NotBlank String name,
         @NotBlank String description,
         @NotBlank String recipe,
-        @NotBlank String photoPath,
+        @NotNull Long photoPathId,
         @NotNull @DecimalMin(value = "0", inclusive = false) Float totalWeightGrams,
         @NotEmpty List<RecipeComponentRequest> components
 ) {
