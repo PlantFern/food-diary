@@ -12,13 +12,13 @@ import java.util.List;
 public record ProductCreateByBarcodeRequest(
         @NotBlank String description,
         @NotNull Long categoryId,
-        @NotNull String photoPath,
+        @NotNull Long photoPathId,
         @NotBlank String barcode,
         @NotNull @DecimalMin(value = "0", inclusive = false) Float gramWeight,
         @NotEmpty List<NutrientRequest> nutrients,
-        @NotNull String frontPhotoPath,
-        @NotNull String productCompositionPhotoPath,
-        @NotNull String productNutritionPhotoPath,
-        @NotNull String barcodePhotoPath
+        @NotNull Long frontPhotoPathId,
+        @NotNull Long productCompositionPhotoPathId,
+        @NotNull Long productNutritionPhotoPathId,
+        @NotNull Long barcodePhotoPathId
 ) {
 }
