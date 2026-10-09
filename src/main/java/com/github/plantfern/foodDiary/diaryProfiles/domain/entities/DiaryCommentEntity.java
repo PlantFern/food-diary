@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Table(
         name = "diary_comments"
 )
+@SQLRestriction("deleted_at is null")
 public class DiaryCommentEntity {
 
     @Setter(AccessLevel.NONE)
