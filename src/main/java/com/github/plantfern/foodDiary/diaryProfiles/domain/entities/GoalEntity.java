@@ -116,7 +116,12 @@ public class GoalEntity {
 
     public void setActualEndedDay() {
         if (actualEndDate == null) {
-            actualEndDate = LocalDate.now();
+
+            var dateNow = LocalDate.now();
+            if(startDate.isAfter(dateNow))
+                actualEndDate = startDate;
+            else
+                actualEndDate = dateNow;
         }
     }
 }
