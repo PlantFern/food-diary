@@ -3,6 +3,8 @@ package com.github.plantfern.foodDiary.food.domain.entities;
 
 import com.github.plantfern.foodDiary.food.api.ItemType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,9 +31,11 @@ public class FoodServingEntity {
     @Column(name = "item_id", nullable = false)
     private Long itemId;
 
+    @DecimalMin(value="0", inclusive = false)
     @Column(name = "amount", nullable = false)
     private Float amount;
 
+    @DecimalMin(value="0", inclusive = false)
     @Column(name = "gram_weight", nullable = false)
     private Float gramWeight;
 
