@@ -12,7 +12,15 @@ import lombok.Setter;
 @Getter
 
 @Entity
-@Table(name = "favorite_food")
+@Table(
+        name = "favorite_food",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_product_id",
+                        columnNames = {"item_id", "item_type", "diary_profile_id"}
+                )
+        }
+)
 public class FavoriteFoodEntity {
 
     @Setter(AccessLevel.NONE)
