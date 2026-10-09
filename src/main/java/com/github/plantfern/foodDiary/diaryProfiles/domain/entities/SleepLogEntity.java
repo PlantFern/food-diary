@@ -44,7 +44,7 @@ public class SleepLogEntity {
     private LocalDateTime endedAt;
 
     @Column(
-            name = "createdAt",
+            name = "created_at",
             nullable = false,
             updatable = false
     )
