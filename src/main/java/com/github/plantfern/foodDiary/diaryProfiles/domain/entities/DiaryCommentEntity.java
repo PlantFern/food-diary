@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.entities;
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.CommentableType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +55,7 @@ public class DiaryCommentEntity {
     )
     private Long commentableId;
 
+    @NotBlank
     @Column(name = "body", nullable = false)
     private String body;
 
