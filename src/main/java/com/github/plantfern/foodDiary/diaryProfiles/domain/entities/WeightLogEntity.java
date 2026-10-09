@@ -1,6 +1,8 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +36,8 @@ public class WeightLogEntity {
     )
     private Long diaryProfileId;
 
+    @Min(20)
+    @Max(300)
     @Column(name = "weight", nullable = false)
     private Float weight;
 
