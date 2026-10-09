@@ -25,7 +25,11 @@ public class GenderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30)
+    @Column(
+            length=30,
+            name="code",
+            nullable=false
+    )
     private String code;
 
     @OneToMany(
