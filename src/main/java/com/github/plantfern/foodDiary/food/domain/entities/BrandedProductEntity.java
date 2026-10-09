@@ -30,6 +30,7 @@ public  class BrandedProductEntity {
     private ProductEntity product;
 
     @Column(
+            unique = true,
             name = "product_id",
             nullable = false
     )
@@ -37,6 +38,7 @@ public  class BrandedProductEntity {
 
     @Column(
             name = "barcode",
+            unique = true,
             nullable = false,
             length = 100
     )
