@@ -9,9 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record GoalRequest(
-        @NotNull @Min(30) Float plannedWeight,
-        @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-        @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate plannedEndDate,
+        @Min(30) Float plannedWeight,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate plannedEndDate,
         List<GoalNutrientRequest> nutrientGoals
 ) {
 }
