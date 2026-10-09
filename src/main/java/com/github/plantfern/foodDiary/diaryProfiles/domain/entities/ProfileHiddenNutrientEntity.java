@@ -37,7 +37,9 @@ public class ProfileHiddenNutrientEntity {
     )
     private Long profileFeatureSettingId;
 
-    @Column( name = "nutrient_id" )
+    @Column(
+            name = "nutrient_id",
+            nullable = false)
     private Long nutrientId;
 
 
