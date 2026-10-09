@@ -49,6 +49,8 @@ public class DiaryProfileEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @ManyToOne(
             fetch = FetchType.LAZY
@@ -105,5 +107,15 @@ public class DiaryProfileEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void softDelete() {
+        if (deletedAt == null) {
+            deletedAt = LocalDateTime.now();
+        }
+    }
+
+    public void restore() {
+        deletedAt = null;
     }
 }
