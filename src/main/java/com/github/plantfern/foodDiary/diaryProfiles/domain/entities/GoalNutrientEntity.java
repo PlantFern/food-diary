@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +42,7 @@ public class GoalNutrientEntity {
     @Column(name = "nutrient_id", nullable = false)
     private Long nutrientId;
 
+    @Min(0)
     @Column(name = "amount", nullable = false)
     private Float amount;
 
