@@ -42,10 +42,16 @@ public class DiaryCommentEntity {
     private Long diaryProfileId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "commentable_type", nullable = false)
+    @Column(
+            name = "commentable_type",
+            nullable = false
+    )
     private CommentableType commentableType;
 
-    @Column(name = "commentable_id")
+    @Column(
+            name = "commentable_id",
+            nullable = false
+    )
     private Long commentableId;
 
     @Column(name = "body", nullable = false)
