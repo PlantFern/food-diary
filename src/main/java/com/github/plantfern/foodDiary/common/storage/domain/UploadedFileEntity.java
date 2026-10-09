@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.common.storage.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -25,9 +26,13 @@ public class UploadedFileEntity {
     @Column(nullable = false)
     private String originalName;
 
-    @Column(nullable = false)
+    @Column(
+            nullable = false,
+            length = 100
+    )
     private String contentType;
 
+    @Min(1)
     @Column(nullable = false)
     private Long size;
 
