@@ -44,8 +44,11 @@ public class ProductEntity {
     @Column(name = "photo_path")
     private String photoPath;
 
-    @Column(name = "is_public")
-    private boolean isPublic;
+    @Column(
+            name = "is_public",
+            nullable = false
+    )
+    private boolean isPublic = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -55,7 +58,10 @@ public class ProductEntity {
     )
     private EntityStatusEntity entityStatus;
     
-    @Column (name = "entity_status_id")
+    @Column (
+            name = "entity_status_id",
+            nullable = false
+    )
     private Long entityStatusId;
 
     @Column(name = "created_by")
