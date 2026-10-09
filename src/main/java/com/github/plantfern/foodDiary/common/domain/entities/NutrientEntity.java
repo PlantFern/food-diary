@@ -19,10 +19,16 @@ public class NutrientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code")
+    @Column(
+            name = "code",
+            nullable = false
+    )
     private String code;
 
-    @JoinColumn(name = "unit_id")
+    @JoinColumn(
+            name = "unit_id",
+            nullable = false
+    )
     @ManyToOne(fetch = FetchType.LAZY)
     private NutrientUnitEntity nutrientUnit;
 
