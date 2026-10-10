@@ -22,9 +22,9 @@ public class FileService {
 
 
     @Transactional
-    public UploadedFileEntity upload(MultipartFile file) {
+    public UploadedFileEntity upload(MultipartFile file, StorageFolder storageFolder) {
 
-        String filename = fileStorageService.store(file);
+        String filename = fileStorageService.store(file, storageFolder);
 
         try {
             var entity = new UploadedFileEntity(

@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
+import com.github.plantfern.foodDiary.common.storage.PhotoPathResolver;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.EntityStatusRepository;
@@ -17,29 +18,34 @@ public class RecipeService {
     private final EntityStatusRepository entityStatusRepository;
     private final FoodPolicy foodPolicy;
     private final RecipeComponentService recipeComponentService;
+    private final PhotoPathResolver photoPathResolver;
 
     public RecipeService(
             CurrentUser currentUser,
             RecipeRepository recipeRepository,
             EntityStatusRepository entityStatusRepository,
             FoodPolicy foodPolicy,
-            RecipeComponentService recipeComponentService) {
+            RecipeComponentService recipeComponentService,
+            PhotoPathResolver photoPathResolver) {
         this.currentUser = currentUser;
         this.recipeRepository = recipeRepository;
         this.entityStatusRepository = entityStatusRepository;
         this.foodPolicy = foodPolicy;
         this.recipeComponentService = recipeComponentService;
+        this.photoPathResolver = photoPathResolver;
     }
 
     public Long create(
             String name,
             String description,
             String recipeText,
-            String photoPath
+            Long photoPathId
     ) {
         var entityStatus = entityStatusRepository
                 .findByCode(EntityStatus.DRAFT.name())
                 .orElseThrow(() -> new EntityNotFoundException("Entity status with such code not found"));
+
+        String photoPath = photoPathResolver.fromFileId(photoPathId);
 
         var savedRecipe = recipeRepository.save(
                 new RecipeEntity(
@@ -62,8 +68,9 @@ public class RecipeService {
             String name,
             String description,
             String recipeText,
-            String photoPath
+            Long photoPathId
     ) {
+
         var foundRecipe = getById(recipeId);
 
         if (foundRecipe.getEntityStatus().getCode().equals(EntityStatus.ACTIVE.name())) {
@@ -71,6 +78,8 @@ public class RecipeService {
         } else {
             foodPolicy.ensureIsOwnerOrModeration(currentUser, foundRecipe.getCreatedById());
         }
+
+        String photoPath = photoPathResolver.fromFileId(photoPathId);
 
         foundRecipe.setName(name);
         foundRecipe.setDescription(description);

@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
 
 import com.github.plantfern.foodDiary.common.storage.FileService;
+import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.meals.domain.services.MealService;
 import com.github.plantfern.foodDiary.meals.web.requests.MealTemplateApplyRequest;
 import jakarta.validation.Valid;
@@ -47,9 +48,10 @@ public class MealController {
     public ResponseEntity<String> setPhoto(
             @PathVariable Long diaryProfileId,
             @PathVariable Long mealId,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @RequestParam StorageFolder storageFolder
     ) {
-        var uploaded = fileService.upload(file);
+        var uploaded = fileService.upload(file, storageFolder);
         String path = "/api/files/" + uploaded.getId();
         mealService.updatePhoto(mealId, path);
         return ResponseEntity.ok(path);

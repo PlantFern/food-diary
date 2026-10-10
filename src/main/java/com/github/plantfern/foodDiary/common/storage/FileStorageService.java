@@ -27,7 +27,7 @@ public class FileStorageService {
         this.properties = properties;
     }
 
-    public String store(MultipartFile file) {
+    public String store(MultipartFile file, StorageFolder folder) {
 
         if (file.isEmpty())
             throw new FileStorageException("File is empty");
@@ -45,14 +45,15 @@ public class FileStorageService {
         String extension = originName != null && originName.contains(".")
                 ? originName.substring(originName.lastIndexOf('.'))
                 : "";
-        String storeName = UUID.randomUUID() + extension;
 
+        String storeName = folder.getPath() + "/" + UUID.randomUUID() + extension;
         Path filePath = rootLocation.resolve(storeName).normalize();
 
-        if (!filePath.startsWith(rootLocation))
+        if(!filePath.startsWith(rootLocation))
             throw new FileStorageException("Cannot access file outside storage dir");
 
         try {
+            Files.createDirectories(filePath.getParent());
             file.transferTo(filePath);
         } catch (IOException e) {
             throw new FileStorageException("Failed to store file " + storeName);

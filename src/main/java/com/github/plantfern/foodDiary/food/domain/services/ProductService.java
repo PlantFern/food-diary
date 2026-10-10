@@ -2,6 +2,8 @@ package com.github.plantfern.foodDiary.food.domain.services;
 
 
 import com.github.plantfern.foodDiary.common.storage.FileService;
+import com.github.plantfern.foodDiary.common.storage.PhotoPathResolver;
+import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.api.apis.ProductApi;
@@ -33,6 +35,7 @@ public class ProductService implements ProductApi {
     private final ProductNutrientService productNutrientService;
     private final FoodServingService foodServingService;
     private final FileService fileService;
+    private final PhotoPathResolver photoPathResolver;
 
     public ProductService(
             CurrentUser currentUser,
@@ -43,8 +46,8 @@ public class ProductService implements ProductApi {
             FoodPolicy foodPolicy,
             ProductNutrientService productNutrientService,
             FoodServingService foodServingService,
-            FileService fileService
-    ) {
+            FileService fileService,
+            PhotoPathResolver photoPathResolver) {
         this.currentUser = currentUser;
         this.productRepository = productRepository;
         this.entityStatusRepository = entityStatusRepository;
@@ -54,12 +57,13 @@ public class ProductService implements ProductApi {
         this.productNutrientService = productNutrientService;
         this.foodServingService = foodServingService;
         this.fileService = fileService;
+        this.photoPathResolver = photoPathResolver;
     }
 
     public Long create(
             String description,
             Long categoryId,
-            String photoPath,
+            Long photoPathId,
             DataSource dataSource,
             String externalId
     ) {
@@ -75,6 +79,8 @@ public class ProductService implements ProductApi {
                 .orElseThrow(
                         () -> new EntityNotFoundException("Data source with such code not found")
                 );
+
+        String photoPath = photoPathResolver.fromFileId(photoPathId);
 
         var savedProduct = productRepository.save(
                 new ProductEntity(
@@ -103,7 +109,7 @@ public class ProductService implements ProductApi {
     }
 
     @Transactional
-    public String setPhoto(Long productId, MultipartFile file) {
+    public String setPhoto(Long productId, MultipartFile file, StorageFolder storageFolder) {
         var product = getById(productId);
         boolean hasPhoto = product.getPhotoPath() != null && !product.getPhotoPath().isBlank();
 
@@ -113,7 +119,7 @@ public class ProductService implements ProductApi {
             foodPolicy.ensureIsOwner(currentUser, product.getCreatedById());
         }
 
-        var uploaded = fileService.upload(file);
+        var uploaded = fileService.upload(file, storageFolder);
         String path = "/api/files/" + uploaded.getId();
         product.setPhotoPath(path);
         productRepository.save(product);
@@ -179,7 +185,7 @@ public class ProductService implements ProductApi {
         var product = this.create(
                 description,
                 6L,
-                "",
+                null,
                 DataSource.NUTRIENT_RECORDING,
                 ""
         );

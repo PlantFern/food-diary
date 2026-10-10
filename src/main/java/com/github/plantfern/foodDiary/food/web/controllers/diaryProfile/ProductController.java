@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
 
+import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.domain.services.*;
 import com.github.plantfern.foodDiary.food.web.requests.ProductCreateByBarcodeRequest;
@@ -41,7 +42,7 @@ public class ProductController {
         Long productId = productService.create(
                 request.description(),
                 request.categoryId(),
-                request.photoPath(),
+                request.photoPathId(),
                 DataSource.BARCODE,
                 request.barcode()
         );
@@ -62,10 +63,10 @@ public class ProductController {
 
         productRequestService.create(
                 productId,
-                request.frontPhotoPath(),
-                request.productCompositionPhotoPath(),
-                request.productNutritionPhotoPath(),
-                request.barcodePhotoPath()
+                request.frontPhotoPathId(),
+                request.productCompositionPhotoPathId(),
+                request.productNutritionPhotoPathId(),
+                request.barcodePhotoPathId()
         );
 
         return ResponseEntity.ok(productId);
@@ -74,8 +75,9 @@ public class ProductController {
     @PatchMapping(value = "/{productId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> setPhoto(
             @PathVariable Long productId,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @RequestParam StorageFolder storageFolder
     ) {
-        return ResponseEntity.ok(productService.setPhoto(productId, file));
+        return ResponseEntity.ok(productService.setPhoto(productId, file, storageFolder));
     }
 }

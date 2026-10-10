@@ -25,10 +25,11 @@ public class FileController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<FileUploadResponse> upload(
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("storage_folder") StorageFolder storageFolder
     ) {
 
-        var entity = fileService.upload(file);
+        var entity = fileService.upload(file, storageFolder);
 
         return ResponseEntity.ok(new FileUploadResponse(
                 entity.getId(),

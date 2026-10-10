@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
 
+import com.github.plantfern.foodDiary.common.storage.PhotoPathResolver;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.domain.entities.ProductRequestEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.ProductRequestRepository;
@@ -17,26 +18,33 @@ public class ProductRequestService {
     private final ProductRequestRepository productRequestRepository;
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
+    private final PhotoPathResolver photoPathResolver;
 
     public ProductRequestService(
             ProductService productService,
             ProductRequestRepository productRequestRepository,
             FoodPolicy foodPolicy,
-            CurrentUser currentUser
-    ) {
+            CurrentUser currentUser,
+            PhotoPathResolver photoPathResolver) {
         this.productService = productService;
         this.productRequestRepository = productRequestRepository;
         this.foodPolicy = foodPolicy;
         this.currentUser = currentUser;
+        this.photoPathResolver = photoPathResolver;
     }
 
     public Long create(
             Long productId,
-            String frontPhotoPath,
-            String productCompositionPhotoPath,
-            String productNutritionPhotoPath,
-            String barcodePhotoPath
+            Long frontPhotoPathId,
+            Long productCompositionPhotoPathId,
+            Long productNutritionPhotoPathId,
+            Long barcodePhotoPathId
     ) {
+
+        String frontPhotoPath = photoPathResolver.fromFileId(frontPhotoPathId);
+        String productCompositionPhotoPath = photoPathResolver.fromFileId(productCompositionPhotoPathId);
+        String productNutritionPhotoPath = photoPathResolver.fromFileId(productNutritionPhotoPathId);
+        String barcodePhotoPath = photoPathResolver.fromFileId(barcodePhotoPathId);
 
         var product = productService.getById(productId);
 
@@ -59,10 +67,10 @@ public class ProductRequestService {
 
     public Long update(
             Long productRequestId,
-            String frontPhotoPath,
-            String productCompositionPhotoPath,
-            String productNutritionPhotoPath,
-            String barcodePhotoPath
+            Long frontPhotoPathId,
+            Long productCompositionPhotoPathId,
+            Long productNutritionPhotoPathId,
+            Long barcodePhotoPathId
     ) {
 
         var productRequest = getById(productRequestId);
@@ -71,6 +79,11 @@ public class ProductRequestService {
             foodPolicy.ensureModeration(currentUser);
         else
             foodPolicy.ensureIsOwnerOrModeration(currentUser, productRequest.getProduct().getCreatedById());
+
+        String frontPhotoPath = photoPathResolver.fromFileId(frontPhotoPathId);
+        String productCompositionPhotoPath = photoPathResolver.fromFileId(productCompositionPhotoPathId);
+        String productNutritionPhotoPath = photoPathResolver.fromFileId(productNutritionPhotoPathId);
+        String barcodePhotoPath = photoPathResolver.fromFileId(barcodePhotoPathId);
 
         productRequest.setFrontPhotoPath(frontPhotoPath);
         productRequest.setProductCompositionPhotoPath(productCompositionPhotoPath);

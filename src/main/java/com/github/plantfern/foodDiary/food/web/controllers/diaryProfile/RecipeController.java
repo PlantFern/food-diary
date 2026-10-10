@@ -28,7 +28,7 @@ public class RecipeController {
                 request.name(),
                 request.description(),
                 request.recipe(),
-                request.photoPath()
+                request.photoPathId()
         );
 
         if (request.components() != null) {
@@ -50,7 +50,7 @@ public class RecipeController {
                 request.name(),
                 request.description(),
                 request.recipe(),
-                request.photoPath()
+                request.photoPathId()
         );
     }
 
