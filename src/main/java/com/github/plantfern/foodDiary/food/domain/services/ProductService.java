@@ -111,7 +111,7 @@ public class ProductService implements ProductApi {
     }
 
     @Transactional
-    public String setPhoto(Long productId, MultipartFile file, StorageFolder storageFolder) {
+    public String setPhoto(Long productId, MultipartFile file) {
         var product = getById(productId);
         boolean hasPhoto = product.getPhotoPath() != null && !product.getPhotoPath().isBlank();
 
@@ -121,7 +121,7 @@ public class ProductService implements ProductApi {
             foodPolicy.ensureIsOwner(currentUser, product.getCreatedById());
         }
 
-        var uploaded = fileService.upload(file, storageFolder);
+        var uploaded = fileService.upload(file, StorageFolder.FOOD_PRODUCTS);
         String path = "/api/files/" + uploaded.getId();
         product.setPhotoPath(path);
         productRepository.save(product);
