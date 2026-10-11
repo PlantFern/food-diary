@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.specialists.web.controllers.specialist;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
 import com.github.plantfern.foodDiary.specialists.domain.services.SpecialistService;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/specialist")
 public class SpecialistController {

@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.users.web.controllers.user;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.users.api.UserDto;
 import com.github.plantfern.foodDiary.users.domain.UserService;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+@Validated
 @RestController
 @RequestMapping("api/users")
 public class UserController {
