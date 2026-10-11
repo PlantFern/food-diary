@@ -64,13 +64,6 @@ public class UserService implements UserApi {
 
 
     @Transactional(readOnly = true)
-    public List<UserEntity> getAll() {
-
-        return userRepository
-                .findAllByDeletedAtIsNull();
-    }
-
-    @Transactional(readOnly = true)
     public boolean hasRole(java.lang.Long userId, RoleName role) {
 
         return userRepository.findById(userId)
@@ -146,14 +139,6 @@ public class UserService implements UserApi {
         } catch (DataIntegrityViolationException ex) {
             throw new IllegalArgumentException("Email or login already registered", ex);
         }
-    }
-
-    @Transactional
-    public void assignRoles(Long targetUserId, Set<RoleName> roles){
-
-        roleAssignmentPolicy.ensureCanAssign(currentUser, targetUserId, roles);
-
-        assignRolesInternal(targetUserId, roles);
     }
 
     @Transactional
