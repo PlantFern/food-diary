@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.users.web.controllers.moderation;
 
+import org.springframework.validation.annotation.Validated;
+
 import com.github.plantfern.foodDiary.users.api.UserDto;
 import com.github.plantfern.foodDiary.users.domain.UserMapper;
 import com.github.plantfern.foodDiary.users.domain.UserService;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/moderation/users")
 @PreAuthorize("hasAnyRole('MODERATOR', 'ADMINISTRATOR')")

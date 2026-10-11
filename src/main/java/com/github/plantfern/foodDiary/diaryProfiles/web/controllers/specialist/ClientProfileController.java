@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.specialist;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
@@ -12,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/specialist/diary-profile")
 public class ClientProfileController {
@@ -36,7 +41,7 @@ public class ClientProfileController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<DiaryProfileDto>> findDiaries(@RequestBody Collection<Long> ids){
+    public ResponseEntity<List<DiaryProfileDto>> findDiaries(@Valid @RequestBody Collection<Long> ids){
         var response = diaryProfileService.getAllById(ids);
 
         return ResponseEntity.ok(response.stream().map(diaryProfileMapper::toDto).toList());
