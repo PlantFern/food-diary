@@ -1,14 +1,18 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
 
+import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.domain.services.RecipeComponentService;
 import com.github.plantfern.foodDiary.food.domain.services.RecipeService;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeComponentRequest;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeCreateRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @AllArgsConstructor
@@ -72,5 +76,13 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComponent(@PathVariable Long recipeComponentId) {
         recipeComponentService.deleteFromRecipe(recipeComponentId);
+    }
+
+    @PatchMapping(value = "/{recipeId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> setPhoto(
+            @PathVariable Long recipeId,
+            @RequestParam("file") MultipartFile file
+    ) {
+        return ResponseEntity.ok(recipeService.setPhoto(recipeId, file));
     }
 }
