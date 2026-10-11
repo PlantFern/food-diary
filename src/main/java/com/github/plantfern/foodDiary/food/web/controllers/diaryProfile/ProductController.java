@@ -5,6 +5,7 @@ import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.domain.services.*;
 import com.github.plantfern.foodDiary.food.web.requests.ProductCreateByBarcodeRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ProductController {
 
     @PostMapping("/barcode")
     public ResponseEntity<Long> createByBarcode(
-            @RequestBody ProductCreateByBarcodeRequest request
+            @Valid @RequestBody ProductCreateByBarcodeRequest request
     ) {
         Long productId = productService.create(
                 request.description(),
