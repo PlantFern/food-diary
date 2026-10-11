@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.specialists.web.controllers.moderation;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/moderation/specialists")
 @PreAuthorize("hasAnyRole('SPECIALIST')")
