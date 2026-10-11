@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.meals.domain.services;
 
+import com.github.plantfern.foodDiary.diaryProfiles.api.CommentableType;
+import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryCommentApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealEntity;
@@ -26,6 +28,7 @@ public class MealService {
     private final MealTemplateFoodRecordRepository mealTemplateFoodRecordRepository;
     private final MealFoodRecordRepository mealFoodRecordRepository;
     private final DiaryProfileApi diaryProfileApi;
+    private final DiaryCommentApi diaryCommentApi;
     private final MealPolicy mealPolicy;
     private final CurrentUser currentUser;
 
@@ -121,6 +124,7 @@ public class MealService {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
+        diaryCommentApi.deleteByCommentableInternal(CommentableType.MEAL, mealId);
         meal.setDeletedDate();
         mealRepository.save(meal);
     }
