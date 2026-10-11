@@ -2,7 +2,6 @@ package com.github.plantfern.foodDiary.food.domain.repositories;
 
 
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductListItemDto;
-import com.github.plantfern.foodDiary.food.api.dto.ProductListItemDto;
 import com.github.plantfern.foodDiary.food.api.dto.ShortPersonalizedProductDetailDto;
 import com.github.plantfern.foodDiary.food.domain.views.VProductBasicEntity;
 import jakarta.annotation.Nullable;
@@ -70,28 +69,6 @@ public interface VProductBasicRepository extends JpaRepository<VProductBasicEnti
             Pageable pageable
     );
 
-    @Query("""
-    select new com.github.plantfern.foodDiary.food.api.dto.ProductListItemDto(
-        product.productId,
-        product.productCode,
-        product.productDescription,
-        product.photoPath,
-        product.categoryCode,
-        product.dataSourceCode
-    )
-    from VProductBasicEntity product
-    where (
-            :query is null
-            or lower(product.productDescription) like lower(concat('%', cast(:query as string), '%'))
-            or lower(product.productCode) like lower(concat('%', cast(:query as string), '%'))
-          )
-      and (:categoryId is null or product.categoryId = :categoryId)
-    """)
-    Page<ProductListItemDto> findList(
-            @Param("query") @Nullable String query,
-            @Param("categoryId") @Nullable Long categoryId,
-            Pageable pageable
-    );
 
     @Query("""
         select new com.github.plantfern.foodDiary.food.api.dto.ShortPersonalizedProductDetailDto(
