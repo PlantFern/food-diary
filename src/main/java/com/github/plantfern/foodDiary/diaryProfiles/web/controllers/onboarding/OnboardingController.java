@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.onboarding;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.DiaryProfileMapper;
@@ -12,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/diary-profile/onboarding")
 public class OnboardingController {
@@ -28,7 +33,7 @@ public class OnboardingController {
 
     @PostMapping("")
     public ResponseEntity<DiaryProfileDto> createDiary(
-            @RequestBody ProfileDataRequest profileDataRequest
+            @Valid @RequestBody ProfileDataRequest profileDataRequest
     ){
         return ResponseEntity.ok(diaryProfileService.create(
                 profileDataRequest.height(),
@@ -39,7 +44,7 @@ public class OnboardingController {
 
     @PostMapping("/create-and-calculate-goal")
     public ResponseEntity<DiaryProfileDto> createDiaryWithCalculatedGoal(
-            @RequestBody ExtendedProfileDataRequest extendedProfileDataRequest
+            @Valid @RequestBody ExtendedProfileDataRequest extendedProfileDataRequest
     ){
 
         return ResponseEntity.ok(diaryProfileService.createWithCalculatedGoal(
@@ -55,7 +60,7 @@ public class OnboardingController {
 
     @PostMapping("/create-with-goal")
     public ResponseEntity<DiaryProfileDto> createDiaryWithGoal(
-            @RequestBody ProfileDataWithGoalRequest profileDataWithGoalRequest
+            @Valid @RequestBody ProfileDataWithGoalRequest profileDataWithGoalRequest
     ){
 
         return ResponseEntity.ok(diaryProfileService.createWithGoal(
