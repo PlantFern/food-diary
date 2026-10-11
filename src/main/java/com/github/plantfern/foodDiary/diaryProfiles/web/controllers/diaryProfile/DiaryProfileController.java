@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfile;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryProfileDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.DiaryProfileService;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileDataRequest;
@@ -7,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/api/diary-profile")
 public class DiaryProfileController {
@@ -26,7 +31,7 @@ public class DiaryProfileController {
     @PutMapping("/{diaryProfileId}")
     public ResponseEntity<DiaryProfileDto> updateDiary(
             @PathVariable Long diaryProfileId,
-            @RequestBody ProfileDataRequest profileDataRequest
+            @Valid @RequestBody ProfileDataRequest profileDataRequest
     ) {
         return ResponseEntity.ok(diaryProfileService.update(
                 diaryProfileId,

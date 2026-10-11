@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfile;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.SleepLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.SleepLogService;
@@ -12,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/diary-profile/sleep-log")
 public class SleepLogController {
@@ -26,7 +31,7 @@ public class SleepLogController {
     @PostMapping("/{diaryProfileId}")
     public ResponseEntity<SleepLogDto> create(
             @PathVariable Long diaryProfileId,
-            @ModelAttribute DateTimePeriodRequest request
+            @Valid @ModelAttribute DateTimePeriodRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -41,7 +46,7 @@ public class SleepLogController {
     @PutMapping("/sleep-logs/{sleepLogId}")
     public ResponseEntity<SleepLogDto> update(
             @PathVariable Long sleepLogId,
-            @ModelAttribute DateTimePeriodRequest request
+            @Valid @ModelAttribute DateTimePeriodRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -93,7 +98,7 @@ public class SleepLogController {
     @GetMapping("/diary-profile/{diaryProfileId}/for-a-period")
     public ResponseEntity<List<SleepLogDto>> getForSelectedPeriod(
             @PathVariable Long diaryProfileId,
-            @ModelAttribute DateTimePeriodRequest request
+            @Valid @ModelAttribute DateTimePeriodRequest request
     ){
 
         return ResponseEntity.ok(

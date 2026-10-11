@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.specialist;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.SleepLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.WeightLogDto;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/specialist/log")
 public class ClientLogController {
@@ -44,7 +49,7 @@ public class ClientLogController {
     @GetMapping("/diary-profile/{diaryProfileId}/for-a-period")
     public ResponseEntity<List<SleepLogDto>> getForSelectedPeriod(
             @PathVariable Long diaryProfileId,
-            @ModelAttribute DateTimePeriodRequest request
+            @Valid @ModelAttribute DateTimePeriodRequest request
     ){
 
         return ResponseEntity.ok(
@@ -60,7 +65,7 @@ public class ClientLogController {
     @GetMapping("/diary-profile/{diaryProfileId}/get-by-period")
     public ResponseEntity<List<WeightLogDto>> getByPeriod(
             @PathVariable Long diaryProfileId,
-            @ModelAttribute DatePeriodRequest request
+            @Valid @ModelAttribute DatePeriodRequest request
     ){
 
         return ResponseEntity.ok(weightLogService.getByDiaryProfileAndPeriod(

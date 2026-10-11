@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.food.web.controllers.moderation;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.food.api.dto.RecipeDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.RecipeListItemDto;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/food/moderation/recipes")
 public class RecipeModerationController {
@@ -45,4 +48,3 @@ public class RecipeModerationController {
         recipeService.archive(recipeId);
     }
 }
-

@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.food.web.controllers.moderation;
 
+import org.springframework.validation.annotation.Validated;
+
 import com.github.plantfern.foodDiary.food.api.dto.ProductDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.ProductListItemDto;
 import com.github.plantfern.foodDiary.food.web.requests.ProductSearchRequest;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+@Validated
 @RestController
 @RequestMapping("/moderation/products")
 public class ProductModerationController {

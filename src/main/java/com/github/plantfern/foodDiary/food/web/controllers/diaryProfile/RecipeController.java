@@ -1,6 +1,8 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
 
+import org.springframework.validation.annotation.Validated;
+
 import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.domain.services.RecipeComponentService;
 import com.github.plantfern.foodDiary.food.domain.services.RecipeService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+@Validated
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/food/recipes")
@@ -66,7 +69,7 @@ public class RecipeController {
     @PostMapping("/{recipeId}/components")
     public ResponseEntity<Long> addComponent(
             @PathVariable Long recipeId,
-            @RequestBody RecipeComponentRequest request
+            @Valid @RequestBody RecipeComponentRequest request
     ) {
         return ResponseEntity.ok(
                 recipeComponentService.addToRecipe(recipeId, request.productServingId(), request.amount())

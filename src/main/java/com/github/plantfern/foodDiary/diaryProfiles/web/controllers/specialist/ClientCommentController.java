@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.specialist;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.CommentableType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.DiaryCommentDto;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/specialist/comment")
 public class ClientCommentController {
@@ -26,7 +31,7 @@ public class ClientCommentController {
     @PostMapping("/{diaryProfile}")
     public ResponseEntity<DiaryCommentDto> create(
             @PathVariable Long diaryProfile,
-            @ModelAttribute CommentRequest request
+            @Valid @ModelAttribute CommentRequest request
     ) {
 
         return ResponseEntity.ok(diaryCommentService.create(
@@ -41,7 +46,7 @@ public class ClientCommentController {
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<DiaryCommentDto> update(
             @PathVariable Long commentId,
-            @ModelAttribute CommentRequest request
+            @Valid @ModelAttribute CommentRequest request
     ) {
 
         return ResponseEntity.ok(diaryCommentService.update(

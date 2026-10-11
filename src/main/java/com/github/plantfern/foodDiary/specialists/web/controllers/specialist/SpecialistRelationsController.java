@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.specialists.web.controllers.specialist;
 
+import org.springframework.validation.annotation.Validated;
+
 import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
 import com.github.plantfern.foodDiary.specialists.domain.services.UserRelationService;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/specialist/{specialistId}/relations")
 public class SpecialistRelationsController {

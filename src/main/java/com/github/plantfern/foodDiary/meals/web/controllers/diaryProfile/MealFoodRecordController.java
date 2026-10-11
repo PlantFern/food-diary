@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.meals.domain.services.MealFoodRecordService;
 import com.github.plantfern.foodDiary.meals.web.requests.MealFoodRecordCreateRequest;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalTime;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/diary-profile/{diaryProfileId}/food-records/")
 public class MealFoodRecordController {
@@ -24,7 +29,7 @@ public class MealFoodRecordController {
     @PostMapping("/")
     public ResponseEntity<Long> add(
             @PathVariable Long diaryProfileId,
-            @RequestBody MealFoodRecordCreateRequest request
+            @Valid @RequestBody MealFoodRecordCreateRequest request
     ) {
         return ResponseEntity.ok(
                 mealFoodRecordService.add(
@@ -42,7 +47,7 @@ public class MealFoodRecordController {
     @PostMapping("/quick-product")
     public ResponseEntity<Long> addWithQuickProduct(
             @PathVariable Long diaryProfileId,
-            @RequestBody QuickProductCreateRequest request
+            @Valid @RequestBody QuickProductCreateRequest request
     ) {
         return ResponseEntity.ok(
                 mealFoodRecordService.addWithQuickProduct(

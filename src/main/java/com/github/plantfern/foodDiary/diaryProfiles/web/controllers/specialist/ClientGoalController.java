@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.specialist;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/specialist/goal")
 public class ClientGoalController {

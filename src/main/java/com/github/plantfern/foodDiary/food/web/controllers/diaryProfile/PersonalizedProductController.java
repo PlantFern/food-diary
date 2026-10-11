@@ -1,5 +1,8 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
+
+import org.springframework.validation.annotation.Validated;
+
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductListItemDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductSearchRequest;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @AllArgsConstructor
+@Validated
 @RestController
 @RequestMapping("/api/food/products")
 public class PersonalizedProductController {

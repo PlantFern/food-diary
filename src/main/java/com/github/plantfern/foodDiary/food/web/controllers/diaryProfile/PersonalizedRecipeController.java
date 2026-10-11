@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
-
+\
+import org.springframework.validation.annotation.Validated;
 
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeListItemDto;
@@ -11,6 +12,7 @@ import java.util.List;
 
 
 @AllArgsConstructor
+@Validated
 @RestController
 @RequestMapping("/api/food/recipes")
 public class PersonalizedRecipeController {

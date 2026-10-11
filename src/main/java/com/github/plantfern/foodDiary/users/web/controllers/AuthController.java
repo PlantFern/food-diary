@@ -1,14 +1,18 @@
 package com.github.plantfern.foodDiary.users.web.controllers;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 import com.github.plantfern.foodDiary.users.api.UserDto;
 import com.github.plantfern.foodDiary.users.domain.UserService;
 import com.github.plantfern.foodDiary.users.web.requests.RegisterRequest;
-import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+@Validated
 @RestController
 public class AuthController {
 
@@ -20,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserDto> createUserAccount(@RequestBody RegisterRequest request    ){
+    public ResponseEntity<UserDto> createUserAccount(@Valid @RequestBody RegisterRequest request) {
 
         return ResponseEntity.ok(
                 userService.register(
