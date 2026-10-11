@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
+import com.github.plantfern.foodDiary.diaryProfiles.api.CommentableType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.SleepLogApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.SleepLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.SleepLogEntity;
@@ -28,6 +29,7 @@ public class SleepLogService implements SleepLogApi {
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
     private final SleepLogMapper sleepLogMapper;
+    private final DiaryCommentService diaryCommentService;
 
 
     @Transactional
@@ -99,6 +101,7 @@ public class SleepLogService implements SleepLogApi {
 
         diaryProfilePolicy.ensureIsOwner(currentUser, diaryProfileId);
 
+        diaryCommentService.deleteByCommentableInternal(CommentableType.SLEEP_LOG, sleepLogId);
         sleepLogRepository.delete(sleepLog);
     }
 
