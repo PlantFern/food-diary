@@ -107,43 +107,6 @@ public class ProductService implements ProductApi {
         return path;
     }
 
-    @Transactional
-    public void activateProduct(Long productId) {
-
-        foodPolicy.ensureModeration(currentUser);
-
-        var foundProduct = getById(productId);
-
-        var entityStatus = entityStatusRepository
-                .findByCode(EntityStatus.ACTIVE.name())
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Entity status with such code not found")
-                );
-
-        foundProduct.setEntityStatusId(entityStatus.getId());
-        foundProduct.setPublic(true);
-
-        productRepository.save(foundProduct);
-    }
-
-    @Transactional
-    public void archive(Long productId) {
-
-        foodPolicy.ensureModeration(currentUser);
-
-        var foundProduct = getById(productId);
-
-        var entityStatus = entityStatusRepository
-                .findByCode(EntityStatus.ARCHIVED.name())
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Entity status with such code not found")
-                );
-
-        foundProduct.setEntityStatusId(entityStatus.getId());
-
-        productRepository.save(foundProduct);
-    }
-
     @Transactional(readOnly = true)
     ProductEntity getById(Long id){
         return productRepository
@@ -153,7 +116,7 @@ public class ProductService implements ProductApi {
                 );
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean existsById(Long productId) {
         return productRepository.existsById(productId);
     }
