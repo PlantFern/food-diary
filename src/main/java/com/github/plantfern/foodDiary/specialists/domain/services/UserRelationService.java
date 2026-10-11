@@ -214,18 +214,6 @@ public class UserRelationService implements UserRelationApi {
     }
 
     @Transactional(readOnly = true)
-    public List<UserRelationDto> getAll() {
-
-        userRelationPolicy.ensureCanGetAll(currentUser);
-
-        return userRelationRepository
-                .findAll()
-                .stream()
-                .map(userRelationMapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public List<UserRelationDto> getByDiaryProfileId(Long diaryProfileId) {
 
         var diaryProfileUserId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
