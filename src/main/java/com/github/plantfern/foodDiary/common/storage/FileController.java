@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.common.storage;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.common.storage.domain.UploadedFileEntity;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor
 
+@Validated
 @RestController
 @RequestMapping("/api/files")
 public class FileController {
