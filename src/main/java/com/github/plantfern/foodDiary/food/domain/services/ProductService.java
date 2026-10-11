@@ -16,6 +16,7 @@ import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 
+@AllArgsConstructor
 @Service
 public class ProductService implements ProductApi {
 
@@ -36,29 +38,6 @@ public class ProductService implements ProductApi {
     private final FoodServingService foodServingService;
     private final FileService fileService;
     private final PhotoPathResolver photoPathResolver;
-
-    public ProductService(
-            CurrentUser currentUser,
-            ProductRepository productRepository,
-            EntityStatusRepository entityStatusRepository,
-            ProductDataSourceRepository productDataSourceRepository,
-            DataSourceRepository dataSourceRepository,
-            FoodPolicy foodPolicy,
-            ProductNutrientService productNutrientService,
-            FoodServingService foodServingService,
-            FileService fileService,
-            PhotoPathResolver photoPathResolver) {
-        this.currentUser = currentUser;
-        this.productRepository = productRepository;
-        this.entityStatusRepository = entityStatusRepository;
-        this.productDataSourceRepository = productDataSourceRepository;
-        this.dataSourceRepository = dataSourceRepository;
-        this.foodPolicy = foodPolicy;
-        this.productNutrientService = productNutrientService;
-        this.foodServingService = foodServingService;
-        this.fileService = fileService;
-        this.photoPathResolver = photoPathResolver;
-    }
 
 
     @Transactional

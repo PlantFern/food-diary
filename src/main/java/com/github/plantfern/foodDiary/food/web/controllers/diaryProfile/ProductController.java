@@ -5,12 +5,14 @@ import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.domain.services.*;
 import com.github.plantfern.foodDiary.food.web.requests.ProductCreateByBarcodeRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/food/products")
 public class ProductController {
@@ -21,19 +23,6 @@ public class ProductController {
     private final ProductNutrientService productNutrientService;
     private final ProductRequestService productRequestService;
 
-    public ProductController(
-            ProductService productService,
-            BrandedProductService brandedProductService,
-            FoodServingService foodServingService,
-            ProductNutrientService productNutrientService,
-            ProductRequestService productRequestService
-    ) {
-        this.productService = productService;
-        this.brandedProductService = brandedProductService;
-        this.foodServingService = foodServingService;
-        this.productNutrientService = productNutrientService;
-        this.productRequestService = productRequestService;
-    }
 
     @PostMapping("/barcode")
     public ResponseEntity<Long> createByBarcode(

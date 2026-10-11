@@ -8,10 +8,12 @@ import com.github.plantfern.foodDiary.food.domain.repositories.ProductRequestRep
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+@AllArgsConstructor
 @Service
 public class ProductRequestService {
 
@@ -20,19 +22,6 @@ public class ProductRequestService {
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
     private final PhotoPathResolver photoPathResolver;
-
-    public ProductRequestService(
-            ProductService productService,
-            ProductRequestRepository productRequestRepository,
-            FoodPolicy foodPolicy,
-            CurrentUser currentUser,
-            PhotoPathResolver photoPathResolver) {
-        this.productService = productService;
-        this.productRequestRepository = productRequestRepository;
-        this.foodPolicy = foodPolicy;
-        this.currentUser = currentUser;
-        this.photoPathResolver = photoPathResolver;
-    }
 
 
     @Transactional

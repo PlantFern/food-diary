@@ -9,6 +9,7 @@ import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@AllArgsConstructor
 @Service
 public class ProductNutrientService {
 
@@ -26,20 +28,6 @@ public class ProductNutrientService {
     private final CurrentUser currentUser;
     private final ProductNutrientRepository productNutrientRepository;
     private final ProductRepository productRepository;
-
-    public ProductNutrientService(
-            NutrientService nutrientService,
-            FoodPolicy foodPolicy,
-            CurrentUser currentUser,
-            ProductNutrientRepository productNutrientRepository,
-            ProductRepository productRepository
-    ) {
-        this.nutrientService = nutrientService;
-        this.foodPolicy = foodPolicy;
-        this.currentUser = currentUser;
-        this.productNutrientRepository = productNutrientRepository;
-        this.productRepository = productRepository;
-    }
 
 
     @Transactional

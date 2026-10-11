@@ -8,9 +8,12 @@ import com.github.plantfern.foodDiary.food.domain.repositories.RecipeRepository;
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+@AllArgsConstructor
 @Service
 public class RecipeService {
 
@@ -20,21 +23,6 @@ public class RecipeService {
     private final FoodPolicy foodPolicy;
     private final RecipeComponentService recipeComponentService;
     private final PhotoPathResolver photoPathResolver;
-
-    public RecipeService(
-            CurrentUser currentUser,
-            RecipeRepository recipeRepository,
-            EntityStatusRepository entityStatusRepository,
-            FoodPolicy foodPolicy,
-            RecipeComponentService recipeComponentService,
-            PhotoPathResolver photoPathResolver) {
-        this.currentUser = currentUser;
-        this.recipeRepository = recipeRepository;
-        this.entityStatusRepository = entityStatusRepository;
-        this.foodPolicy = foodPolicy;
-        this.recipeComponentService = recipeComponentService;
-        this.photoPathResolver = photoPathResolver;
-    }
 
 
     @Transactional

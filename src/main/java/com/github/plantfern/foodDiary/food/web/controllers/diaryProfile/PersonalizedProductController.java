@@ -4,20 +4,19 @@ import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductListItemDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedProductSearchRequest;
 import com.github.plantfern.foodDiary.food.domain.services.ProductQueryService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/food/products")
 public class PersonalizedProductController {
 
     private final ProductQueryService productQueryService;
 
-    public PersonalizedProductController(ProductQueryService productQueryService) {
-        this.productQueryService = productQueryService;
-    }
 
     @GetMapping("/diary-profile/{diaryProfileId}")
     public Page<PersonalizedProductListItemDto> getAllPersonalized(

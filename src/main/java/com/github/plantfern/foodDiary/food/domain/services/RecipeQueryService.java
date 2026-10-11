@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
+
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.ItemType;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeDetailDto;
@@ -13,11 +14,14 @@ import com.github.plantfern.foodDiary.food.domain.repositories.VRecipeBasicRepos
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
+@AllArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class RecipeQueryService {
@@ -29,23 +33,6 @@ public class RecipeQueryService {
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
     private final RecipeComponentMapper recipeComponentMapper;
-
-    public RecipeQueryService(
-            VRecipeBasicRepository vRecipeBasicRepository,
-            RecipeComponentRepository recipeComponentRepository,
-            FavoriteFoodRepository favoriteFoodRepository,
-            DiaryProfileApi diaryProfileApi,
-            FoodPolicy foodPolicy,
-            CurrentUser currentUser,
-            RecipeComponentMapper recipeComponentMapper) {
-        this.vRecipeBasicRepository = vRecipeBasicRepository;
-        this.recipeComponentRepository = recipeComponentRepository;
-        this.favoriteFoodRepository = favoriteFoodRepository;
-        this.diaryProfileApi = diaryProfileApi;
-        this.foodPolicy = foodPolicy;
-        this.currentUser = currentUser;
-        this.recipeComponentMapper = recipeComponentMapper;
-    }
 
 
     @Transactional(readOnly = true)

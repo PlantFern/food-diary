@@ -15,6 +15,7 @@ import com.github.plantfern.foodDiary.food.web.requests.ProductSearchRequest;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 
+@AllArgsConstructor
 @Transactional
 @Service
 public class ProductQueryService {
@@ -38,24 +40,6 @@ public class ProductQueryService {
     private final FavoriteFoodRepository favoriteFoodRepository;
     private final FoodServingMapper foodServingMapper;
 
-    public ProductQueryService(
-            ProfileFeatureSettingsApi profileFeatureSettingsApi,
-            NutrientService nutrientService,
-            VProductBasicRepository vProductBasicRepository,
-            VProductNutrientRepository vProductNutrientRepository,
-            CurrentUser currentUser,
-            FoodPolicy foodPolicy, DiaryProfileApi diaryProfileApi, FoodServingService foodServingService, FavoriteFoodRepository favoriteFoodRepository, FoodServingMapper foodServingMapper) {
-        this.profileFeatureSettingsApi = profileFeatureSettingsApi;
-        this.nutrientService = nutrientService;
-        this.vProductBasicRepository = vProductBasicRepository;
-        this.vProductNutrientRepository = vProductNutrientRepository;
-        this.currentUser = currentUser;
-        this.foodPolicy = foodPolicy;
-        this.diaryProfileApi = diaryProfileApi;
-        this.foodServingService = foodServingService;
-        this.favoriteFoodRepository = favoriteFoodRepository;
-        this.foodServingMapper = foodServingMapper;
-    }
 
     @Transactional(readOnly = true)
     public Page<PersonalizedProductListItemDto> getAllPersonalized(

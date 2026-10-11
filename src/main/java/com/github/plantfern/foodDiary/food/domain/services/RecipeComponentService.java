@@ -1,5 +1,6 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
+
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeComponentEntity;
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeEntity;
@@ -9,12 +10,15 @@ import com.github.plantfern.foodDiary.food.domain.repositories.RecipeRepository;
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
+@AllArgsConstructor
 @Service
 public class RecipeComponentService {
 
@@ -23,20 +27,6 @@ public class RecipeComponentService {
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
     private final RecipeRepository recipeRepository;
-
-    @Autowired
-    public RecipeComponentService(
-            FoodServingRepository foodServingRepository,
-            RecipeComponentRepository recipeComponentRepository,
-            FoodPolicy foodPolicy,
-            CurrentUser currentUser,
-            RecipeRepository recipeRepository) {
-        this.foodServingRepository = foodServingRepository;
-        this.recipeComponentRepository = recipeComponentRepository;
-        this.foodPolicy = foodPolicy;
-        this.currentUser = currentUser;
-        this.recipeRepository = recipeRepository;
-    }
 
 
     @Transactional

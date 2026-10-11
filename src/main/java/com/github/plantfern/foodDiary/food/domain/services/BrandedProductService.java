@@ -6,10 +6,12 @@ import com.github.plantfern.foodDiary.food.domain.mappers.BrandedProductMapper;
 import com.github.plantfern.foodDiary.food.domain.repositories.BrandedProductRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class BrandedProductService {
 
     private final FoodServingService foodServingService;
@@ -17,17 +19,6 @@ public class BrandedProductService {
     private final BrandedProductRepository brandedProductRepository;
     private final ProductRepository productRepository;
 
-    public BrandedProductService(
-            FoodServingService foodServingService,
-            BrandedProductMapper brandedProductMapper,
-            BrandedProductRepository brandedProductRepository,
-            ProductRepository productRepository
-    ) {
-        this.foodServingService = foodServingService;
-        this.brandedProductMapper = brandedProductMapper;
-        this.brandedProductRepository = brandedProductRepository;
-        this.productRepository = productRepository;
-    }
 
     @Transactional
     public BrandedProductDto create(

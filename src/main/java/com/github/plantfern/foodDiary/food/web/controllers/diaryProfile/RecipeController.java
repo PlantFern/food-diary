@@ -5,11 +5,13 @@ import com.github.plantfern.foodDiary.food.domain.services.RecipeComponentServic
 import com.github.plantfern.foodDiary.food.domain.services.RecipeService;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeComponentRequest;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeCreateRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/food/recipes")
 public class RecipeController {
@@ -17,10 +19,6 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final RecipeComponentService recipeComponentService;
 
-    public RecipeController(RecipeService recipeService, RecipeComponentService recipeComponentService) {
-        this.recipeService = recipeService;
-        this.recipeComponentService = recipeComponentService;
-    }
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody RecipeCreateRequest request) {
