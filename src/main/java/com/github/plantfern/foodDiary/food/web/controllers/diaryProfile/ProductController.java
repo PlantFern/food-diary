@@ -1,10 +1,10 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
 
-import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.domain.services.*;
 import com.github.plantfern.foodDiary.food.web.requests.ProductCreateByBarcodeRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +37,7 @@ public class ProductController {
 
     @PostMapping("/barcode")
     public ResponseEntity<Long> createByBarcode(
-            @ModelAttribute ProductCreateByBarcodeRequest request
+            @Valid @RequestBody ProductCreateByBarcodeRequest request
     ) {
         Long productId = productService.create(
                 request.description(),
@@ -75,9 +75,8 @@ public class ProductController {
     @PatchMapping(value = "/{productId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> setPhoto(
             @PathVariable Long productId,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam StorageFolder storageFolder
+            @RequestParam("file") MultipartFile file
     ) {
-        return ResponseEntity.ok(productService.setPhoto(productId, file, storageFolder));
+        return ResponseEntity.ok(productService.setPhoto(productId, file));
     }
 }
