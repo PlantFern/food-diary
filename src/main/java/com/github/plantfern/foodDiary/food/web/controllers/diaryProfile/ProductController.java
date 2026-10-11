@@ -1,5 +1,7 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
+import org.springframework.validation.annotation.Validated;
+
 
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.domain.services.*;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/food/products")
 public class ProductController {
