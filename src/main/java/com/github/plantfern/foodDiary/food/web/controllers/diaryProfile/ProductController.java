@@ -65,9 +65,8 @@ public class ProductController {
     @PatchMapping(value = "/{productId}/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> setPhoto(
             @PathVariable Long productId,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam StorageFolder storageFolder
+            @RequestParam("file") MultipartFile file
     ) {
-        return ResponseEntity.ok(productService.setPhoto(productId, file, storageFolder));
+        return ResponseEntity.ok(productService.setPhoto(productId, file));
     }
 }
