@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record MealCreateRequest(
@@ -15,7 +14,7 @@ public record MealCreateRequest(
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate date,
         Long templateId,
-        String photoPath,
+        Long photoPathId,
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
         @JsonFormat(pattern = "HH:mm") LocalTime eatenAt
         ) {
