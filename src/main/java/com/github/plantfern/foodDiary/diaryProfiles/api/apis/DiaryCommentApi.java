@@ -12,4 +12,6 @@ public interface DiaryCommentApi {
             (Long diaryProfileId, CommentableType type);
 
     DiaryCommentDto getByIdInternal(Long id);
+
+    void deleteByCommentableInternal(CommentableType type, Long commentableId);
 }

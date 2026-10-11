@@ -20,4 +20,9 @@ public interface DiaryCommentRepository extends JpaRepository<DiaryCommentEntity
     List<DiaryCommentEntity> findAllByCommentableTypeAndDiaryProfileId
             (CommentableType commentableType, Long diaryProfile);
 
+    void deleteAllByCommentableTypeAndCommentableId(
+            CommentableType commentableType,
+            Long commentableId
+    );
+
 }
