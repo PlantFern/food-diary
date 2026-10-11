@@ -1,6 +1,8 @@
 package com.github.plantfern.foodDiary.food.domain.services;
 
+import com.github.plantfern.foodDiary.common.storage.FileService;
 import com.github.plantfern.foodDiary.common.storage.PhotoPathResolver;
+import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.EntityStatusRepository;
@@ -11,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @AllArgsConstructor
@@ -23,6 +26,7 @@ public class RecipeService {
     private final FoodPolicy foodPolicy;
     private final RecipeComponentService recipeComponentService;
     private final PhotoPathResolver photoPathResolver;
+    private final FileService fileService;
 
 
     @Transactional
@@ -124,6 +128,24 @@ public class RecipeService {
 
         foundRecipe.softDelete();
         recipeRepository.save(foundRecipe);
+    }
+
+    @Transactional
+    public String setPhoto(Long recipeId, MultipartFile file) {
+        var recipe = getById(recipeId);
+        boolean hasPhoto = recipe.getPhotoPath() != null && !recipe.getPhotoPath().isBlank();
+
+        if (hasPhoto) {
+            foodPolicy.ensureModeration(currentUser);
+        } else {
+            foodPolicy.ensureIsOwner(currentUser, recipe.getCreatedById());
+        }
+
+        var uploaded = fileService.upload(file, StorageFolder.FOOD_RECIPES);
+        String path = "/api/files/" + uploaded.getId();
+        recipe.setPhotoPath(path);
+        recipeRepository.save(recipe);
+        return path;
     }
 
     @Transactional(readOnly = true)
