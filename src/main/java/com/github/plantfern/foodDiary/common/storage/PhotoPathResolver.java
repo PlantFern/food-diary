@@ -26,7 +26,7 @@ public class PhotoPathResolver {
 
         if(value == null || value.isBlank()) return null;
 
-        if(value.startsWith("/http://") || value.startsWith("/https://"))
+        if(value.startsWith("http://") || value.startsWith("https://"))
             return value;
 
         if(value.startsWith("/api/files/")) {

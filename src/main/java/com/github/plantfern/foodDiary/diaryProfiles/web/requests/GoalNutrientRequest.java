@@ -1,10 +1,11 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.requests;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record GoalNutrientRequest(
-        @NotNull Long nutrientId,
-        @NotNull @Min(0) Float amount
+        @NotNull @Positive Long nutrientId,
+        @NotNull @DecimalMin(value = "0.0", inclusive = false) Float amount
 ) {
 }
