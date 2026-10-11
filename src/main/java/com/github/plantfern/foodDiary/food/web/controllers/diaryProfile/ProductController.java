@@ -26,7 +26,7 @@ public class ProductController {
 
     @PostMapping("/barcode")
     public ResponseEntity<Long> createByBarcode(
-            @ModelAttribute ProductCreateByBarcodeRequest request
+            @RequestBody ProductCreateByBarcodeRequest request
     ) {
         Long productId = productService.create(
                 request.description(),
