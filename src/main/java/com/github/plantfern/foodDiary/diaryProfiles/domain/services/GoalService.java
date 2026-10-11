@@ -45,6 +45,26 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
 
+        if (goalNutrientList == null) {
+            goalNutrientList = List.of();
+        }
+
+        boolean hasWeight = plannedWeight != null;
+        boolean hasNutrients = !goalNutrientList.isEmpty();
+        if (!hasWeight && !hasNutrients) {
+            throw new IllegalArgumentException(
+                    "At least planned weight or one nutrient goal is required"
+            );
+        }
+
+        if (startDate == null) {
+            startDate = LocalDate.now();
+        }
+
+        if (plannedEndDate != null && plannedEndDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("Planned end date cannot be before start date");
+        }
+
         var nutrientIds = goalNutrientList
                 .stream()
                 .map(GoalNutrientRequest::nutrientId)
@@ -75,7 +95,7 @@ public class GoalService implements GoalApi {
             return goalMapper.toDto(goal);
 
         var goalId = goal.getId();
-        for( var goalNutrient : goalNutrientList ) {
+        for (var goalNutrient : goalNutrientList) {
             goal.getGoalNutrientSet().add(
                     new GoalNutrientEntity(
                             goalId,
@@ -109,6 +129,36 @@ public class GoalService implements GoalApi {
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldGoal.getCreatedById());
 
+        if (goalNutrientList == null) {
+            goalNutrientList = List.of();
+        }
+
+        boolean hasWeight = plannedWeight != null;
+        boolean hasNutrients = !goalNutrientList.isEmpty();
+        if (!hasWeight && !hasNutrients) {
+            throw new IllegalArgumentException(
+                    "At least planned weight or one nutrient goal is required"
+            );
+        }
+
+        if (startDate == null) {
+            startDate = LocalDate.now();
+        }
+
+        LocalDate existingEnd = oldGoal.getPlannedEndDate();
+        if (existingEnd == null) {
+            existingEnd = oldGoal.getActualEndDate();
+        }
+        if (existingEnd != null && startDate.isAfter(existingEnd)) {
+            throw new IllegalArgumentException(
+                    "Start date cannot be after existing end date of the goal"
+            );
+        }
+
+        if (plannedEndDate != null && plannedEndDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("Planned end date cannot be before start date");
+        }
+
         var nutrientIds = goalNutrientList
                 .stream()
                 .map(GoalNutrientRequest::nutrientId)
@@ -133,7 +183,7 @@ public class GoalService implements GoalApi {
             return goalMapper.toDto(newGoal);
 
         var currentGoalId = newGoal.getId();
-        for( var goalNutrient : goalNutrientList ) {
+        for (var goalNutrient : goalNutrientList) {
             newGoal.getGoalNutrientSet().add(
                     new GoalNutrientEntity(
                             currentGoalId,

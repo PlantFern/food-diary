@@ -5,6 +5,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalNutrientDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.GoalService;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.GoalRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class GoalController {
     @PostMapping ("/{diaryProfileId}")
     public ResponseEntity<GoalDto> create(
             @PathVariable Long diaryProfileId,
-            @RequestBody GoalRequest request
+            @Valid @RequestBody GoalRequest request
     ) {
 
         return ResponseEntity.ok(goalService.create(
@@ -44,7 +45,7 @@ public class GoalController {
     @PutMapping ("/goals/{goalId}")
     public ResponseEntity<GoalDto> update(
             @PathVariable Long goalId,
-            @RequestBody GoalRequest request
+            @Valid @RequestBody GoalRequest request
     ) {
 
         return ResponseEntity.ok(goalService.update(

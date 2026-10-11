@@ -7,6 +7,7 @@ import com.github.plantfern.foodDiary.food.domain.services.RecipeService;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeComponentRequest;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeCreateRequest;
 import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class RecipeController {
 
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody RecipeCreateRequest request) {
+    public ResponseEntity<Long> create(@Valid @RequestBody RecipeCreateRequest request) {
         Long recipeId = recipeService.create(
                 request.name(),
                 request.description(),
@@ -46,7 +47,7 @@ public class RecipeController {
 
     @PutMapping("/{recipeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long recipeId, @RequestBody RecipeCreateRequest request) {
+    public void update(@PathVariable Long recipeId, @Valid @RequestBody RecipeCreateRequest request) {
         recipeService.update(
                 recipeId,
                 request.name(),

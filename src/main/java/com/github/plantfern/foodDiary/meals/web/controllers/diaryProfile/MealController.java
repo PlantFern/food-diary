@@ -48,10 +48,9 @@ public class MealController {
     public ResponseEntity<String> setPhoto(
             @PathVariable Long diaryProfileId,
             @PathVariable Long mealId,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam StorageFolder storageFolder
+            @RequestParam("file") MultipartFile file
     ) {
-        var uploaded = fileService.upload(file, storageFolder);
+        var uploaded = fileService.upload(file, StorageFolder.MEALS_MEALS);
         String path = "/api/files/" + uploaded.getId();
         mealService.updatePhoto(mealId, path);
         return ResponseEntity.ok(path);
