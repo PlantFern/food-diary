@@ -5,8 +5,6 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.ItemType;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeDetailDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeListItemDto;
-import com.github.plantfern.foodDiary.food.api.dto.RecipeDetailDto;
-import com.github.plantfern.foodDiary.food.api.dto.RecipeListItemDto;
 import com.github.plantfern.foodDiary.food.domain.mappers.RecipeComponentMapper;
 import com.github.plantfern.foodDiary.food.domain.repositories.FavoriteFoodRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.RecipeComponentRepository;
@@ -55,14 +53,6 @@ public class RecipeQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecipeListItemDto> getAll(String query) {
-        foodPolicy.ensureModeration(currentUser);
-        return vRecipeBasicRepository.findList(
-                (query == null || query.isBlank()) ? null : query.trim()
-        );
-    }
-
-    @Transactional(readOnly = true)
     public PersonalizedRecipeDetailDto getPersonalizedDetail(Long diaryProfileId, Long recipeId) {
         var diaryProfile = diaryProfileApi.getByIdInternal(diaryProfileId);
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
@@ -89,32 +79,6 @@ public class RecipeQueryService {
                 basic.getEntityStatusCode(),
                 basic.getIsPublic(),
                 isFavorite,
-                components
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public RecipeDetailDto getDetail(Long recipeId) {
-        foodPolicy.ensureModeration(currentUser);
-
-        var basic = vRecipeBasicRepository.findByRecipeId(recipeId)
-                .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
-
-        var components = recipeComponentRepository
-                .findAllByRecipeId(recipeId)
-                .stream()
-                .map(recipeComponentMapper::toDto)
-                .toList();
-
-        return new RecipeDetailDto(
-                basic.getRecipeId(),
-                basic.getRecipeName(),
-                basic.getRecipeDescription(),
-                basic.getRecipe(),
-                basic.getPhotoPath(),
-                basic.getTotalWeightGrams(),
-                basic.getEntityStatusCode(),
-                basic.getIsPublic(),
                 components
         );
     }
