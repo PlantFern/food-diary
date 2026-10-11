@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.diaryProfiles.domain.services;
 
 
+import com.github.plantfern.foodDiary.diaryProfiles.api.CommentableType;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.WeightLogApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.WeightLogDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEntity;
@@ -28,6 +29,7 @@ public class WeightLogService implements WeightLogApi {
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
     private final WeightLogMapper weightLogMapper;
+    private final DiaryCommentService diaryCommentService;
 
 
     @Transactional
@@ -95,6 +97,7 @@ public class WeightLogService implements WeightLogApi {
                 diaryProfileUser
         );
 
+        diaryCommentService.deleteByCommentableInternal(CommentableType.WEIGHT_LOG, weightLogId);
         weightLogRepository.delete(weightLog);
     }
 
