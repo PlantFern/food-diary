@@ -1,5 +1,9 @@
 package com.github.plantfern.foodDiary.diaryProfiles.web.controllers.diaryProfile;
 
+import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.Valid;
+
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
@@ -14,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/diary-profile/feature-settings")
 public class ProfileFeatureSettingsController {
@@ -33,7 +38,7 @@ public class ProfileFeatureSettingsController {
     @PostMapping("/{diaryProfileId}")
     public ResponseEntity<ProfileFeatureSettingsDto> create(
             @PathVariable Long diaryProfileId,
-            @RequestBody ProfileFeatureSettingsRequest request
+            @Valid @RequestBody ProfileFeatureSettingsRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -52,7 +57,7 @@ public class ProfileFeatureSettingsController {
     @PutMapping("/settings/{profileFeatureSettingsId}")
     public ResponseEntity<ProfileFeatureSettingsDto> update(
             @PathVariable Long profileFeatureSettingsId,
-            @RequestBody ProfileFeatureSettingsRequest request
+            @Valid @RequestBody ProfileFeatureSettingsRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -105,7 +110,7 @@ public class ProfileFeatureSettingsController {
     @GetMapping("/diary-profile/{diaryProfileId}/by-period")
     public ResponseEntity<List<ProfileFeatureSettingsDto>> getAllByPeriodAndDiaryProfileId(
             @PathVariable Long diaryProfileId,
-            @ModelAttribute DateTimePeriodRequest request
+            @Valid @ModelAttribute DateTimePeriodRequest request
     ) {
         return ResponseEntity.ok(
                 profileFeatureSettingsService
