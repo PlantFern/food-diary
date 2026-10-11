@@ -86,37 +86,6 @@ public class RecipeService {
     }
 
     @Transactional
-    public void activate(Long recipeId) {
-        foodPolicy.ensureModeration(currentUser);
-
-        var foundRecipe = getById(recipeId);
-
-        var entityStatus = entityStatusRepository
-                .findByCode(EntityStatus.ACTIVE.name())
-                .orElseThrow(() -> new EntityNotFoundException("Entity status with such code not found"));
-
-        foundRecipe.setEntityStatusId(entityStatus.getId());
-        foundRecipe.setPublic(true);
-
-        recipeRepository.save(foundRecipe);
-    }
-
-    @Transactional
-    public void archive(Long recipeId) {
-        foodPolicy.ensureModeration(currentUser);
-
-        var foundRecipe = getById(recipeId);
-
-        var entityStatus = entityStatusRepository
-                .findByCode(EntityStatus.ARCHIVED.name())
-                .orElseThrow(() -> new EntityNotFoundException("Entity status with such code not found"));
-
-        foundRecipe.setEntityStatusId(entityStatus.getId());
-
-        recipeRepository.save(foundRecipe);
-    }
-
-    @Transactional
     public void softDelete(Long recipeId) {
         var foundRecipe = getById(recipeId);
 
