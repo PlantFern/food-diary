@@ -2,7 +2,6 @@ package com.github.plantfern.foodDiary.food.domain.repositories;
 
 
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeListItemDto;
-import com.github.plantfern.foodDiary.food.api.dto.RecipeListItemDto;
 import com.github.plantfern.foodDiary.food.domain.views.VRecipeBasicEntity;
 import jakarta.annotation.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -57,21 +56,6 @@ public interface VRecipeBasicRepository extends JpaRepository<VRecipeBasicEntity
             @Param("onlyMy") boolean onlyMy
     );
 
-    @Query("""
-                select new com.github.plantfern.foodDiary.food.api.dto.RecipeListItemDto(
-                    recipe.recipeId,
-                    recipe.recipeName,
-                    recipe.photoPath
-                )
-                from VRecipeBasicEntity recipe
-                where (:query is null
-                        or lower(recipe.recipeName) like lower(concat('%', cast(:query as string), '%'))
-                        or lower(coalesce(recipe.recipeDescription, '')) like lower(concat('%', cast(:query as string), '%'))
-                )
-    """)
-    List<RecipeListItemDto> findList(
-            @Param("query") @Nullable String query
-    );
 
     Optional<VRecipeBasicEntity> findByRecipeId(Long recipeId);
 }
