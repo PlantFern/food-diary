@@ -9,6 +9,7 @@ import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RecipeService {
@@ -35,6 +36,8 @@ public class RecipeService {
         this.photoPathResolver = photoPathResolver;
     }
 
+
+    @Transactional
     public Long create(
             String name,
             String description,
@@ -63,6 +66,7 @@ public class RecipeService {
         return recipeRepository.save(savedRecipe).getId();
     }
 
+    @Transactional
     public void update(
             Long recipeId,
             String name,
@@ -89,6 +93,7 @@ public class RecipeService {
         recipeRepository.save(foundRecipe);
     }
 
+    @Transactional
     public void activate(Long recipeId) {
         foodPolicy.ensureModeration(currentUser);
 
@@ -104,6 +109,7 @@ public class RecipeService {
         recipeRepository.save(foundRecipe);
     }
 
+    @Transactional
     public void archive(Long recipeId) {
         foodPolicy.ensureModeration(currentUser);
 
@@ -118,6 +124,7 @@ public class RecipeService {
         recipeRepository.save(foundRecipe);
     }
 
+    @Transactional
     public void softDelete(Long recipeId) {
         var foundRecipe = getById(recipeId);
 
@@ -131,6 +138,7 @@ public class RecipeService {
         recipeRepository.save(foundRecipe);
     }
 
+    @Transactional(readOnly = true)
     public void countTotalWeight(Long recipeId) {
 
         var recipe = recipeRepository
@@ -140,6 +148,7 @@ public class RecipeService {
         recipe.setTotalWeightGrams(recipeComponentService.countWeightByRecipeId(recipeId));
     }
 
+    @Transactional(readOnly = true)
     RecipeEntity getById(Long id) {
         return recipeRepository
                 .findById(id)

@@ -7,6 +7,7 @@ import com.github.plantfern.foodDiary.food.domain.repositories.BrandedProductRep
 import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BrandedProductService {
@@ -28,6 +29,7 @@ public class BrandedProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public BrandedProductDto create(
             Long productId,
             String barcode,

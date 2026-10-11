@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.common.storage;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -11,6 +12,7 @@ public class PhotoPathResolver {
 
     private final FileService fileService;
 
+    @Transactional
     public String fromFileId(Long fileId) {
 
         if(fileId == null) return null;
@@ -19,6 +21,7 @@ public class PhotoPathResolver {
         return "/api/files/" + fileId;
     }
 
+    @Transactional
     public String fromPathOrUrl(String value) {
 
         if(value == null || value.isBlank()) return null;

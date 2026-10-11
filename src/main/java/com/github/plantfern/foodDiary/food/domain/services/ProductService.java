@@ -60,6 +60,8 @@ public class ProductService implements ProductApi {
         this.photoPathResolver = photoPathResolver;
     }
 
+
+    @Transactional
     public Long create(
             String description,
             Long categoryId,
@@ -126,6 +128,7 @@ public class ProductService implements ProductApi {
         return path;
     }
 
+    @Transactional
     public void activateProduct(Long productId) {
 
         foodPolicy.ensureModeration(currentUser);
@@ -144,6 +147,7 @@ public class ProductService implements ProductApi {
         productRepository.save(foundProduct);
     }
 
+    @Transactional
     public void archive(Long productId) {
 
         foodPolicy.ensureModeration(currentUser);
@@ -161,7 +165,7 @@ public class ProductService implements ProductApi {
         productRepository.save(foundProduct);
     }
 
-
+    @Transactional(readOnly = true)
     ProductEntity getById(Long id){
         return productRepository
                 .findById(id)
@@ -170,12 +174,14 @@ public class ProductService implements ProductApi {
                 );
     }
 
+    @Transactional(readOnly = true)
     public boolean existsById(Long productId) {
         return productRepository.existsById(productId);
     }
 
 
     @Override
+    @Transactional
     public Long createNutrientRecordingProduct(
             String description,
             Float gramWeight,

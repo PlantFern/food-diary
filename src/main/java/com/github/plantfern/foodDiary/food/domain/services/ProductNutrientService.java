@@ -10,6 +10,7 @@ import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,8 @@ public class ProductNutrientService {
         this.productRepository = productRepository;
     }
 
+
+    @Transactional
     public Long addToProduct(Long productId, Long nutrientId, Float amount){
 
         if(amount < 0)
@@ -66,6 +69,7 @@ public class ProductNutrientService {
         ).getId();
     }
 
+    @Transactional
     public List<Long> addAllToProduct(
             Long productId,
             Map<Long, Float> nutrients
@@ -108,6 +112,7 @@ public class ProductNutrientService {
                 .toList();
     }
 
+    @Transactional
     public Long updateProductNutrient(Long productNutrientId, Float amount){
 
         if(amount < 0)
@@ -129,6 +134,7 @@ public class ProductNutrientService {
         return productNutrientRepository.save(productNutrient).getId();
     }
 
+    @Transactional
     public void deleteFromProduct(Long productNutrientId) {
         var productNutrient = productNutrientRepository
                 .findById(productNutrientId)

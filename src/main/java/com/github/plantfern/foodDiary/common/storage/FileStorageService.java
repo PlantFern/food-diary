@@ -8,6 +8,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class FileStorageService {
         this.properties = properties;
     }
 
+
+    @Transactional
     public String store(MultipartFile file, StorageFolder folder) {
 
         if (file.isEmpty())
@@ -62,6 +65,7 @@ public class FileStorageService {
         return storeName;
     }
 
+    @Transactional
     public Resource loadAsResource(String filename) {
 
         if (filename == null || filename.isBlank())
@@ -78,6 +82,7 @@ public class FileStorageService {
         return new FileSystemResource(filePath);
     }
 
+    @Transactional
     public void delete(String filename) {
 
         if (filename == null || filename.isBlank())

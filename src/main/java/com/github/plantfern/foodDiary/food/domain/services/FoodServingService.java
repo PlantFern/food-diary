@@ -13,6 +13,7 @@ import com.github.plantfern.foodDiary.food.domain.views.VFoodServingEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,6 +30,8 @@ public class FoodServingService implements FoodServingApi {
     private final VFoodServingRepository vFoodServingRepository;
     private final VItemNutrientRepository vItemNutrientRepository;
 
+
+    @Transactional
     public FoodServingDto createForProduct(
             Long productId,
             Float amount,
@@ -61,11 +64,13 @@ public class FoodServingService implements FoodServingApi {
         ));
     }
 
+    @Transactional(readOnly = true)
     public List<FoodServingEntity> getByProductId(Long productId) {
 
         return foodServingRepository.findAllByItemIdAndItemType(productId, ItemType.PRODUCT);
     }
 
+    @Transactional(readOnly = true)
     public boolean existsById(Long foodServingId) {
         return foodServingRepository.existsById(foodServingId);
     }
@@ -73,6 +78,7 @@ public class FoodServingService implements FoodServingApi {
 
     // region Override
 
+    @Transactional(readOnly = true)
     @Override
     public FoodServingDto getById(Long foodServingId) {
         return foodServingRepository
@@ -83,6 +89,7 @@ public class FoodServingService implements FoodServingApi {
                 );
     }
 
+    @Transactional
     @Override
     public Map<Long, ProductServingDto> getInfoByServingIds(
             Collection<Long> servingIds,
@@ -125,6 +132,7 @@ public class FoodServingService implements FoodServingApi {
         return result;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Map<Long, Map<Long, Float>> getNutrientsByServingIds(
             Collection<Long> servingIds,

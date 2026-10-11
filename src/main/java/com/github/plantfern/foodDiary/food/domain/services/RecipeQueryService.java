@@ -47,6 +47,8 @@ public class RecipeQueryService {
         this.recipeComponentMapper = recipeComponentMapper;
     }
 
+
+    @Transactional(readOnly = true)
     public List<PersonalizedRecipeListItemDto> getAllPersonalized(
             Long diaryProfileId,
             String query,
@@ -65,6 +67,7 @@ public class RecipeQueryService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<RecipeListItemDto> getAll(String query) {
         foodPolicy.ensureModeration(currentUser);
         return vRecipeBasicRepository.findList(
@@ -72,6 +75,7 @@ public class RecipeQueryService {
         );
     }
 
+    @Transactional(readOnly = true)
     public PersonalizedRecipeDetailDto getPersonalizedDetail(Long diaryProfileId, Long recipeId) {
         var diaryProfile = diaryProfileApi.getByIdInternal(diaryProfileId);
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
@@ -102,6 +106,7 @@ public class RecipeQueryService {
         );
     }
 
+    @Transactional(readOnly = true)
     public RecipeDetailDto getDetail(Long recipeId) {
         foodPolicy.ensureModeration(currentUser);
 

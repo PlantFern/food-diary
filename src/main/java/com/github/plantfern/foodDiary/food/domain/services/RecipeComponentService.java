@@ -11,6 +11,7 @@ import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class RecipeComponentService {
         this.recipeRepository = recipeRepository;
     }
 
+
+    @Transactional
     public Long addToRecipe(Long recipeId, Long productServingId, Float amount) {
         if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be greater than 0");
@@ -59,6 +62,7 @@ public class RecipeComponentService {
         ).getId();
     }
 
+    @Transactional
     public Long updateComponent(Long recipeComponentId, Float amount) {
         if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be greater than 0");
@@ -74,6 +78,7 @@ public class RecipeComponentService {
         return recipeComponentRepository.save(component).getId();
     }
 
+    @Transactional
     public void deleteFromRecipe(Long recipeComponentId) {
         var component = recipeComponentRepository
                 .findById(recipeComponentId)
@@ -84,6 +89,7 @@ public class RecipeComponentService {
         recipeComponentRepository.delete(component);
     }
 
+    @Transactional(readOnly = true)
     public Float countWeightByRecipeId(Long recipeId){
 
         return recipeComponentRepository.sumWeightGramsByRecipeId(recipeId);

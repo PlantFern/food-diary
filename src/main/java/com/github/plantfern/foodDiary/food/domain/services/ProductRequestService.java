@@ -9,6 +9,7 @@ import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -33,6 +34,8 @@ public class ProductRequestService {
         this.photoPathResolver = photoPathResolver;
     }
 
+
+    @Transactional
     public Long create(
             Long productId,
             Long frontPhotoPathId,
@@ -65,6 +68,7 @@ public class ProductRequestService {
         ).getId();
     }
 
+    @Transactional
     public Long update(
             Long productRequestId,
             Long frontPhotoPathId,
@@ -95,6 +99,7 @@ public class ProductRequestService {
                 .getId();
     }
 
+    @Transactional(readOnly = true)
     ProductRequestEntity getById(Long id) {
 
         return productRequestRepository
