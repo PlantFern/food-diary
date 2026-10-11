@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.meals.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,7 @@ public class MealTemplateFoodRecordEntity {
     @Column(name = "serving_id", nullable = false)
     private Long servingId;
 
+    @DecimalMin(value="0", inclusive=false)
     @Column(name = "amount", nullable = false)
     private Float amount;
 
