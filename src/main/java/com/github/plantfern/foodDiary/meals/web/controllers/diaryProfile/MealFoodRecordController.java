@@ -79,4 +79,9 @@ public class MealFoodRecordController {
     public void delete(@PathVariable Long recordId) {
         mealFoodRecordService.delete(recordId);
     }
+
+    @GetMapping("/{recordId}")
+    public ResponseEntity<?> getById(@PathVariable Long recordId) {
+        return ResponseEntity.ok(mealFoodRecordService.getById(recordId));
+    }
 }
