@@ -30,6 +30,11 @@ public class MealTemplateController {
         return ResponseEntity.ok(mealTemplateService.listByDiaryProfile(diaryProfileId));
     }
 
+    @GetMapping("/{templateId}")
+    public ResponseEntity<?> getById(@PathVariable Long templateId) {
+        return ResponseEntity.ok(mealTemplateService.getById(templateId));
+    }
+
     @PostMapping("")
     public ResponseEntity<Long> create(
             @PathVariable Long diaryProfileId,
