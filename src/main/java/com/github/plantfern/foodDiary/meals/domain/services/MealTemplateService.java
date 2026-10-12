@@ -18,33 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalTime;
 import java.util.List;
 
-
 @Service
 @AllArgsConstructor
 public class MealTemplateService {
 
     private final MealTemplateRepository mealTemplateRepository;
     private final MealTemplateFoodRecordRepository mealTemplateFoodRecordRepository;
-    private final FoodServingApi foodServingApi;
     private final DiaryProfileApi diaryProfileApi;
     private final MealPolicy mealPolicy;
     private final CurrentUser currentUser;
+    private final FoodServingApi foodServingApi;
 
     @Transactional(readOnly = true)
     public List<MealTemplateListItemDto> listByDiaryProfile(Long diaryProfileId) {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
         mealPolicy.ensureIsOwner(currentUser, ownerId);
-
-        return mealTemplateRepository.findAllByDiaryProfileId(diaryProfileId).stream()
-                .map(t -> new MealTemplateListItemDto(
-                        t.getId(),
-                        t.getName(),
-                        t.getScheduledTime(),
-                        t.getFrequency(),
-                        null,
-                        null
-                ))
-                .toList();
+        return mealTemplateRepository.findListItemsByDiaryProfileId(diaryProfileId);
     }
 
     @Transactional
@@ -58,9 +47,14 @@ public class MealTemplateService {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
-        return mealTemplateRepository.save(
-                new MealTemplateEntity(diaryProfileId, name, scheduledTime, frequency, startedAt)
-        ).getId();
+        var entity = new MealTemplateEntity(
+                diaryProfileId,
+                name,
+                scheduledTime,
+                frequency,
+                startedAt
+        );
+        return mealTemplateRepository.save(entity).getId();
     }
 
     @Transactional
@@ -85,24 +79,23 @@ public class MealTemplateService {
     public void softDelete(Long templateId) {
         var template = getById(templateId);
         ensureCanWrite(template);
-        template.setDeletedDate();
+        template.setDeleted(true);
         mealTemplateRepository.save(template);
     }
 
     @Transactional
     public Long addRecord(Long templateId, Long servingId, Float amount) {
-        if (amount == null || amount <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than 0");
-        }
-
         var template = getById(templateId);
         ensureCanWrite(template);
 
         foodServingApi.getById(servingId);
 
-        return mealTemplateFoodRecordRepository.save(
-                new MealTemplateFoodRecordEntity(templateId, servingId, amount)
-        ).getId();
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than 0");
+        }
+
+        var record = new MealTemplateFoodRecordEntity(templateId, servingId, amount);
+        return mealTemplateFoodRecordRepository.save(record).getId();
     }
 
     @Transactional
@@ -136,7 +129,7 @@ public class MealTemplateService {
         mealPolicy.ensureIsOwner(currentUser, ownerId);
     }
 
-    MealTemplateEntity getById(Long id) {
+    public MealTemplateEntity getById(Long id) {
         return mealTemplateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Template not found"));
     }
