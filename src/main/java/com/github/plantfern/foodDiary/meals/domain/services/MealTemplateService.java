@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class MealTemplateService {
             String name,
             LocalTime scheduledTime,
             Long frequency,
-            Long startedAt
+            LocalDate startedAt
     ) {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
         mealPolicy.ensureIsOwner(currentUser, ownerId);
@@ -72,7 +73,7 @@ public class MealTemplateService {
             String name,
             LocalTime scheduledTime,
             Long frequency,
-            Long startedAt
+            LocalDate startedAt
     ) {
         var template = getById(templateId);
         ensureCanWrite(template);
