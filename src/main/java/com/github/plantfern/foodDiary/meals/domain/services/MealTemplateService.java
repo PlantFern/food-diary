@@ -33,7 +33,16 @@ public class MealTemplateService {
     public List<MealTemplateListItemDto> listByDiaryProfile(Long diaryProfileId) {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
         mealPolicy.ensureIsOwner(currentUser, ownerId);
-        return mealTemplateRepository.findListItemsByDiaryProfileId(diaryProfileId);
+        return mealTemplateRepository.findAllByDiaryProfileId(diaryProfileId).stream()
+                .map(t -> new MealTemplateListItemDto(
+                        t.getId(),
+                        t.getName(),
+                        t.getScheduledTime(),
+                        t.getFrequency(),
+                        null,
+                        null
+                ))
+                .toList();
     }
 
     @Transactional
@@ -79,7 +88,7 @@ public class MealTemplateService {
     public void softDelete(Long templateId) {
         var template = getById(templateId);
         ensureCanWrite(template);
-        template.setDeleted(true);
+        template.setDeletedDate();
         mealTemplateRepository.save(template);
     }
 
