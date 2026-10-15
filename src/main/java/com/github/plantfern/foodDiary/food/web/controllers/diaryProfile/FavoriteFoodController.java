@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @AllArgsConstructor
@@ -19,6 +20,14 @@ public class FavoriteFoodController {
 
     private final FavoriteFoodService favoriteFoodService;
 
+
+    @GetMapping("/search")
+    public List<Map<String, Object>> search(
+            @PathVariable Long diaryProfileId,
+            @RequestParam(required = false, defaultValue = "") String q
+    ) {
+        return favoriteFoodService.search(diaryProfileId, q);
+    }
 
     @PostMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
