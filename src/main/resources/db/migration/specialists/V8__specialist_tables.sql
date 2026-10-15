@@ -45,11 +45,17 @@ ALTER TABLE user_relation_statuses
 ALTER TABLE user_relations
     ADD CONSTRAINT unique_user_relations_diary_profile_id_specialist_id UNIQUE (diary_profile_id, specialist_id);
 
+ALTER TABLE specialists
+    ADD CONSTRAINT FK_SPECIALISTS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+
 ALTER TABLE user_relations
     ADD CONSTRAINT FK_USER_RELATIONS_ON_RELATION_STATUS FOREIGN KEY (relation_status_id) REFERENCES user_relation_statuses (id);
 
 ALTER TABLE user_relations
     ADD CONSTRAINT FK_USER_RELATIONS_ON_SPECIALIST FOREIGN KEY (specialist_id) REFERENCES specialists (id);
+
+ALTER TABLE user_relations
+    ADD CONSTRAINT FK_USER_RELATIONS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
 
 ALTER TABLE user_visibility
     ADD CONSTRAINT FK_USER_VISIBILITY_ON_ACTOR_USER FOREIGN KEY (actor_user_id) REFERENCES users (id);
