@@ -113,22 +113,25 @@ public class UserService implements UserApi {
     ) {
 
         var emailNormalized = email.trim().toLowerCase();
-        var loginNormalized =
-                login != null && !login.isEmpty()
-                        ? login.trim().toLowerCase()
-                        : login;
+        String loginNormalized = null;
+        if (login != null && !login.isBlank()) {
+            loginNormalized = login.trim().toLowerCase();
+            if (loginNormalized.length() < 3) {
+                throw new IllegalArgumentException("Login must be at least 3 characters");
+            }
+        }
 
         if (userRepository.existsByEmailIgnoreCase(emailNormalized)) {
             throw new IllegalArgumentException("Email already registered");
         }
 
-        if (userRepository.existsByLoginIgnoreCase(loginNormalized)) {
+        if (loginNormalized != null && userRepository.existsByLoginIgnoreCase(loginNormalized)) {
             throw new IllegalArgumentException("Login already used");
         }
 
         UserEntity user;
 
-        if (loginNormalized != null && !loginNormalized.isEmpty()) {
+        if (loginNormalized != null) {
             user = new UserEntity(
                     emailNormalized,
                     loginNormalized,
