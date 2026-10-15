@@ -12,7 +12,7 @@ CREATE TABLE meal_templates
     name             VARCHAR(255)          NULL,
     scheduled_time   time                  NOT NULL,
     frequency        BIGINT                NOT NULL,
-    started_at       BIGINT                NOT NULL,
+    started_at       date                  NOT NULL,
     created_at       datetime              NOT NULL,
     updated_at       datetime              NULL,
     deleted_at       datetime              NULL,
