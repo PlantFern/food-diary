@@ -1,18 +1,8 @@
-ALTER TABLE weight_logs
-    ADD CONSTRAINT FK_WEIGHT_LOGS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
-
-CREATE TABLE diary_comments
+CREATE TABLE genders
 (
-    id               BIGINT AUTO_INCREMENT NOT NULL,
-    diary_profile_id BIGINT                NOT NULL,
-    commentable_type VARCHAR(255)          NOT NULL,
-    commentable_id   BIGINT                NOT NULL,
-    body             VARCHAR(2000)         NOT NULL,
-    created_by       BIGINT                NOT NULL,
-    created_at       datetime              NOT NULL,
-    updated_at       datetime              NULL,
-    deleted_at       datetime              NULL,
-    CONSTRAINT pk_diary_comments PRIMARY KEY (id)
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    code VARCHAR(30)           NOT NULL,
+    CONSTRAINT pk_genders PRIMARY KEY (id)
 );
 
 CREATE TABLE diary_profiles
@@ -28,11 +18,18 @@ CREATE TABLE diary_profiles
     CONSTRAINT pk_diary_profiles PRIMARY KEY (id)
 );
 
-CREATE TABLE genders
+CREATE TABLE diary_comments
 (
-    id   BIGINT AUTO_INCREMENT NOT NULL,
-    code VARCHAR(30)           NOT NULL,
-    CONSTRAINT pk_genders PRIMARY KEY (id)
+    id               BIGINT AUTO_INCREMENT NOT NULL,
+    diary_profile_id BIGINT                NOT NULL,
+    commentable_type VARCHAR(255)          NOT NULL,
+    commentable_id   BIGINT                NOT NULL,
+    body             VARCHAR(2000)         NOT NULL,
+    created_by       BIGINT                NOT NULL,
+    created_at       datetime              NOT NULL,
+    updated_at       datetime              NULL,
+    deleted_at       datetime              NULL,
+    CONSTRAINT pk_diary_comments PRIMARY KEY (id)
 );
 
 CREATE TABLE goals
@@ -78,33 +75,6 @@ CREATE TABLE weight_logs
     CONSTRAINT pk_weight_logs PRIMARY KEY (id)
 );
 
-ALTER TABLE genders
-    ADD CONSTRAINT uc_6794e03220730f26afe4a4b3e UNIQUE (code);
-
-ALTER TABLE profile_hidden_nutrients
-    ADD CONSTRAINT uc_4856ab80209fc578ef2a34397 UNIQUE (profile_feature_setting_id, nutrient_id);
-
-ALTER TABLE goal_nutrients
-    ADD CONSTRAINT uc_6918b2e4f0ec0855cfc0f4a29 UNIQUE (goal_id, nutrient_id);
-
-ALTER TABLE diary_comments
-    ADD CONSTRAINT FK_DIARY_COMMENTS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
-
-ALTER TABLE diary_profiles
-    ADD CONSTRAINT FK_DIARY_PROFILES_ON_GENDER FOREIGN KEY (gender_id) REFERENCES genders (id);
-
-ALTER TABLE goals
-    ADD CONSTRAINT FK_GOALS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
-
-ALTER TABLE goal_nutrients
-    ADD CONSTRAINT FK_GOAL_NUTRIENTS_ON_GOAL FOREIGN KEY (goal_id) REFERENCES goals (id);
-
-ALTER TABLE profile_feature_settings
-    ADD CONSTRAINT FK_PROFILE_FEATURE_SETTINGS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
-
-ALTER TABLE profile_hidden_nutrients
-    ADD CONSTRAINT FK_PROFILE_HIDDEN_NUTRIENTS_ON_PROFILE_FEATURE_SETTING FOREIGN KEY (profile_feature_setting_id) REFERENCES profile_feature_settings (id);
-
 CREATE TABLE profile_feature_settings
 (
     id                     BIGINT AUTO_INCREMENT NOT NULL,
@@ -129,5 +99,44 @@ CREATE TABLE profile_hidden_nutrients
     CONSTRAINT pk_profile_hidden_nutrients PRIMARY KEY (id)
 );
 
+ALTER TABLE genders
+    ADD CONSTRAINT uc_genders_code UNIQUE (code);
+
+ALTER TABLE profile_hidden_nutrients
+    ADD CONSTRAINT uc_profile_hidden_nutrients UNIQUE (profile_feature_setting_id, nutrient_id);
+
+ALTER TABLE goal_nutrients
+    ADD CONSTRAINT uc_goal_nutrients_goal_nutrient UNIQUE (goal_id, nutrient_id);
+
+ALTER TABLE diary_profiles
+    ADD CONSTRAINT FK_DIARY_PROFILES_ON_GENDER FOREIGN KEY (gender_id) REFERENCES genders (id);
+
+ALTER TABLE diary_profiles
+    ADD CONSTRAINT FK_DIARY_PROFILES_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+
+ALTER TABLE diary_comments
+    ADD CONSTRAINT FK_DIARY_COMMENTS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
+
+ALTER TABLE goals
+    ADD CONSTRAINT FK_GOALS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
+
+ALTER TABLE goal_nutrients
+    ADD CONSTRAINT FK_GOAL_NUTRIENTS_ON_GOAL FOREIGN KEY (goal_id) REFERENCES goals (id);
+
+ALTER TABLE goal_nutrients
+    ADD CONSTRAINT FK_GOAL_NUTRIENTS_ON_NUTRIENT FOREIGN KEY (nutrient_id) REFERENCES nutrients (id);
+
+ALTER TABLE profile_feature_settings
+    ADD CONSTRAINT FK_PROFILE_FEATURE_SETTINGS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
+
+ALTER TABLE profile_hidden_nutrients
+    ADD CONSTRAINT FK_PROFILE_HIDDEN_NUTRIENTS_ON_PROFILE_FEATURE_SETTING FOREIGN KEY (profile_feature_setting_id) REFERENCES profile_feature_settings (id);
+
+ALTER TABLE profile_hidden_nutrients
+    ADD CONSTRAINT FK_PROFILE_HIDDEN_NUTRIENTS_ON_NUTRIENT FOREIGN KEY (nutrient_id) REFERENCES nutrients (id);
+
 ALTER TABLE sleep_logs
     ADD CONSTRAINT FK_SLEEP_LOGS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
+
+ALTER TABLE weight_logs
+    ADD CONSTRAINT FK_WEIGHT_LOGS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
