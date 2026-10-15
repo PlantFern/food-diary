@@ -69,10 +69,11 @@ SELECT
     'RECIPE'       AS item_type,
     pn.nutrient_id AS nutrient_id,
     n.code         AS nutrient_code,
-    SUM(pn.amount * rc.amount / 100.0) AS amount_per100g,
+    SUM(pn.amount * (rc.amount * fs.gram_weight) / 100.0) AS amount_per100g,
     nu.code        AS unit_code
 FROM recipe_components rc
-JOIN product_nutrients pn ON pn.product_id = rc.product_id
+JOIN food_servings fs ON fs.id = rc.product_serving_id
+JOIN product_nutrients pn ON pn.product_id = fs.item_id AND fs.item_type = 'PRODUCT'
 JOIN nutrients n ON n.id = pn.nutrient_id
 JOIN nutrient_units nu ON nu.id = n.unit_id
 GROUP BY rc.recipe_id, pn.nutrient_id, n.code, nu.code;
@@ -111,11 +112,12 @@ SELECT
     pn.nutrient_id AS nutrient_id,
     r.name         AS recipe_code,
     n.code         AS nutrient_code,
-    SUM(pn.amount * rc.amount / 100.0) AS amount_per100g,
+    SUM(pn.amount * (rc.amount * fs.gram_weight) / 100.0) AS amount_per100g,
     nu.code        AS unit_code
 FROM recipe_components rc
 JOIN recipes r ON r.id = rc.recipe_id AND r.deleted_at IS NULL
-JOIN product_nutrients pn ON pn.product_id = rc.product_id
+JOIN food_servings fs ON fs.id = rc.product_serving_id
+JOIN product_nutrients pn ON pn.product_id = fs.item_id AND fs.item_type = 'PRODUCT'
 JOIN nutrients n ON n.id = pn.nutrient_id
 JOIN nutrient_units nu ON nu.id = n.unit_id
 GROUP BY rc.recipe_id, pn.nutrient_id, r.name, n.code, nu.code;
