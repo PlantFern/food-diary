@@ -4,6 +4,7 @@ package com.github.plantfern.foodDiary.specialists.domain.services;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.api.apis.SpecialistApi;
 import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistDto;
+import com.github.plantfern.foodDiary.specialists.api.dto.SpecialistSearchItemDto;
 import com.github.plantfern.foodDiary.specialists.api.events.SpecialistDeletedEvent;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.SpecialistMapper;
@@ -185,5 +186,18 @@ public class SpecialistService implements SpecialistApi {
                 .findAll()
                 .stream()
                 .toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SpecialistSearchItemDto> search(String query) {
+        return specialistRepository.searchByEmailOrLogin(query == null ? "" : query).stream()
+                .map(row -> new SpecialistSearchItemDto(
+                        row.getId(),
+                        row.getUserId(),
+                        row.getIsActive(),
+                        row.getEmail(),
+                        row.getLogin()
+                ))
+                .toList();
     }
 }
