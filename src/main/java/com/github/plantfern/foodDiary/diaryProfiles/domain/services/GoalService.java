@@ -5,8 +5,10 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.apis.GoalApi;
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.GoalDto;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.GoalNutrientEntity;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.WeightLogEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.GoalMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepository;
+import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.WeightLogRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.GoalNutrientRequest;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
@@ -24,12 +26,20 @@ import java.util.stream.Collectors;
 @Service
 public class GoalService implements GoalApi {
 
+    private static final float LOSE_KG_PER_WEEK = 0.5f;
+    private static final float GAIN_KG_PER_WEEK = 0.35f;
+    private static final float MAINTAIN_THRESHOLD_KG = 0.3f;
+    private static final int MIN_WEEKS = 2;
+    private static final int MAX_WEEKS = 104;
+    private static final int MAINTAIN_WEEKS = 12;
+
     private final GoalRepository goalRepository;
     private final GoalMapper goalMapper;
     private final DiaryProfileService diaryProfileService;
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
     private final NutrientService nutrientService;
+    private final WeightLogRepository weightLogRepository;
 
 
     @Transactional
@@ -61,9 +71,7 @@ public class GoalService implements GoalApi {
             startDate = LocalDate.now();
         }
 
-        if (plannedEndDate != null && plannedEndDate.isBefore(startDate)) {
-            throw new IllegalArgumentException("Planned end date cannot be before start date");
-        }
+        plannedEndDate = resolvePlannedEndDate(diaryProfileId, plannedWeight, startDate);
 
         var nutrientIds = goalNutrientList
                 .stream()
@@ -145,19 +153,11 @@ public class GoalService implements GoalApi {
             startDate = LocalDate.now();
         }
 
-        LocalDate existingEnd = oldGoal.getPlannedEndDate();
-        if (existingEnd == null) {
-            existingEnd = oldGoal.getActualEndDate();
-        }
-        if (existingEnd != null && startDate.isAfter(existingEnd)) {
-            throw new IllegalArgumentException(
-                    "Start date cannot be after existing end date of the goal"
-            );
-        }
-
-        if (plannedEndDate != null && plannedEndDate.isBefore(startDate)) {
-            throw new IllegalArgumentException("Planned end date cannot be before start date");
-        }
+        plannedEndDate = resolvePlannedEndDate(
+                oldGoal.getDiaryProfileId(),
+                plannedWeight,
+                startDate
+        );
 
         var nutrientIds = goalNutrientList
                 .stream()
@@ -194,6 +194,33 @@ public class GoalService implements GoalApi {
         }
 
         return goalMapper.toDto(goalRepository.save(newGoal));
+    }
+
+    private LocalDate resolvePlannedEndDate(
+            Long diaryProfileId,
+            Float plannedWeight,
+            LocalDate startDate
+    ) {
+        if (plannedWeight == null) {
+            return startDate.plusWeeks(MAINTAIN_WEEKS);
+        }
+
+        float currentWeight = weightLogRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .map(WeightLogEntity::getWeight)
+                .orElse(plannedWeight);
+
+        float delta = plannedWeight - currentWeight;
+        float absDelta = Math.abs(delta);
+
+        if (absDelta < MAINTAIN_THRESHOLD_KG) {
+            return startDate.plusWeeks(MAINTAIN_WEEKS);
+        }
+
+        float weeklyRate = delta < 0 ? LOSE_KG_PER_WEEK : GAIN_KG_PER_WEEK;
+        int weeks = (int) Math.ceil(absDelta / weeklyRate);
+        weeks = Math.max(MIN_WEEKS, Math.min(MAX_WEEKS, weeks));
+        return startDate.plusWeeks(weeks);
     }
 
     @Transactional
