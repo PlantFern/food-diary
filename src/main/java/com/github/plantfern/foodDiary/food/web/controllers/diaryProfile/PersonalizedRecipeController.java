@@ -1,5 +1,5 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
-\
+
 import org.springframework.validation.annotation.Validated;
 
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeDetailDto;
