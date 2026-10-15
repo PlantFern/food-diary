@@ -1,14 +1,9 @@
-ALTER TABLE users
-    ADD CONSTRAINT uc_users_email UNIQUE (email);
-
-ALTER TABLE user_roles
-    ADD CONSTRAINT FK_USER_ROLES_ON_ROLE FOREIGN KEY (role_id) REFERENCES roles (id);
-
-ALTER TABLE user_roles
-    ADD CONSTRAINT FK_USER_ROLES_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
-
-ALTER TABLE users
-    ADD CONSTRAINT uc_users_login UNIQUE (login);
+CREATE TABLE roles
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    code VARCHAR(32)           NOT NULL,
+    CONSTRAINT pk_roles PRIMARY KEY (id)
+);
 
 CREATE TABLE users
 (
@@ -30,12 +25,17 @@ CREATE TABLE user_roles
     CONSTRAINT pk_user_roles PRIMARY KEY (id)
 );
 
-CREATE TABLE roles
-(
-    id   BIGINT AUTO_INCREMENT NOT NULL,
-    code VARCHAR(32)           NOT NULL,
-    CONSTRAINT pk_roles PRIMARY KEY (id)
-);
-
 ALTER TABLE roles
     ADD CONSTRAINT uc_roles_code UNIQUE (code);
+
+ALTER TABLE users
+    ADD CONSTRAINT uc_users_email UNIQUE (email);
+
+ALTER TABLE users
+    ADD CONSTRAINT uc_users_login UNIQUE (login);
+
+ALTER TABLE user_roles
+    ADD CONSTRAINT FK_USER_ROLES_ON_ROLE FOREIGN KEY (role_id) REFERENCES roles (id);
+
+ALTER TABLE user_roles
+    ADD CONSTRAINT FK_USER_ROLES_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
