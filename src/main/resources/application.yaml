@@ -22,8 +22,14 @@ spring:
       jakarta.persistence.validation.mode: callback
   flyway:
     enabled: true
-    locations: classpath:db/migration,
-                classpath:db/seed
+    locations: >
+      classpath:db/migration/common,
+      classpath:db/migration/users,
+      classpath:db/migration/food,
+      classpath:db/migration/diaryProfiles,
+      classpath:db/migration/meals,
+      classpath:db/migration/specialists,
+      classpath:db/seed
   config:
     import: "optional:file:.env[.properties]"
   datasource:
