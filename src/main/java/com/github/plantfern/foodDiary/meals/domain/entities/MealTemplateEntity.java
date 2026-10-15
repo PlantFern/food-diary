@@ -37,7 +37,7 @@ public class MealTemplateEntity {
     private Long frequency;
 
     @Column(name = "started_at", nullable = false)
-    private Long startedAt;
+    private LocalDate startedAt;
 
     @Column(
             name = "created_at",
@@ -60,7 +60,7 @@ public class MealTemplateEntity {
             String name,
             LocalTime scheduledTime,
             Long frequency,
-            Long startedAt
+            LocalDate startedAt
     ) {
         this.diaryProfileId = diaryProfileId;
         this.name = name;
