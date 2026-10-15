@@ -221,12 +221,10 @@
 					<locations>
 						<location>filesystem:src/main/resources/db/migration/common</location>
 						<location>filesystem:src/main/resources/db/migration/users</location>
-						<!-- добавь папки модулей по мере появления:
 						<location>filesystem:src/main/resources/db/migration/food</location>
 						<location>filesystem:src/main/resources/db/migration/diaryProfiles</location>
 						<location>filesystem:src/main/resources/db/migration/meals</location>
 						<location>filesystem:src/main/resources/db/migration/specialists</location>
-						-->
 					</locations>
 				</configuration>
 				<dependencies>
