@@ -4,6 +4,8 @@ package com.github.plantfern.foodDiary.food.domain.services;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.ItemType;
 import com.github.plantfern.foodDiary.food.domain.entities.FavoriteFoodEntity;
+import com.github.plantfern.foodDiary.food.domain.entities.ProductEntity;
+import com.github.plantfern.foodDiary.food.domain.entities.RecipeEntity;
 import com.github.plantfern.foodDiary.food.domain.repositories.FavoriteFoodRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.ProductRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.RecipeRepository;
@@ -15,7 +17,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 
 @AllArgsConstructor
@@ -45,7 +50,6 @@ public class FavoriteFoodService {
                     new FavoriteFoodEntity(itemType, itemId, diaryProfileId)
             );
         } catch (DataIntegrityViolationException ignored) {
-            // already favorite
         }
     }
 
@@ -73,6 +77,56 @@ public class FavoriteFoodService {
                 .stream()
                 .map(FavoriteFoodEntity::getItemId)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> search(Long diaryProfileId, String query) {
+        ensureOwner(diaryProfileId);
+        String q = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        List<Long> productIds = listItemIds(diaryProfileId, ItemType.PRODUCT);
+        if (!productIds.isEmpty()) {
+            for (ProductEntity p : productRepository.findAllById(productIds)) {
+                if (p.getDeletedAt() != null) {
+                    continue;
+                }
+                String code = p.getCode() == null ? "" : p.getCode().toLowerCase(Locale.ROOT);
+                String desc = p.getDescription() == null ? "" : p.getDescription().toLowerCase(Locale.ROOT);
+                if (q.isEmpty() || code.contains(q) || desc.contains(q)) {
+                    result.add(Map.of(
+                            "itemType", ItemType.PRODUCT.name(),
+                            "itemId", p.getId(),
+                            "name", p.getCode() == null ? "" : p.getCode(),
+                            "description", p.getDescription() == null ? "" : p.getDescription(),
+                            "photoPath", p.getPhotoPath() == null ? "" : p.getPhotoPath()
+                    ));
+                }
+            }
+        }
+
+        List<Long> recipeIds = listItemIds(diaryProfileId, ItemType.RECIPE);
+        if (!recipeIds.isEmpty()) {
+            for (RecipeEntity r : recipeRepository.findAllById(recipeIds)) {
+                if (r.getDeletedAt() != null) {
+                    continue;
+                }
+                String name = r.getName() == null ? "" : r.getName().toLowerCase(Locale.ROOT);
+                String desc = r.getDescription() == null ? "" : r.getDescription().toLowerCase(Locale.ROOT);
+                if (q.isEmpty() || name.contains(q) || desc.contains(q)) {
+                    result.add(Map.of(
+                            "itemType", ItemType.RECIPE.name(),
+                            "itemId", r.getId(),
+                            "name", r.getName() == null ? "" : r.getName(),
+                            "description", r.getDescription() == null ? "" : r.getDescription(),
+                            "photoPath", r.getPhotoPath() == null ? "" : r.getPhotoPath()
+                    ));
+                }
+            }
+        }
+
+        return result;
     }
 
     private void ensureOwner(Long diaryProfileId) {
