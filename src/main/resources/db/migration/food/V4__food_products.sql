@@ -14,18 +14,6 @@ CREATE TABLE products
     CONSTRAINT pk_products PRIMARY KEY (id)
 );
 
-CREATE TABLE branded_products
-(
-    id              BIGINT AUTO_INCREMENT NOT NULL,
-    product_id      BIGINT                NOT NULL,
-    barcode         VARCHAR(100)          NOT NULL,
-    base_serving_id BIGINT                NOT NULL,
-    created_at      datetime              NOT NULL,
-    updated_at      datetime              NULL,
-    deleted_at      datetime              NULL,
-    CONSTRAINT pk_branded_products PRIMARY KEY (id)
-);
-
 CREATE TABLE food_servings
 (
     id              BIGINT AUTO_INCREMENT NOT NULL,
@@ -40,44 +28,17 @@ CREATE TABLE food_servings
     CONSTRAINT pk_food_servings PRIMARY KEY (id)
 );
 
-ALTER TABLE products
-    ADD CONSTRAINT uc_products_code UNIQUE (code);
-
-ALTER TABLE product_nutrients
-    ADD CONSTRAINT unique_product_id_nutrient_id UNIQUE (product_id, nutrient_id);
-
-ALTER TABLE branded_products
-    ADD CONSTRAINT uc_branded_products_barcode UNIQUE (barcode);
-
-ALTER TABLE branded_products
-    ADD CONSTRAINT uc_branded_products_product UNIQUE (product_id);
-
-ALTER TABLE products
-    ADD CONSTRAINT FK_PRODUCTS_ON_ENTITY_STATUS FOREIGN KEY (entity_status_id) REFERENCES entity_statuses (id);
-
-ALTER TABLE products
-    ADD CONSTRAINT FK_PRODUCTS_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES categories (id);
-
-ALTER TABLE product_nutrients
-    ADD CONSTRAINT FK_PRODUCT_NUTRIENTS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
-
-ALTER TABLE product_requests
-    ADD CONSTRAINT FK_PRODUCT_REQUESTS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
-
-ALTER TABLE product_data_sources
-    ADD CONSTRAINT FK_PRODUCT_DATA_SOURCES_ON_DATA_SOURCE FOREIGN KEY (data_source_id) REFERENCES data_sources (id);
-
-ALTER TABLE product_data_sources
-    ADD CONSTRAINT FK_PRODUCT_DATA_SOURCES_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
-
-ALTER TABLE food_servings
-    ADD CONSTRAINT FK_FOOD_SERVINGS_ON_SERVING_UNIT FOREIGN KEY (serving_unit_id) REFERENCES serving_units (id);
-
-ALTER TABLE branded_products
-    ADD CONSTRAINT FK_BRANDED_PRODUCTS_ON_BASE_SERVING FOREIGN KEY (base_serving_id) REFERENCES food_servings (id);
-
-ALTER TABLE branded_products
-    ADD CONSTRAINT FK_BRANDED_PRODUCTS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+CREATE TABLE branded_products
+(
+    id              BIGINT AUTO_INCREMENT NOT NULL,
+    product_id      BIGINT                NOT NULL,
+    barcode         VARCHAR(100)          NOT NULL,
+    base_serving_id BIGINT                NOT NULL,
+    created_at      datetime              NOT NULL,
+    updated_at      datetime              NULL,
+    deleted_at      datetime              NULL,
+    CONSTRAINT pk_branded_products PRIMARY KEY (id)
+);
 
 CREATE TABLE product_data_sources
 (
@@ -111,3 +72,45 @@ CREATE TABLE product_requests
     deleted_at                     datetime              NULL,
     CONSTRAINT pk_product_requests PRIMARY KEY (id)
 );
+
+ALTER TABLE products
+    ADD CONSTRAINT uc_products_code UNIQUE (code);
+
+ALTER TABLE product_nutrients
+    ADD CONSTRAINT unique_product_id_nutrient_id UNIQUE (product_id, nutrient_id);
+
+ALTER TABLE branded_products
+    ADD CONSTRAINT uc_branded_products_barcode UNIQUE (barcode);
+
+ALTER TABLE branded_products
+    ADD CONSTRAINT uc_branded_products_product UNIQUE (product_id);
+
+ALTER TABLE products
+    ADD CONSTRAINT FK_PRODUCTS_ON_ENTITY_STATUS FOREIGN KEY (entity_status_id) REFERENCES entity_statuses (id);
+
+ALTER TABLE products
+    ADD CONSTRAINT FK_PRODUCTS_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES categories (id);
+
+ALTER TABLE product_nutrients
+    ADD CONSTRAINT FK_PRODUCT_NUTRIENTS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+
+ALTER TABLE product_nutrients
+    ADD CONSTRAINT FK_PRODUCT_NUTRIENTS_ON_NUTRIENT FOREIGN KEY (nutrient_id) REFERENCES nutrients (id);
+
+ALTER TABLE product_requests
+    ADD CONSTRAINT FK_PRODUCT_REQUESTS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+
+ALTER TABLE product_data_sources
+    ADD CONSTRAINT FK_PRODUCT_DATA_SOURCES_ON_DATA_SOURCE FOREIGN KEY (data_source_id) REFERENCES data_sources (id);
+
+ALTER TABLE product_data_sources
+    ADD CONSTRAINT FK_PRODUCT_DATA_SOURCES_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+
+ALTER TABLE food_servings
+    ADD CONSTRAINT FK_FOOD_SERVINGS_ON_SERVING_UNIT FOREIGN KEY (serving_unit_id) REFERENCES serving_units (id);
+
+ALTER TABLE branded_products
+    ADD CONSTRAINT FK_BRANDED_PRODUCTS_ON_BASE_SERVING FOREIGN KEY (base_serving_id) REFERENCES food_servings (id);
+
+ALTER TABLE branded_products
+    ADD CONSTRAINT FK_BRANDED_PRODUCTS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
