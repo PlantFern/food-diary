@@ -53,3 +53,8 @@ application-secret.properties
 .env
 .env.local
 .env.*.local
+
+#### Local development dump (contains user/diary data; never commit)
+src/main/resources/db/devdata/V100__development_personal_data.sql
+src/main/resources/db/devdata/legacy_dump_data.sql
+Dump20261015 (2).sql
