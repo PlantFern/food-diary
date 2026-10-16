@@ -7,4 +7,5 @@ spring:
       classpath:db/migration/diaryProfiles,
       classpath:db/migration/meals,
       classpath:db/migration/specialists,
-      classpath:db/seed
+      classpath:db/seed,
+      classpath:db/devdata
