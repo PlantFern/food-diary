@@ -20,7 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -98,10 +101,30 @@ public class ProductQueryService {
                 ? settings.hiddenNutrientIds()
                 : Set.of();
 
-        var productNutrients = vProductNutrientRepository.findPersonalizedByProductId(
-                productId,
-                hiddenNutrientIds.isEmpty() ? null : hiddenNutrientIds
-        );
+        // All values for the product (including ones that may later be masked as null)
+        Map<Long, ProductNutrientItemDto> byNutrientId = vProductNutrientRepository
+                .findByProductId(productId)
+                .stream()
+                .collect(Collectors.toMap(
+                        ProductNutrientItemDto::nutrientId,
+                        Function.identity(),
+                        (a, b) -> a
+                ));
+
+        // Full catalog: missing or hidden → amount null (UI shows dash)
+        var productNutrients = nutrientService.findAllOrdered().stream()
+                .map(n -> {
+                    String unitCode = n.getNutrientUnit() != null ? n.getNutrientUnit().getCode() : null;
+                    if (hiddenNutrientIds.contains(n.getId())) {
+                        return new ProductNutrientItemDto(n.getId(), n.getCode(), null, unitCode);
+                    }
+                    var found = byNutrientId.get(n.getId());
+                    if (found != null) {
+                        return found;
+                    }
+                    return new ProductNutrientItemDto(n.getId(), n.getCode(), null, unitCode);
+                })
+                .toList();
 
         var foundProductServings = foodServingService
                 .getByProductId(productId)
