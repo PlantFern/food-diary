@@ -11,7 +11,9 @@ import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
 import com.github.plantfern.foodDiary.food.api.dto.ProductServingDto;
 import com.github.plantfern.foodDiary.meals.api.dto.*;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
+import com.github.plantfern.foodDiary.meals.domain.entities.MealTypeEntity;
 import com.github.plantfern.foodDiary.meals.domain.repositories.MealTemplateRepository;
+import com.github.plantfern.foodDiary.meals.domain.repositories.MealTypeRepository;
 import com.github.plantfern.foodDiary.meals.domain.repositories.VMealDayRecordRepository;
 import com.github.plantfern.foodDiary.meals.domain.views.VMealDayRecordEntity;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
@@ -34,6 +36,7 @@ public class MealQueryService {
 
     private final VMealDayRecordRepository vMealDayRecordRepository;
     private final MealTemplateRepository mealTemplateRepository;
+    private final MealTypeRepository mealTypeRepository;
     private final FoodServingApi foodServingApi;
     private final DiaryProfileApi diaryProfileApi;
     private final MealPolicy mealPolicy;
@@ -152,20 +155,32 @@ public class MealQueryService {
                         Collectors.toList()
                 ));
 
-        List<MealSectionDto> sections = byMealType
-                .values()
-                .stream()
-                .map(mealRows -> {
-                    var first = mealRows.getFirst();
+        // Always expose every meal type so empty placeholders stay on the diary home
+        List<MealTypeEntity> allTypes = mealTypeRepository.findAll().stream()
+                .sorted(Comparator.comparing(MealTypeEntity::getId))
+                .toList();
 
+        List<MealSectionDto> sections = allTypes.stream()
+                .map(type -> {
+                    var mealRows = byMealType.getOrDefault(type.getId(), List.of());
+                    if (mealRows.isEmpty()) {
+                        return new MealSectionDto(
+                                -type.getId(),
+                                type.getId(),
+                                type.getCode(),
+                                null,
+                                List.of(),
+                                0f
+                        );
+                    }
+                    var first = mealRows.getFirst();
                     var items = mealRows.stream()
                             .map(r -> toItemDto(r, productServingMap.get(r.getServingId())))
                             .toList();
-
                     return new MealSectionDto(
                             first.getMealId(),
                             first.getMealTypeId(),
-                            first.getMealTypeCode(),
+                            first.getMealTypeCode() != null ? first.getMealTypeCode() : type.getCode(),
                             first.getGeneratedFromTemplateId(),
                             items,
                             sumNutrient(items)
