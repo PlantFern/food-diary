@@ -1,5 +1,10 @@
 spring:
   flyway:
-    locations: classpath:db/migration,
-                classpath:db/seed,
-                classpath:db/devdata
+    locations: >
+      classpath:db/migration/common,
+      classpath:db/migration/users,
+      classpath:db/migration/food,
+      classpath:db/migration/diaryProfiles,
+      classpath:db/migration/meals,
+      classpath:db/migration/specialists,
+      classpath:db/seed
