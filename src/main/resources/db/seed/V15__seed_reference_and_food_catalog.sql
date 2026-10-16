@@ -68,7 +68,7 @@ INSERT INTO `nutrient_units` (`id`, `code`) VALUES
 
 -- 37 seed rows
 INSERT INTO `nutrients` (`id`, `code`, `unit_id`) VALUES
-  (5, 'ENERGY_KCAL',2),
+  (5, 'ENERGY_KCAL',1),
   (6, 'PROTEIN',2),
   (7, 'FAT',2),
   (8, 'CARBS',2),
