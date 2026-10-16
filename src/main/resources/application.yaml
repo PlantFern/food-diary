@@ -13,6 +13,7 @@ spring:
       file-size-threshold: 1MB
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
       naming:
@@ -20,6 +21,10 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       jakarta.persistence.validation.mode: callback
+
+  thymeleaf:
+    check-template-location: false
+
   flyway:
     enabled: true
     locations: >
