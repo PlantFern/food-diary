@@ -33,8 +33,7 @@ spring:
       classpath:db/migration/food,
       classpath:db/migration/diaryProfiles,
       classpath:db/migration/meals,
-      classpath:db/migration/specialists,
-      classpath:db/seed
+      classpath:db/migration/specialists
   config:
     import: "optional:file:.env[.properties]"
   datasource:
