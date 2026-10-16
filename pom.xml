@@ -225,6 +225,8 @@
 						<location>filesystem:src/main/resources/db/migration/diaryProfiles</location>
 						<location>filesystem:src/main/resources/db/migration/meals</location>
 						<location>filesystem:src/main/resources/db/migration/specialists</location>
+						<location>filesystem:src/main/resources/db/seed</location>
+						<location>filesystem:src/main/resources/db/devdata</location>
 					</locations>
 				</configuration>
 				<dependencies>
