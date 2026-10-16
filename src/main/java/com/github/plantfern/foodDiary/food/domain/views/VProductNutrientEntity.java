@@ -13,22 +13,22 @@ import org.hibernate.annotations.Immutable;
 public class VProductNutrientEntity {
 
     @Id
-    @Column(name = "product_id")
+    @Column(name = "productId")
     private Long productId;
 
-    @Column(name = "nutrient_id")
+    @Column(name = "nutrientId")
     private Long nutrientId;
 
-    @Column(name = "product_code")
+    @Column(name = "productCode")
     private String productCode;
 
-    @Column(name = "nutrient_code")
+    @Column(name = "nutrientCode")
     private String nutrientCode;
 
-    @Column(name = "amount_per100g")
+    @Column(name = "amountPer100g")
     private Float amountPer100g;
 
-    @Column(name = "unit_code")
+    @Column(name = "unitCode")
     private String unitCode;
 
     protected VProductNutrientEntity() {}
