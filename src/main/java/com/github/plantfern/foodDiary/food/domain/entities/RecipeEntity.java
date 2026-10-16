@@ -30,7 +30,7 @@ public class RecipeEntity {
     @Column(name = "name", length = 100, unique = true, nullable = false)
     private String name;
 
-    @Column(name = "description", unique = true, nullable = false)
+    @Column(name = "description", length = 500, unique = true, nullable = false)
     private String description;
 
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
