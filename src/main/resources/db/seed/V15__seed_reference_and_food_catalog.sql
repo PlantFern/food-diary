@@ -5,7 +5,7 @@
 -- Dump recipes were drafts/private (legacy entity_status_id/is_public order); they are not seeded.
 
 -- 43 seed rows
-INSERT INTO `categories` (`id`, `code`, `parent_id`) VALUES
+INSERT IGNORE INTO `categories` (`id`, `code`, `parent_id`) VALUES
   (1, 'ANIMAL_PRODUCTS', NULL),
   (2, 'PLANT_PRODUCTS', NULL),
   (3, 'PROCESSED_FOODS', NULL),
@@ -51,20 +51,20 @@ INSERT INTO `categories` (`id`, `code`, `parent_id`) VALUES
   (43, 'SUGAR_AND_SWEETENERS', 3);
 
 -- 4 seed rows
-INSERT INTO `data_sources` (`id`, `code`) VALUES
+INSERT IGNORE INTO `data_sources` (`id`, `code`) VALUES
   (1, 'USDA'),
   (2, 'BARCODE'),
   (3, 'CUSTOM'),
   (4, 'NUTRIENT_RECORDING');
 
 -- 3 seed rows
-INSERT INTO `entity_statuses` (`id`, `code`) VALUES
+INSERT IGNORE INTO `entity_statuses` (`id`, `code`) VALUES
   (1, 'DRAFT'),
   (2, 'ACTIVE'),
   (3, 'ARCHIVED');
 
 -- 6 seed rows
-INSERT INTO `nutrient_units` (`id`, `code`) VALUES
+INSERT IGNORE INTO `nutrient_units` (`id`, `code`) VALUES
   (1, 'G'),
   (2, 'MG'),
   (3, 'MCG'),
@@ -73,7 +73,7 @@ INSERT INTO `nutrient_units` (`id`, `code`) VALUES
   (6, 'KJ');
 
 -- 37 seed rows
-INSERT INTO `nutrients` (`id`, `code`, `unit_id`) VALUES
+INSERT IGNORE INTO `nutrients` (`id`, `code`, `unit_id`) VALUES
   (1, 'ENERGY_KCAL', 1),
   (2, 'PROTEIN', 1),
   (3, 'FAT', 1),
@@ -113,7 +113,7 @@ INSERT INTO `nutrients` (`id`, `code`, `unit_id`) VALUES
   (37, 'ALCOHOL', 1);
 
 -- 8 seed rows
-INSERT INTO `serving_units` (`id`, `code`) VALUES
+INSERT IGNORE INTO `serving_units` (`id`, `code`) VALUES
   (1, 'gram'),
   (2, 'cup'),
   (3, 'fl oz'),
@@ -124,14 +124,14 @@ INSERT INTO `serving_units` (`id`, `code`) VALUES
   (8, 'tablespoon');
 
 -- 4 seed rows
-INSERT INTO `roles` (`id`, `code`) VALUES
+INSERT IGNORE INTO `roles` (`id`, `code`) VALUES
   (1, 'DIARY_PROFILE'),
   (2, 'SPECIALIST'),
   (3, 'MODERATOR'),
   (4, 'ADMINISTRATOR');
 
 -- 7 seed rows
-INSERT INTO `meal_types` (`id`, `code`) VALUES
+INSERT IGNORE INTO `meal_types` (`id`, `code`) VALUES
   (1, 'BREAKFAST'),
   (2, 'MORNING_SNACK'),
   (3, 'LUNCH'),
@@ -141,14 +141,14 @@ INSERT INTO `meal_types` (`id`, `code`) VALUES
   (7, 'OTHER');
 
 -- 4 seed rows
-INSERT INTO `user_relation_statuses` (`id`, `code`) VALUES
+INSERT IGNORE INTO `user_relation_statuses` (`id`, `code`) VALUES
   (1, 'PENDING'),
   (2, 'ACTIVE'),
   (3, 'ENDED'),
   (4, 'CANCELLED');
 
 -- 1118 seed rows
-INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (1, 'BAR_FOOD_00000001', 'молоко простоквашино 2,5 %, бренд: простоквашино', 7, 'https://images.openfoodfacts.org/images/products/460/705/347/3544/front_ru.12.400.jpg', 1, 2, NULL, '2026-07-29 14:46:17', '2026-08-27 18:58:24', NULL),
   (2, 'BAR_FOOD_00000002', 'молоко сгущенное цельное, бренд: рогачевъ', 7, 'https://images.openfoodfacts.org/images/products/481/006/500/6079/front_ru.30.400.jpg', 1, 2, NULL, '2026-07-29 14:46:17', '2026-08-27 18:58:24', NULL),
   (3, 'BAR_FOOD_00000003', 'молоко питьевое 3,2 %, бренд: село зелёное', 7, 'https://images.openfoodfacts.org/images/products/464/001/735/0536/front_ru.6.400.jpg', 1, 2, NULL, '2026-07-29 14:46:17', '2026-08-27 18:58:24', NULL),
@@ -400,7 +400,7 @@ INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`
   (253, 'BAR_FOOD_00000279', 'шоколад молочный \"milka\" с цельным фундуком, бренд: milka', 23, 'https://images.openfoodfacts.org/images/products/762/220/177/1140/front_en.3.400.jpg', 1, 2, NULL, '2026-07-30 09:30:14', '2026-08-27 18:58:24', NULL),
   (254, 'BAR_FOOD_00000280', 'горький шоколад, бренд: россия - щедрая душа', 23, 'https://images.openfoodfacts.org/images/products/460/068/001/5934/front_ru.4.400.jpg', 1, 2, NULL, '2026-07-30 09:30:14', '2026-08-27 18:58:24', NULL);
 
-INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (255, 'BAR_FOOD_00000281', 'шоколад молочный с фундуком и изюмом, бренд: шарлиз', 23, 'https://images.openfoodfacts.org/images/products/466/001/394/6274/front_en.5.400.jpg', 1, 2, NULL, '2026-07-30 09:30:14', '2026-08-27 18:58:24', NULL),
   (256, 'BAR_FOOD_00000282', 'шоколад молочный \"альпен гольд\" с кусочками печенья \"орео\", бренд: alpen gold', 23, 'https://images.openfoodfacts.org/images/products/762/220/150/0627/front_en.3.400.jpg', 1, 2, NULL, '2026-07-30 09:30:14', '2026-08-27 18:58:24', NULL),
   (257, 'BAR_FOOD_00000283', 'шоколад молочный с начинкой, бренд: степ', 23, 'https://images.openfoodfacts.org/images/products/460/514/204/1018/front_en.10.400.jpg', 1, 2, NULL, '2026-07-30 09:30:14', '2026-08-27 18:58:24', NULL),
@@ -652,7 +652,7 @@ INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`
   (508, 'BAR_FOOD_00000602', 'рис басмати, бренд: мистраль', 15, NULL, 1, 2, NULL, '2026-07-30 12:04:14', '2026-08-27 18:58:24', NULL),
   (509, 'BAR_FOOD_00000603', 'чечевица красная персидская, бренд: мистраль', 14, NULL, 1, 2, NULL, '2026-07-30 12:04:15', '2026-08-27 18:58:24', NULL);
 
-INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (510, 'BAR_FOOD_00000604', 'нут, бренд: мистраль', 14, NULL, 1, 2, NULL, '2026-07-30 12:04:16', '2026-08-27 18:58:24', NULL),
   (511, 'BAR_FOOD_00000605', 'маш, бренд: мистраль', 14, NULL, 1, 2, NULL, '2026-07-30 12:04:16', '2026-08-27 18:58:24', NULL),
   (512, 'BAR_FOOD_00000606', 'гречневая крупа ядрица, бренд: мистраль', 15, NULL, 1, 2, NULL, '2026-07-30 12:04:16', '2026-08-27 18:58:24', NULL),
@@ -904,7 +904,7 @@ INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`
   (762, 'BAR_FOOD_00000912', 'макаронные изделия вермишель паутинка, бренд: baisad', 15, 'https://images.openfoodfacts.org/images/products/460/700/400/1130/front_ru.11.400.jpg', 1, 2, NULL, '2026-07-30 13:11:21', '2026-08-27 18:58:24', NULL),
   (763, 'BAR_FOOD_00000913', 'вермишель паутинка, бренд: ладные', 15, 'https://images.openfoodfacts.org/images/products/460/700/400/4704/front_ru.6.400.jpg', 1, 2, NULL, '2026-07-30 13:11:21', '2026-08-27 18:58:24', NULL);
 
-INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (764, 'BAR_FOOD_00000914', 'вермишель группа в, бренд: clever', 15, 'https://images.openfoodfacts.org/images/products/466/000/032/3095/front_ru.5.400.jpg', 1, 2, NULL, '2026-07-30 13:11:21', '2026-08-27 18:58:24', NULL),
   (765, 'BAR_FOOD_00000915', 'спагетти высший сорт, бренд: просто!', 15, 'https://images.openfoodfacts.org/images/products/466/000/032/3835/front_ru.5.400.jpg', 1, 2, NULL, '2026-07-30 13:11:21', '2026-08-27 18:58:24', NULL),
   (766, 'BAR_FOOD_00000916', 'вермишель яичная длинная, бренд: макфа', 15, NULL, 1, 2, NULL, '2026-07-30 13:11:21', '2026-08-27 18:58:24', NULL),
@@ -1156,7 +1156,7 @@ INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`
   (1012, 'BAR_FOOD_00001162', 'чипсы рисовые baked chips «прованские травы», бренд: r.a.w.life', 22, 'https://images.openfoodfacts.org/images/products/460/795/906/1821/front_ru.3.400.jpg', 1, 2, NULL, '2026-07-30 14:00:37', '2026-08-27 18:58:24', NULL),
   (1013, 'BAR_FOOD_00001163', 'чипсы нутовые нутсы сметана и зелень, бренд: лента', 22, 'https://images.openfoodfacts.org/images/products/460/606/857/8817/front_ru.3.400.jpg', 1, 2, NULL, '2026-07-30 14:00:37', '2026-08-27 18:58:24', NULL);
 
-INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (1014, 'BAR_FOOD_00001164', 'чипсы лейз со вкусом сметаны и зелени, бренд: lay’s', 22, 'https://images.openfoodfacts.org/images/products/469/038/810/7765/front_ru.5.400.jpg', 1, 2, NULL, '2026-07-30 14:00:37', '2026-08-27 18:58:24', NULL),
   (1015, 'BAR_FOOD_00001165', 'pigсоны чипсы мясные из свинины, бренд: meat house', 22, 'https://images.openfoodfacts.org/images/products/462/003/167/6621/front_ru.3.400.jpg', 1, 2, NULL, '2026-07-30 14:00:37', '2026-08-27 18:58:24', NULL),
   (1016, 'BAR_FOOD_00001166', 'нутсы «паприка», бренд: вкусвилл', 22, 'https://images.openfoodfacts.org/images/products/210/010/080/3902/front_ru.3.400.jpg', 1, 2, NULL, '2026-07-30 14:00:37', '2026-08-27 18:58:24', NULL),
@@ -1277,7 +1277,7 @@ INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`
   (1284, 'FDC_FOOD_00001284', 'cream, brand: вкуснотеево, 33%', 7, 'FDC_FOOD_00001284.jpg', 1, 2, NULL, '2026-08-06 15:52:19', '2026-08-27 18:58:24', NULL);
 
 -- 2840 seed rows
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (1, 'PRODUCT', 1, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2, 'PRODUCT', 1, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (3, 'PRODUCT', 1, 930, 930, 1, 'бутылка', '2026-08-22 13:53:50', NULL),
@@ -1529,7 +1529,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (249, 'PRODUCT', 92, 1, 1, 1, 'упаковка', '2026-08-22 13:53:50', NULL),
   (250, 'PRODUCT', 92, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (251, 'PRODUCT', 92, 1000, 1000, 1, NULL, '2026-08-22 13:53:50', NULL),
   (252, 'PRODUCT', 93, 1, 1, 1, 'бутылка', '2026-08-22 13:53:50', NULL),
   (253, 'PRODUCT', 93, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -1781,7 +1781,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (503, 'PRODUCT', 187, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (504, 'PRODUCT', 187, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (505, 'PRODUCT', 188, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (506, 'PRODUCT', 188, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (507, 'PRODUCT', 189, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -2033,7 +2033,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (753, 'PRODUCT', 286, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (754, 'PRODUCT', 287, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (755, 'PRODUCT', 287, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (756, 'PRODUCT', 287, 90, 90, 1, NULL, '2026-08-22 13:53:50', NULL),
   (757, 'PRODUCT', 288, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -2285,7 +2285,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (1003, 'PRODUCT', 384, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1004, 'PRODUCT', 385, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (1005, 'PRODUCT', 385, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1006, 'PRODUCT', 386, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1007, 'PRODUCT', 386, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -2537,7 +2537,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (1262, 'PRODUCT', 510, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1263, 'PRODUCT', 510, 450, 450, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (1264, 'PRODUCT', 511, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1265, 'PRODUCT', 511, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1266, 'PRODUCT', 511, 450, 450, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -2789,7 +2789,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (1515, 'PRODUCT', 593, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1516, 'PRODUCT', 593, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (1517, 'PRODUCT', 593, 700, 700, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1518, 'PRODUCT', 594, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1519, 'PRODUCT', 594, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -3041,7 +3041,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (1768, 'PRODUCT', 692, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1769, 'PRODUCT', 693, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (1770, 'PRODUCT', 693, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1771, 'PRODUCT', 694, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (1772, 'PRODUCT', 694, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -3293,7 +3293,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (2018, 'PRODUCT', 794, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2019, 'PRODUCT', 794, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (2020, 'PRODUCT', 794, 1, 400, 4, NULL, '2026-08-22 13:53:50', NULL),
   (2021, 'PRODUCT', 795, 1, 1, 1, 'упаковка', '2026-08-22 13:53:50', NULL),
   (2022, 'PRODUCT', 795, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -3545,7 +3545,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (2268, 'PRODUCT', 900, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2269, 'PRODUCT', 901, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (2270, 'PRODUCT', 901, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2271, 'PRODUCT', 902, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2272, 'PRODUCT', 902, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -3797,7 +3797,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (2518, 'PRODUCT', 1005, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2519, 'PRODUCT', 1005, 1, 200, 4, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (2520, 'PRODUCT', 1006, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2521, 'PRODUCT', 1006, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (2522, 'PRODUCT', 1006, 1, 80, 4, NULL, '2026-08-22 13:53:50', NULL),
@@ -4049,7 +4049,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (34174, 'PRODUCT', 1253, 1, 500, 4, NULL, '2026-08-22 13:53:50', NULL),
   (34175, 'PRODUCT', 1254, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL);
 
-INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
+INSERT IGNORE INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
   (34176, 'PRODUCT', 1254, 100, 100, 1, NULL, '2026-08-22 13:53:50', NULL),
   (34177, 'PRODUCT', 1254, 1, 450, 4, NULL, '2026-08-22 13:53:50', NULL),
   (34178, 'PRODUCT', 1255, 1, 1, 1, NULL, '2026-08-22 13:53:50', NULL),
@@ -4142,7 +4142,7 @@ INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weigh
   (34268, 'PRODUCT', 1282, 1, 10, 8, NULL, '2026-08-22 13:53:50', NULL);
 
 -- 1108 seed rows
-INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (1, 1, '4607053473544', 3, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (2, 2, '4810065006079', 6, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (3, 3, '4640017350536', 9, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
@@ -4394,7 +4394,7 @@ INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`
   (251, 253, '7622201771140', 665, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (252, 254, '4600680015934', 667, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL);
 
-INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (253, 255, '4660013946274', 670, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (254, 256, '7622201500627', 672, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (255, 257, '4605142041018', 674, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
@@ -4646,7 +4646,7 @@ INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`
   (504, 508, '4607141570513', 1255, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (505, 509, '4607141570070', 1258, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL);
 
-INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (506, 510, '4607141570131', 1261, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (507, 511, '4607141570117', 1264, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (508, 512, '4607141572975', 1267, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
@@ -4898,7 +4898,7 @@ INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`
   (756, 762, '4607004001130', 1936, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (757, 763, '4607004004704', 1939, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL);
 
-INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (758, 764, '4660000323095', 1942, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (759, 765, '4660000323835', 1945, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (760, 766, '99990000428', 1948, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
@@ -5150,7 +5150,7 @@ INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`
   (1006, 1012, '4607959061821', 2536, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (1007, 1013, '4606068578817', 2539, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL);
 
-INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+INSERT IGNORE INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (1008, 1014, '4690388107765', 2542, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (1009, 1015, '4620031676621', 2545, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
   (1010, 1016, '2100100803902', 2548, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL),
@@ -5261,7 +5261,7 @@ INSERT INTO `branded_products` (`id`, `product_id`, `barcode`, `base_serving_id`
   (1115, 1284, '4601751018984', 34266, '2026-08-26 15:04:56', '2026-08-26 15:04:56', NULL);
 
 -- 1116 seed rows
-INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
+INSERT IGNORE INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
   (1, 1, 2, '4607053473544'),
   (2, 2, 2, '4810065006079'),
   (3, 3, 2, '4640017350536'),
@@ -5513,7 +5513,7 @@ INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `exter
   (249, 253, 2, '7622201771140'),
   (250, 254, 2, '4600680015934');
 
-INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
+INSERT IGNORE INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
   (251, 255, 2, '4660013946274'),
   (252, 256, 2, '7622201500627'),
   (253, 257, 2, '4605142041018'),
@@ -5765,7 +5765,7 @@ INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `exter
   (499, 508, 2, '4607141570513'),
   (500, 509, 2, '4607141570070');
 
-INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
+INSERT IGNORE INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
   (501, 510, 2, '4607141570131'),
   (502, 511, 2, '4607141570117'),
   (503, 512, 2, '4607141572975'),
@@ -6017,7 +6017,7 @@ INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `exter
   (749, 762, 2, '4607004001130'),
   (750, 763, 2, '4607004004704');
 
-INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
+INSERT IGNORE INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
   (751, 764, 2, '4660000323095'),
   (752, 765, 2, '4660000323835'),
   (753, 766, 2, '99990000428'),
@@ -6269,7 +6269,7 @@ INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `exter
   (999, 1012, 2, '4607959061821'),
   (1000, 1013, 2, '4606068578817');
 
-INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
+INSERT IGNORE INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `external_id`) VALUES
   (1001, 1014, 2, '4690388107765'),
   (1002, 1015, 2, '4620031676621'),
   (1003, 1016, 2, '2100100803902'),
@@ -6388,7 +6388,7 @@ INSERT INTO `product_data_sources` (`id`, `product_id`, `data_source_id`, `exter
   (1116, 1284, 1, '4601751018984');
 
 -- 4410 seed rows
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (1, 1, 1, 53.7),
   (2, 1, 2, 2.9),
   (3, 1, 3, 2.5),
@@ -6640,7 +6640,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (249, 66, 3, 3),
   (250, 66, 4, 7.7);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (251, 67, 1, 215),
   (252, 67, 2, 6.1),
   (253, 67, 3, 13.7),
@@ -6892,7 +6892,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (499, 133, 1, 47),
   (500, 133, 2, 3);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (501, 133, 3, 1.8),
   (502, 133, 4, 4.7),
   (503, 135, 1, 53),
@@ -7144,7 +7144,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (749, 217, 4, 4.7),
   (750, 218, 1, 37);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (751, 218, 2, 0.8),
   (752, 218, 3, 0.7),
   (753, 218, 4, 6.9),
@@ -7396,7 +7396,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (999, 279, 4, 97),
   (1000, 279, 6, 7);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (1001, 280, 1, 547.6),
   (1002, 280, 2, 9.5),
   (1003, 280, 3, 33.3),
@@ -7648,7 +7648,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (1249, 336, 4, 55),
   (1250, 337, 1, 535);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (1251, 337, 2, 5),
   (1252, 337, 3, 31),
   (1253, 337, 4, 59),
@@ -7900,7 +7900,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (1499, 406, 2, 4.9),
   (1500, 406, 3, 24.9);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (1501, 406, 4, 62.9),
   (1502, 407, 1, 510.1),
   (1503, 407, 2, 4.8),
@@ -8152,7 +8152,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (1749, 468, 4, 55),
   (1750, 469, 1, 502.7);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (1751, 469, 2, 5.7),
   (1752, 469, 3, 25.3),
   (1753, 469, 4, 59.6),
@@ -8404,7 +8404,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (1999, 535, 4, 76),
   (2000, 536, 1, 355);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (2001, 536, 2, 14.5),
   (2002, 536, 3, 0.5),
   (2003, 536, 4, 73),
@@ -8656,7 +8656,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (2249, 599, 2, 7.5),
   (2250, 599, 3, 0.5);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (2251, 599, 4, 77),
   (2252, 600, 1, 360),
   (2253, 600, 2, 12),
@@ -8908,7 +8908,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (2499, 663, 3, 5),
   (2500, 663, 4, 1.5);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (2501, 664, 1, 58.8),
   (2502, 664, 2, 1.8),
   (2503, 664, 3, 0.2),
@@ -9160,7 +9160,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (2749, 728, 2, 7),
   (2750, 728, 3, 18);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (2751, 728, 4, 54),
   (2752, 729, 1, 200),
   (2753, 729, 2, 2),
@@ -9412,7 +9412,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (2999, 796, 4, 77),
   (3000, 796, 5, 14);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (3001, 797, 2, 6.5),
   (3002, 797, 3, 0.5),
   (3003, 797, 4, 83),
@@ -9664,7 +9664,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (3249, 861, 4, 75),
   (3250, 862, 1, 357);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (3251, 862, 2, 7.7),
   (3252, 862, 3, 1.4),
   (3253, 862, 4, 78.4),
@@ -9916,7 +9916,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (3499, 921, 3, 5),
   (3500, 921, 4, 65);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (3501, 922, 1, 360),
   (3502, 922, 2, 10),
   (3503, 922, 3, 5),
@@ -10168,7 +10168,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (3749, 983, 1, 510),
   (3750, 983, 2, 6);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (3751, 983, 3, 30),
   (3752, 983, 4, 53),
   (3753, 984, 1, 520),
@@ -10420,7 +10420,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (3999, 1038, 3, 27),
   (4000, 1038, 4, 62);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (4001, 1039, 1, 515.2),
   (4002, 1039, 2, 4.5),
   (4003, 1039, 3, 32),
@@ -10672,7 +10672,7 @@ INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VA
   (4249, 1251, 3, 9),
   (4250, 1251, 4, 7.5);
 
-INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
+INSERT IGNORE INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
   (4251, 1252, 1, 114.7),
   (4252, 1252, 2, 1.2),
   (4253, 1252, 3, 9),
