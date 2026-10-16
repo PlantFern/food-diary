@@ -11,6 +11,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfile
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,34 +123,40 @@ public class WeightLogService implements WeightLogApi {
 
     public List<WeightLogDto> getByDiaryProfileId(Long diaryProfileId) {
 
-        var foundEeightLogList = weightLogRepository.findByDiaryProfileId(diaryProfileId)
+        var foundWeightLogList = weightLogRepository.findByDiaryProfileId(diaryProfileId)
                 .stream()
                 .map(weightLogMapper::toDto)
                 .toList();
 
+        if (foundWeightLogList.isEmpty()) {
+            var ownerId = diaryProfileService.getOwnerUserIdInternal(diaryProfileId);
+            diaryProfilePolicy.ensureCanGet(currentUser, ownerId);
+            return List.of();
+        }
+
         var diaryProfileUserId = diaryProfileService
-                .getOwnerUserIdInternal(foundEeightLogList.getFirst().diaryProfileId());
+                .getOwnerUserIdInternal(foundWeightLogList.getFirst().diaryProfileId());
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
-        return foundEeightLogList;
+        return foundWeightLogList;
     }
 
-    public WeightLogDto getById(Long commentId){
+    public WeightLogDto getById(Long weightLogId){
 
-        var foundComment = weightLogRepository
-                .findById(commentId)
+        var found = weightLogRepository
+                .findById(weightLogId)
                 .map(weightLogMapper::toDto)
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Diary comment with such id not found")
+                        () -> new EntityNotFoundException("Weight log with such id not found")
                 );
 
         var diaryProfileUserId = diaryProfileService
-                .getOwnerUserIdInternal(foundComment.diaryProfileId());
+                .getOwnerUserIdInternal(found.diaryProfileId());
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
-        return foundComment;
+        return found;
     }
 
     public List<WeightLogDto> getByDiaryProfileAndPeriod(
@@ -161,7 +168,7 @@ public class WeightLogService implements WeightLogApi {
         if(beginPeriod.isAfter(endPeriod))
             throw new IllegalArgumentException("Period cannot begin after it ends");
 
-        var foundEeightLogList = weightLogRepository.findAllByDiaryProfileIdAndCreatedAtBetween(
+        var foundWeightLogList = weightLogRepository.findAllByDiaryProfileIdAndCreatedAtBetween(
                         diaryProfileId,
                         LocalDateTime.of(beginPeriod, LocalTime.MIN),
                         LocalDateTime.of(endPeriod, LocalTime.MIN)
@@ -170,22 +177,27 @@ public class WeightLogService implements WeightLogApi {
                 .map(weightLogMapper::toDto)
                 .toList();
 
+        if (foundWeightLogList.isEmpty()) {
+            var ownerId = diaryProfileService.getOwnerUserIdInternal(diaryProfileId);
+            diaryProfilePolicy.ensureCanGet(currentUser, ownerId);
+            return List.of();
+        }
+
         var diaryProfileUserId = diaryProfileService
-                .getOwnerUserIdInternal(foundEeightLogList.getFirst().diaryProfileId());
+                .getOwnerUserIdInternal(foundWeightLogList.getFirst().diaryProfileId());
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
-        return foundEeightLogList;
+        return foundWeightLogList;
     }
 
     @Override
+    @Nullable
     public WeightLogDto getLatestByDiaryProfileIdInternal(Long diaryProfileId) {
 
         return weightLogRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
                 .map(weightLogMapper::toDto)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Weight log for such diary profile id not found")
-                );
+                .orElse(null);
     }
 }
