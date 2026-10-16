@@ -3,6 +3,8 @@ package com.github.plantfern.foodDiary.food.domain.entities;
 
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +33,8 @@ public class RecipeEntity {
     @Column(name = "description", unique = true, nullable = false)
     private String description;
 
-    @Column(name = "recipe", unique = true, nullable = false)
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
+    @Column(name = "recipe", columnDefinition = "TEXT", nullable = false)
     private String recipe;
 
     @Column(name = "photo_path", unique = true, nullable = false)
