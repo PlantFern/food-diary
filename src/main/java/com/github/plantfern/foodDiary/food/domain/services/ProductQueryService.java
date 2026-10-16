@@ -11,7 +11,6 @@ import com.github.plantfern.foodDiary.food.domain.repositories.FavoriteFoodRepos
 import com.github.plantfern.foodDiary.food.domain.repositories.VProductBasicRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.VProductNutrientRepository;
 import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
-import com.github.plantfern.foodDiary.food.web.requests.ProductSearchRequest;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
@@ -86,28 +85,6 @@ public class ProductQueryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductListItemDto> getAll(
-            @Nullable ProductSearchRequest request,
-            Pageable pageable
-    ){
-
-        foodPolicy.ensureModeration(currentUser);
-
-        var req = request != null
-                ? request
-                : new ProductSearchRequest(null, null);
-
-        return vProductBasicRepository.findList(
-                (req.query() == null
-                        || req.query().isBlank())
-                        ? null
-                        : req.query().trim(),
-                req.categoryId(),
-                pageable
-        );
-    }
-
-    @Transactional(readOnly = true)
     public PersonalizedProductDetailDto getPersonalizedDetailAboutProduct(
             Long diaryProfileId,
             Long productId
@@ -159,40 +136,4 @@ public class ProductQueryService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public ProductDetailDto getDetailAboutProduct(
-            Long productId
-    ) {
-
-        foodPolicy.ensureModeration(currentUser);
-
-        var productNutrients = vProductNutrientRepository
-                .findByProductId(productId);
-
-        var foundProductServings = foodServingService
-                .getByProductId(productId)
-                .stream().map(foodServingMapper::toDto)
-                .toList();
-
-        var vProductBasic = vProductBasicRepository
-                .findByProductId(
-                        productId
-                )
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Product with such product id not found")
-                );
-
-        return new ProductDetailDto(
-                vProductBasic.getProductId(),
-                vProductBasic.getProductCode(),
-                vProductBasic.getProductDescription(),
-                vProductBasic.getPhotoPath(),
-                vProductBasic.getCategoryCode(),
-                vProductBasic.getEntityStatusCode(),
-                vProductBasic.getDataSourceCode(),
-                vProductBasic.getIsPublic(),
-                foundProductServings,
-                productNutrients
-        );
-    }
 }
