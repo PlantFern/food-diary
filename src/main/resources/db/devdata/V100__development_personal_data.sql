@@ -5,6 +5,9 @@
 -- Legacy-only tables are not in current migrations; keep the original dump for those.
 -- Excluded from current-schema import: 15 comments with NULL commentable_id and one duplicate user relation.
 
+-- Remove the product row left behind if a prior MySQL run failed mid-migration.
+DELETE FROM `products` WHERE `id` = 1285 AND `code` = 'CUSTOM_FOOD_00001285';
+
 -- 1 rows
 INSERT INTO `products` (`id`, `code`, `description`, `category_id`, `photo_path`, `is_public`, `entity_status_id`, `created_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
   (1285, 'CUSTOM_FOOD_00001285', '9 месяцев фолиевая кислота АО\"Валента Фарм\"', 42, 'CUSTOM_FOOD_00001285', 0, 1, 11, '2026-08-27 18:57:57', '2026-08-27 18:58:53', NULL);
