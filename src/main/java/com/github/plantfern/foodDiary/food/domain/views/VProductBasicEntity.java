@@ -16,52 +16,52 @@ import org.hibernate.annotations.Immutable;
 public class VProductBasicEntity {
 
     @Id
-    @Column(name = "productId")
+    @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "productCode")
+    @Column(name = "product_code")
     private String productCode;
 
-    @Column(name = "productDescription")
+    @Column(name = "product_description")
     private String productDescription;
 
-    @Column(name = "photoPath")
+    @Column(name = "photo_path")
     private String photoPath;
 
-    @Column(name = "isPublic")
+    @Column(name = "is_public")
     private Boolean isPublic;
 
-    @Column(name = "createdById")
+    @Column(name = "created_by_id")
     private Long createdById;
 
-    @Column(name = "categoryId")
+    @Column(name = "category_id")
     private Long categoryId;
 
-    @Column(name = "categoryCode")
+    @Column(name = "category_code")
     private String categoryCode;
 
-    @Column(name = "entityStatusId")
+    @Column(name = "entity_status_id")
     private Long entityStatusId;
 
-    @Column(name = "entityStatusCode")
+    @Column(name = "entity_status_code")
     private String entityStatusCode;
 
-    @Column(name = "dataSourceId")
+    @Column(name = "data_source_id")
     private Long dataSourceId;
 
-    @Column(name = "dataSourceCode")
+    @Column(name = "data_source_code")
     private String dataSourceCode;
 
-    @Column(name = "baseServingId")
+    @Column(name = "base_serving_id")
     private Long baseServingId;
 
-    @Column(name = "servingAmount")
+    @Column(name = "serving_amount")
     private Long servingAmount;
 
-    @Column(name = "gramWeightPerServing")
+    @Column(name = "gram_weight_per_serving")
     private Float gramWeightPerServing;
 
-    @Column(name = "servingUnitCode")
+    @Column(name = "serving_unit_code")
     private String servingUnitCode;
 
     protected VProductBasicEntity() {}

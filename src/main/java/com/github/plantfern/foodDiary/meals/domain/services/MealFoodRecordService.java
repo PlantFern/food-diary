@@ -170,4 +170,18 @@ public class MealFoodRecordService {
 
         mealFoodRecordRepository.delete(record);
     }
+
+    @Transactional(readOnly = true)
+    public MealFoodRecordEntity getById(Long recordId) {
+        var record = mealFoodRecordRepository.findById(recordId)
+                .orElseThrow(() -> new EntityNotFoundException("Food record not found"));
+
+        var meal = mealRepository.findById(record.getMealId())
+                .orElseThrow(() -> new EntityNotFoundException("Meal not found"));
+
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
+        mealPolicy.ensureIsOwner(currentUser, ownerId);
+
+        return record;
+    }
 }

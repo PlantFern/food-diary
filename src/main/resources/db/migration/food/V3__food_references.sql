@@ -1,0 +1,64 @@
+CREATE TABLE categories
+(
+    id        BIGINT AUTO_INCREMENT NOT NULL,
+    code      VARCHAR(255)          NOT NULL,
+    parent_id BIGINT                NULL,
+    CONSTRAINT pk_categories PRIMARY KEY (id)
+);
+
+CREATE TABLE entity_statuses
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    code VARCHAR(40)           NOT NULL,
+    CONSTRAINT pk_entity_statuses PRIMARY KEY (id)
+);
+
+CREATE TABLE data_sources
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    code VARCHAR(45)           NOT NULL,
+    CONSTRAINT pk_data_sources PRIMARY KEY (id)
+);
+
+CREATE TABLE nutrient_units
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    code VARCHAR(255)          NOT NULL,
+    CONSTRAINT pk_nutrient_units PRIMARY KEY (id)
+);
+
+CREATE TABLE nutrients
+(
+    id      BIGINT AUTO_INCREMENT NOT NULL,
+    code    VARCHAR(255)          NOT NULL,
+    unit_id BIGINT                NOT NULL,
+    CONSTRAINT pk_nutrients PRIMARY KEY (id)
+);
+
+CREATE TABLE serving_units
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    code VARCHAR(40)           NOT NULL,
+    CONSTRAINT pk_serving_units PRIMARY KEY (id)
+);
+
+ALTER TABLE serving_units
+    ADD CONSTRAINT uc_serving_units_code UNIQUE (code);
+
+ALTER TABLE data_sources
+    ADD CONSTRAINT uc_data_sources_code UNIQUE (code);
+
+ALTER TABLE entity_statuses
+    ADD CONSTRAINT uc_entity_statuses_code UNIQUE (code);
+
+ALTER TABLE categories
+    ADD CONSTRAINT uc_categories_code UNIQUE (code);
+
+ALTER TABLE nutrient_units
+    ADD CONSTRAINT uc_nutrient_units_code UNIQUE (code);
+
+ALTER TABLE nutrients
+    ADD CONSTRAINT FK_NUTRIENTS_ON_UNIT FOREIGN KEY (unit_id) REFERENCES nutrient_units (id);
+
+ALTER TABLE categories
+    ADD CONSTRAINT FK_CATEGORIES_ON_PARENT FOREIGN KEY (parent_id) REFERENCES categories (id);

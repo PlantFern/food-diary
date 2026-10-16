@@ -10,7 +10,7 @@ import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
 
-@Component
+@Component("specialistsDiaryEventListener")
 @RequiredArgsConstructor
 public class DiaryEventListener {
 

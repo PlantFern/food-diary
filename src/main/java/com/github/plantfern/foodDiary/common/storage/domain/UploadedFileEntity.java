@@ -23,10 +23,11 @@ public class UploadedFileEntity {
     @Column(nullable = false, unique = true)
     private String filename;
 
-    @Column(nullable = false)
+    @Column(name = "original_name", nullable = false)
     private String originalName;
 
     @Column(
+            name = "content_type",
             nullable = false,
             length = 100
     )
@@ -36,7 +37,7 @@ public class UploadedFileEntity {
     @Column(nullable = false)
     private Long size;
 
-    @Column(nullable = false)
+    @Column(name = "uploaded_at", nullable = false)
     private LocalDateTime uploadedAt;
 
 

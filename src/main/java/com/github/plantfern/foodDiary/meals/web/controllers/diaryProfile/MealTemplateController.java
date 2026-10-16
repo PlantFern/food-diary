@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -30,13 +31,18 @@ public class MealTemplateController {
         return ResponseEntity.ok(mealTemplateService.listByDiaryProfile(diaryProfileId));
     }
 
+    @GetMapping("/{templateId}")
+    public ResponseEntity<?> getById(@PathVariable Long templateId) {
+        return ResponseEntity.ok(mealTemplateService.getById(templateId));
+    }
+
     @PostMapping("")
     public ResponseEntity<Long> create(
             @PathVariable Long diaryProfileId,
             @RequestParam String name,
             @RequestParam LocalTime scheduledTime,
             @RequestParam Long frequency,
-            @RequestParam Long startedAt
+            @RequestParam LocalDate startedAt
     ) {
         return ResponseEntity.ok(
                 mealTemplateService.create(
@@ -52,7 +58,7 @@ public class MealTemplateController {
             @RequestParam String name,
             @RequestParam LocalTime scheduledTime,
             @RequestParam Long frequency,
-            @RequestParam Long startedAt
+            @RequestParam LocalDate startedAt
     ) {
         mealTemplateService.update(templateId, name, scheduledTime, frequency, startedAt);
     }

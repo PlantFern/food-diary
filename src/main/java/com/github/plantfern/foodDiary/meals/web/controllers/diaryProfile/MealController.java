@@ -61,4 +61,9 @@ public class MealController {
     public void delete(@PathVariable Long mealId) {
         mealService.softDelete(mealId);
     }
+
+    @GetMapping("/{mealId}")
+    public ResponseEntity<?> getById(@PathVariable Long mealId) {
+        return ResponseEntity.ok(mealService.getById(mealId));
+    }
 }
