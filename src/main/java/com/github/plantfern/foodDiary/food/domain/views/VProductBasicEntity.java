@@ -56,7 +56,7 @@ public class VProductBasicEntity {
     private Long baseServingId;
 
     @Column(name = "servingAmount")
-    private Long servingAmount;
+    private Float servingAmount;
 
     @Column(name = "gramWeightPerServing")
     private Float gramWeightPerServing;
