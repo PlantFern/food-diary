@@ -94,7 +94,7 @@ SELECT
     ds.code            AS dataSourceCode,
     bp.base_serving_id AS baseServingId,
     fs.amount          AS servingAmount,
-    fs.gram_weight     AS gramWeight_per_serving,
+    fs.gram_weight     AS gramWeightPerServing,
     su.code            AS servingUnitCode
 FROM products p
 LEFT JOIN categories c ON c.id = p.category_id
