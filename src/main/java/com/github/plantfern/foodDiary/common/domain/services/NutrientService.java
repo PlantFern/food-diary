@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,12 @@ public class NutrientService {
                 .orElseThrow(
                         () -> new EntityNotFoundException("No nutrientEntity with such id")
                 );
+    }
+
+    public List<NutrientEntity> findAllOrdered() {
+        return nutrientRepository.findAll().stream()
+                .sorted(Comparator.comparing(NutrientEntity::getId))
+                .toList();
     }
 
     public boolean existsAllByIdIn(Set<Long> ids) {
