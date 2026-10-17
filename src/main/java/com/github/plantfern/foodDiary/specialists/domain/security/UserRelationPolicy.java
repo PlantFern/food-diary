@@ -58,6 +58,8 @@ public class UserRelationPolicy {
         if(currentUser.hasRole(RoleName.MODERATOR)
                 || currentUser.hasRole(RoleName.ADMINISTRATOR))
             return;
+
+        throw new AccessDeniedException("Only specialist or moderator can activate or reject");
     }
 
     public void ensureCanEnd(
@@ -75,8 +77,12 @@ public class UserRelationPolicy {
         if(!UserRelationStatus
                 .valueOf(relationStatus)
                 .equals(UserRelationStatus.ACTIVE)){
-            throw new IllegalStateException("User relation status must be pending");
+            throw new IllegalStateException("User relation status must be active");
         }
+
+        if(currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR))
+            return;
 
         throw new AccessDeniedException("Only users related to user relation can access");
     }
@@ -139,13 +145,20 @@ public class UserRelationPolicy {
             Long diaryProfileUserId,
             Long specialistUserId
     ) {
+        if (diaryProfileUserId != null && diaryProfileUserId.equals(specialistUserId)) {
+            throw new IllegalStateException("User cannot create relations with themselves");
+        }
+
         var currentId = currentUser.requireId();
 
-        if(currentId.equals(diaryProfileUserId) || currentId.equals(specialistUserId))
+        if (currentId.equals(diaryProfileUserId) || currentId.equals(specialistUserId)) {
             return;
+        }
 
-        if(diaryProfileUserId.equals(specialistUserId))
-            throw new IllegalStateException("User cannot create relations with themselves");
+        if (currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR)) {
+            return;
+        }
 
         throw new AccessDeniedException("Only the users participating in the relation can create it");
     }
