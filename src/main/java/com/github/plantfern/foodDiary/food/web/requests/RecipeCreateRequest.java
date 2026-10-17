@@ -11,6 +11,6 @@ public record RecipeCreateRequest(
         String recipe,
         Long photoPathId,
         Float totalWeightGrams,
-        @Valid List<RecipeComponentRequest> components
+        List<@Valid RecipeComponentRequest> components
 ) {
 }
