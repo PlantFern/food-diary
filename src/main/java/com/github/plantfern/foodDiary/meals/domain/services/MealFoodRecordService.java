@@ -3,6 +3,7 @@ package com.github.plantfern.foodDiary.meals.domain.services;
 import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
 import com.github.plantfern.foodDiary.food.api.apis.ProductApi;
+import com.github.plantfern.foodDiary.food.api.dto.FoodServingDto;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealEntity;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealFoodRecordEntity;
@@ -157,7 +158,6 @@ public class MealFoodRecordService {
 
     @Transactional
     public void delete(Long recordId) {
-        // DELETE is idempotent: repeated requests for an already removed record succeed.
         var record = mealFoodRecordRepository.findById(recordId).orElse(null);
         if (record == null) {
             return;
@@ -169,8 +169,6 @@ public class MealFoodRecordService {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
-        // Execute DELETE immediately. Concurrent duplicate requests are harmless:
-        // the request that removes an already-removed row simply affects zero rows.
         mealFoodRecordRepository.deleteRecordRowById(recordId);
     }
 
@@ -185,10 +183,45 @@ public class MealFoodRecordService {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
+        FoodServingDto serving = null;
+        try {
+            serving = foodServingApi.getById(record.getServingId());
+        } catch (Exception ignored) {
+            // still return the record even if serving was removed
+        }
+
+        String productDescription = serving != null ? serving.description() : null;
+        // Prefer item name from view-based API when description is empty
+        if (productDescription == null || productDescription.isBlank()) {
+            try {
+                var map = foodServingApi.getInfoByServingIds(
+                        java.util.List.of(record.getServingId()),
+                        1L
+                );
+                var info = map.get(record.getServingId());
+                if (info != null) {
+                    productDescription = info.productDescription();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        Float servingAmount = serving != null ? serving.amount() : null;
+        Float gramWeight = serving != null ? serving.gramWeight() : null;
+        String unitCode = serving != null && serving.servingUnit() != null
+                ? serving.servingUnit().code()
+                : null;
+
         return new MealFoodRecordDto(
                 record.getId(),
                 record.getMealId(),
+                meal.getMealTypeId(),
+                meal.getDate(),
                 record.getServingId(),
+                productDescription,
+                servingAmount,
+                gramWeight,
+                unitCode,
                 record.getAmount(),
                 record.getEatenAt()
         );
