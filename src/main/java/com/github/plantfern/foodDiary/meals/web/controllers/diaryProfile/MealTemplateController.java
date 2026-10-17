@@ -1,6 +1,7 @@
 package com.github.plantfern.foodDiary.meals.web.controllers.diaryProfile;
 
 
+import com.github.plantfern.foodDiary.meals.api.dto.MealTemplateDto;
 import com.github.plantfern.foodDiary.meals.api.dto.MealTemplateListItemDto;
 import com.github.plantfern.foodDiary.meals.domain.services.MealTemplateService;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,8 @@ public class MealTemplateController {
     }
 
     @GetMapping("/{templateId}")
-    public ResponseEntity<?> getById(@PathVariable Long templateId) {
-        return ResponseEntity.ok(mealTemplateService.getById(templateId));
+    public ResponseEntity<MealTemplateDto> getById(@PathVariable Long templateId) {
+        return ResponseEntity.ok(mealTemplateService.getDetail(templateId));
     }
 
     @PostMapping("")
