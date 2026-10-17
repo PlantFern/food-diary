@@ -12,6 +12,7 @@ public record PersonalizedRecipeDetailDto(
         String entityStatusCode,
         Boolean isPublic,
         Boolean isFavorite,
-    List<RecipeComponentDto> components
+        List<RecipeComponentDto> components,
+        List<FoodServingDto> servings
 ) {
 }
