@@ -157,8 +157,11 @@ public class MealFoodRecordService {
 
     @Transactional
     public void delete(Long recordId) {
-        var record = mealFoodRecordRepository.findById(recordId)
-                .orElseThrow(() -> new EntityNotFoundException("Food record not found"));
+        // DELETE is idempotent: repeated requests for an already removed record succeed.
+        var record = mealFoodRecordRepository.findById(recordId).orElse(null);
+        if (record == null) {
+            return;
+        }
 
         var meal = mealRepository.findById(record.getMealId())
                 .orElseThrow(() -> new EntityNotFoundException("Meal not found"));
