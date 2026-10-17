@@ -28,8 +28,8 @@ public class FileService {
 
         try {
             var entity = new UploadedFileEntity(
-                    filename,
                     file.getOriginalFilename(),
+                    filename,
                     file.getContentType(),
                     file.getSize(),
                     LocalDateTime.now()
