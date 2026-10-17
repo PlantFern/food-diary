@@ -37,6 +37,9 @@ spring:
   config:
     import: "optional:file:.env[.properties]"
   datasource:
+    # Keep SQL literals and bound string parameters on the same collation as the schema.
+    hikari:
+      connection-init-sql: "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
