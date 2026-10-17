@@ -62,3 +62,31 @@ ALTER TABLE nutrients
 
 ALTER TABLE categories
     ADD CONSTRAINT FK_CATEGORIES_ON_PARENT FOREIGN KEY (parent_id) REFERENCES categories (id);
+
+-- Canonical nutrient units and nutrients; IDs are relied on by the catalog seed.
+INSERT INTO nutrient_units (code) VALUES ('kcal');
+INSERT INTO nutrient_units (code) VALUES ('g');
+
+INSERT INTO nutrients (code, unit_id)
+SELECT 'ENERGY', id FROM nutrient_units WHERE code = 'kcal' LIMIT 1;
+INSERT INTO nutrients (code, unit_id)
+SELECT 'PROTEIN', id FROM nutrient_units WHERE code = 'g' LIMIT 1;
+INSERT INTO nutrients (code, unit_id)
+SELECT 'FAT', id FROM nutrient_units WHERE code = 'g' LIMIT 1;
+INSERT INTO nutrients (code, unit_id)
+SELECT 'CARBS', id FROM nutrient_units WHERE code = 'g' LIMIT 1;
+
+INSERT INTO serving_units (code) VALUES ('g');
+INSERT INTO serving_units (code) VALUES ('ml');
+INSERT INTO serving_units (code) VALUES ('pcs');
+
+INSERT INTO entity_statuses (code) VALUES ('ACTIVE');
+INSERT INTO entity_statuses (code) VALUES ('DRAFT');
+INSERT INTO entity_statuses (code) VALUES ('ARCHIVED');
+
+INSERT INTO data_sources (code) VALUES ('USER');
+INSERT INTO data_sources (code) VALUES ('SYSTEM');
+INSERT INTO data_sources (code) VALUES ('USDA');
+INSERT INTO data_sources (code) VALUES ('BARCODE');
+INSERT INTO data_sources (code) VALUES ('CUSTOM');
+INSERT INTO data_sources (code) VALUES ('NUTRIENT_RECORDING');
