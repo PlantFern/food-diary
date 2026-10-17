@@ -5,6 +5,8 @@ public record RecipeComponentDto(
         Long productServingId,
         Float amount,
         String productDescription,
-        String servingUnitCode
+        String servingUnitCode,
+        Float gramWeight,
+        Float nutrient
 ) {
 }
