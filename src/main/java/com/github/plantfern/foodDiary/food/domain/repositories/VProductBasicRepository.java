@@ -37,7 +37,13 @@ public interface VProductBasicRepository extends JpaRepository<VProductBasicEnti
         on favorite.itemId = product.productId
        and favorite.itemType = com.github.plantfern.foodDiary.food.api.ItemType.PRODUCT
        and favorite.diaryProfileId = :diaryProfileId
-    where product.entityStatusCode = 'ACTIVE'
+    where (
+                product.entityStatusCode = 'ACTIVE'
+                or (
+                    product.entityStatusCode = 'DRAFT'
+                    and product.createdById = :currentUserId
+                )
+            )
       and (
             (
                 (product.dataSourceCode is null or product.dataSourceCode <> 'NUTRIENT_RECORDING')
@@ -89,7 +95,13 @@ public interface VProductBasicRepository extends JpaRepository<VProductBasicEnti
            and favorite.itemType = com.github.plantfern.foodDiary.food.api.ItemType.PRODUCT
            and favorite.diaryProfileId = :diaryProfileId
         where   product.productId = :productId and
-                product.entityStatusCode = 'ACTIVE'
+                (
+                    product.entityStatusCode = 'ACTIVE'
+                    or (
+                        product.entityStatusCode = 'DRAFT'
+                        and product.createdById = :currentUserId
+                    )
+                )
           and (
                 (
                     (product.dataSourceCode is null or product.dataSourceCode <> 'NUTRIENT_RECORDING')
