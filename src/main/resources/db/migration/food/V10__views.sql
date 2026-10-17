@@ -127,7 +127,9 @@ SELECT
 FROM recipe_components rc
 JOIN recipes r ON r.id = rc.recipe_id AND r.deleted_at IS NULL
 JOIN food_servings fs ON fs.id = rc.product_serving_id
-JOIN product_nutrients pn ON pn.product_id = fs.item_id AND fs.item_type = 'PRODUCT'
+JOIN product_nutrients pn
+    ON pn.product_id = fs.item_id
+   AND fs.item_type = CONVERT('PRODUCT' USING utf8mb4) COLLATE utf8mb4_unicode_ci
 JOIN nutrients n ON n.id = pn.nutrient_id
 JOIN nutrient_units nu ON nu.id = n.unit_id
 GROUP BY rc.recipe_id, pn.nutrient_id, r.name, n.code, nu.code;
