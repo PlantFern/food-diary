@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 
 
+import com.github.plantfern.foodDiary.meals.api.dto.MealFoodRecordDto;
 import com.github.plantfern.foodDiary.meals.domain.services.MealFoodRecordService;
 import com.github.plantfern.foodDiary.meals.web.requests.MealFoodRecordCreateRequest;
 import com.github.plantfern.foodDiary.meals.web.requests.QuickProductCreateRequest;
@@ -81,7 +82,7 @@ public class MealFoodRecordController {
     }
 
     @GetMapping("/{recordId}")
-    public ResponseEntity<?> getById(@PathVariable Long recordId) {
+    public ResponseEntity<MealFoodRecordDto> getById(@PathVariable Long recordId) {
         return ResponseEntity.ok(mealFoodRecordService.getById(recordId));
     }
 }
