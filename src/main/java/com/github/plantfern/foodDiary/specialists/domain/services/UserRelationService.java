@@ -54,20 +54,18 @@ public class UserRelationService implements UserRelationApi {
             SpecialistService specialistService,
 
             ApplicationEventPublisher events,
-            DiaryProfileApi diaryProfileApi) {
+            DiaryProfileApi diaryProfileApi
+    ) {
         this.currentUser = currentUser;
         this.userApi = userApi;
         this.userRelationPolicy = userRelationPolicy;
-
         this.userRelationMapper = userRelationMapper;
         this.userRelationRepository = userRelationRepository;
         this.userRelationStatusRepository = userRelationStatusRepository;
         this.specialistService = specialistService;
-
         this.events = events;
         this.diaryProfileApi = diaryProfileApi;
     }
-
 
     @Transactional
     public void create(Long diaryProfileId, Long specialistId, RelationType relationType) {
@@ -81,25 +79,37 @@ public class UserRelationService implements UserRelationApi {
                 specialist.userId()
         );
 
-        if (Boolean.TRUE.equals(
-                userRelationRepository.existsByDiaryProfileIdAndSpecialistId(diaryProfileId, specialistId)
-        )) {
+        var pendingStatus = userRelationStatusRepository.getByCode(UserRelationStatus.PENDING.name());
+
+        var existingOpt = userRelationRepository.findByDiaryProfileIdAndSpecialistId(
+                diaryProfileId, specialistId);
+
+        if (existingOpt.isPresent()) {
+            var existing = existingOpt.get();
+            UserRelationStatus status;
+            try {
+                status = existing.getStatusCode();
+            } catch (Exception e) {
+                status = null;
+            }
+
+            // После отмены или завершения клиент может снова отправить заявку
+            if (status == UserRelationStatus.CANCELED || status == UserRelationStatus.ENDED) {
+                existing.setRelationType(relationType);
+                existing.setUserRelationStatusEntity(pendingStatus);
+                userRelationRepository.save(existing);
+                return;
+            }
+
+            if (status == UserRelationStatus.PENDING) {
+                throw new IllegalStateException("Заявка уже отправлена и ожидает ответа специалиста");
+            }
+            if (status == UserRelationStatus.ACTIVE) {
+                throw new IllegalStateException("Связь с этим специалистом уже активна");
+            }
+
             throw new IllegalStateException("Relation between this profile and specialist already exists");
         }
-
-        var endedStatus = userRelationStatusRepository.getByCode(
-                UserRelationStatus.ENDED.name()
-        );
-
-        if(!userRelationRepository.findAllBySpecialistIdAndDiaryProfileIdAndUserRelationStatusEntityAndRelationType(
-                diaryProfileId,
-                specialistId,
-                endedStatus,
-                RelationType.SPECIALIST
-        ).isEmpty())
-            throw new IllegalStateException("Relation with specialist relation type already exists");
-
-        var pendingStatus = userRelationStatusRepository.getByCode(UserRelationStatus.PENDING.name());
 
         try {
             userRelationRepository.save(new UserRelationEntity(
@@ -199,7 +209,7 @@ public class UserRelationService implements UserRelationApi {
         var userRelation = userRelationRepository
                 .findById(userRelationId)
                 .orElseThrow(
-                        () -> new IllegalArgumentException("UserRelation not found")
+                        () -> new EntityExistsException("user relation not found")
                 );
 
         var diaryProfileUserId = diaryProfileApi.getOwnerUserIdInternal(userRelation.getDiaryProfileId());
