@@ -127,4 +127,11 @@ public class RecipeService {
         recipe.setTotalWeightGrams(recipeComponentService.countWeightByRecipeId(recipeId));
         recipeRepository.save(recipe);
     }
+
+    @Transactional(readOnly = true)
+    RecipeEntity getById(Long id) {
+        return recipeRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Recipe with such id not found"));
+    }
 }
