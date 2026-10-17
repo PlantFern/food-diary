@@ -7,6 +7,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record NutrientRequest(
         @NotNull Long nutrientId,
-        @NotNull @DecimalMin(value = "0", inclusive = false) Float amount
+        @NotNull @DecimalMin(value = "0", inclusive = true) Float amount
 ) {
 }
