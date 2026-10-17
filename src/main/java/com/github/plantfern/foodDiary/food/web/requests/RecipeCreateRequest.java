@@ -1,18 +1,16 @@
 package com.github.plantfern.foodDiary.food.web.requests;
 
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public record RecipeCreateRequest(
         @NotBlank String name,
-        @NotBlank String description,
-        @NotBlank String recipe,
-        @NotNull Long photoPathId,
-        @NotNull @DecimalMin(value = "0", inclusive = false) Float totalWeightGrams,
-        @NotEmpty List<RecipeComponentRequest> components
+        String description,
+        String recipe,
+        Long photoPathId,
+        Float totalWeightGrams,
+        @Valid List<RecipeComponentRequest> components
 ) {
 }
