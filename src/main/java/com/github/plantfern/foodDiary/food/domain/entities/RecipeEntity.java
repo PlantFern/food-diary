@@ -25,7 +25,7 @@ public class RecipeEntity {
     private Long id;
 
     @Column(name = "code", length = 40, unique = true, nullable = false)
-    private String code;
+    private String code = "";
 
     @Column(name = "name", length = 100, unique = true, nullable = false)
     private String name;
@@ -112,7 +112,7 @@ public class RecipeEntity {
     }
 
     public void assignCode() {
-        if (code.isEmpty())
+        if (code == null || code.isEmpty())
             code = String.format("%08d", id);
     }
 }
