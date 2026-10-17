@@ -1,0 +1,11 @@
+INSERT INTO data_sources (code)
+SELECT 'BARCODE' WHERE NOT EXISTS (SELECT 1 FROM data_sources WHERE code = 'BARCODE');
+
+INSERT INTO data_sources (code)
+SELECT 'CUSTOM' WHERE NOT EXISTS (SELECT 1 FROM data_sources WHERE code = 'CUSTOM');
+
+INSERT INTO data_sources (code)
+SELECT 'NUTRIENT_RECORDING' WHERE NOT EXISTS (SELECT 1 FROM data_sources WHERE code = 'NUTRIENT_RECORDING');
+
+INSERT INTO data_sources (code)
+SELECT 'USDA' WHERE NOT EXISTS (SELECT 1 FROM data_sources WHERE code = 'USDA');
