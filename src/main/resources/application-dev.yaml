@@ -1,5 +1,8 @@
 spring:
   flyway:
+    # The development data migration V100 may already be applied when lower-version
+    # schema migrations are added later. Allow those pending migrations in dev only.
+    out-of-order: true
     locations: >
       classpath:db/migration/common,
       classpath:db/migration/users,
