@@ -325,15 +325,14 @@ public class GoalService implements GoalApi {
     @Transactional(readOnly = true)
     @Override
     public GoalDto getActiveByDiaryProfileInternal(Long diaryDiaryProfileId) {
-        var goal = goalRepository
-                    .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Any goal not found")
-                );
-
-        if (goal.getActualEndDate() == null)
-            return goalMapper.toDto(goal);
-        return null;
+        // This internal query is used by read-only aggregations. Missing/inactive
+        // goals are an expected state, so return null rather than throwing a runtime
+        // exception that could mark a participating outer transaction rollback-only.
+        return goalRepository
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryDiaryProfileId)
+                .filter(goal -> goal.getActualEndDate() == null)
+                .map(goalMapper::toDto)
+                .orElse(null);
     }
 
     @Transactional(readOnly = true)
