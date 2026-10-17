@@ -334,7 +334,8 @@ public class MealQueryService {
                 productServing != null ? productServing.servingAmount() : null,
                 productServing != null ? productServing.gramWeight() : null,
                 productServing != null ? productServing.servingUnitCode() : null,
-                nutrient
+                nutrient,
+                productServing != null ? productServing.photoPath() : null
         );
     }
 
