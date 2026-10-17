@@ -1,7 +1,6 @@
 package com.github.plantfern.foodDiary.food.domain.entities;
 
 
-import com.github.plantfern.foodDiary.food.api.DataSource;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -27,17 +26,17 @@ public class RecipeEntity {
     @Column(name = "code", length = 40, unique = true, nullable = false)
     private String code = "";
 
-    @Column(name = "name", length = 100, unique = true, nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "description", length = 500, unique = true, nullable = false)
+    @Column(name = "description", length = 500, nullable = false)
     private String description;
 
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column(name = "recipe", columnDefinition = "TEXT", nullable = false)
     private String recipe;
 
-    @Column(name = "photo_path", unique = true, nullable = false)
+    @Column(name = "photo_path", nullable = false)
     private String photoPath;
 
     @Column(name = "total_weight_grams")
