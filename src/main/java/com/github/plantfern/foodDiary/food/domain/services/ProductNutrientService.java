@@ -51,8 +51,8 @@ public class ProductNutrientService {
         return productNutrientRepository.save(
                 new ProductNutrientEntity(
                         amount,
-                        product.getId(),
-                        nutrient.getId()
+                        nutrient.getId(),
+                        product.getId()
                 )
         ).getId();
     }
@@ -69,11 +69,14 @@ public class ProductNutrientService {
                 )
                 .getId();
 
-        var nutrientIds = nutrients.keySet();
+        if (nutrients == null) {
+            throw new IllegalArgumentException("Nutrients must not be null");
+        }
 
-        nutrientService.existsAllByIdIn(
-                nutrientIds
-        );
+        var nutrientIds = nutrients.keySet();
+        if (!nutrientService.existsAllByIdIn(nutrientIds)) {
+            throw new EntityNotFoundException("One or more nutrients were not found");
+        }
 
         var productNutrientList = new ArrayList<ProductNutrientEntity>();
 
