@@ -5,8 +5,6 @@ import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
 import com.github.plantfern.foodDiary.food.api.dto.FoodServingDto;
 import com.github.plantfern.foodDiary.food.api.dto.ProductServingDto;
 import com.github.plantfern.foodDiary.food.domain.entities.FoodServingEntity;
-import com.github.plantfern.foodDiary.food.domain.entities.ProductEntity;
-import com.github.plantfern.foodDiary.food.domain.entities.ServingUnitEntity;
 import com.github.plantfern.foodDiary.food.domain.mappers.FoodServingMapper;
 import com.github.plantfern.foodDiary.food.domain.repositories.*;
 import com.github.plantfern.foodDiary.food.domain.views.VFoodServingEntity;
@@ -124,7 +122,8 @@ public class FoodServingService implements FoodServingApi {
                             serving.getServingAmount(),
                             serving.getGramWeight(),
                             serving.getServingUnitCode(),
-                            nutrientByItem.get(key)
+                            nutrientByItem.get(key),
+                            normalizePhotoPath(serving.getItemPhotoPath())
                     )
             );
         }
@@ -161,6 +160,24 @@ public class FoodServingService implements FoodServingApi {
 
     private static String itemKey(String itemType, Long itemId) {
         return itemType + ":" + itemId;
+    }
+
+    /**
+     * Normalize stored photo value to a stable API path:
+     * - absolute URL kept as-is
+     * - /api/files/... kept as-is
+     * - pure numeric id -> /api/files/{id}
+     * - bare filename / relative path -> /api/files/{value}
+     */
+    static String normalizePhotoPath(String value) {
+        if (value == null || value.isBlank()) return null;
+        String v = value.trim();
+        if (v.startsWith("http://") || v.startsWith("https://")) return v;
+        if (v.startsWith("/api/files/")) return v;
+        if (v.matches("\\d+")) return "/api/files/" + v;
+        // strip leading slash so FileController can treat the rest as stored name
+        if (v.startsWith("/")) v = v.substring(1);
+        return "/api/files/" + v;
     }
 
     private Map<String, Map<Long, Float>> loadNutrientPer100g(
