@@ -7,6 +7,7 @@ public record MealTemplateFoodRecordItemDto(
         Float amount,
         Float servingAmount,
         Float gramWeight,
-        String servingUnitCode
+        String servingUnitCode,
+        Float nutrient
 ) {
 }
