@@ -62,7 +62,10 @@ public class RecipeQueryService {
         var diaryProfile = diaryProfileApi.getByIdInternal(diaryProfileId);
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
-        var basic = vRecipeBasicRepository.findByRecipeId(recipeId)
+        var basic = vRecipeBasicRepository.findAccessibleByRecipeId(
+                        recipeId,
+                        currentUser.requireId()
+                )
                 .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
 
         boolean isFavorite = favoriteFoodRepository.existsByDiaryProfileIdAndItemTypeAndItemId(
