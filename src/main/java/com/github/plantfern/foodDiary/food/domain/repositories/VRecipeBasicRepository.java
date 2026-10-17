@@ -57,5 +57,23 @@ public interface VRecipeBasicRepository extends JpaRepository<VRecipeBasicEntity
     );
 
 
+    @Query("""
+            select recipe
+            from VRecipeBasicEntity recipe
+            where recipe.recipeId = :recipeId
+              and (
+                    recipe.entityStatusCode is null
+                    or recipe.entityStatusCode <> 'ARCHIVED'
+                  )
+              and (
+                    recipe.isPublic = true
+                    or recipe.createdById = :currentUserId
+                  )
+            """)
+    Optional<VRecipeBasicEntity> findAccessibleByRecipeId(
+            @Param("recipeId") Long recipeId,
+            @Param("currentUserId") Long currentUserId
+    );
+
     Optional<VRecipeBasicEntity> findByRecipeId(Long recipeId);
 }
