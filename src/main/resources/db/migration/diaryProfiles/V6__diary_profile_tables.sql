@@ -140,3 +140,8 @@ ALTER TABLE sleep_logs
 
 ALTER TABLE weight_logs
     ADD CONSTRAINT FK_WEIGHT_LOGS_ON_DIARY_PROFILE FOREIGN KEY (diary_profile_id) REFERENCES diary_profiles (id);
+
+
+-- Canonical genders used by diary profiles.
+INSERT INTO genders (code) VALUES ('MALE');
+INSERT INTO genders (code) VALUES ('FEMALE');
