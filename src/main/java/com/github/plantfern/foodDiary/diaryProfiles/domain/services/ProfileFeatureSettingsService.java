@@ -9,6 +9,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettin
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.ProfileFeatureSettingsRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
+import com.github.plantfern.foodDiary.specialists.api.apis.UserRelationApi;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import com.github.plantfern.foodDiary.users.api.UserApi;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,7 +33,15 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final ProfileFeatureSettingsMapper profileFeatureSettingsMapper;
     private final NutrientService nutrientService;
+    private final UserRelationApi userRelationApi;
 
+    private void ensureNotLockedBySpecialist(Long diaryProfileId) {
+        if (userRelationApi.hasActiveSpecialistControlInternal(diaryProfileId)) {
+            throw new IllegalStateException(
+                    "Settings are managed by your specialist and cannot be changed"
+            );
+        }
+    }
 
     @Transactional
     public ProfileFeatureSettingsDto create(
@@ -48,6 +57,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
+        ensureNotLockedBySpecialist(diaryProfileId);
 
         if(!nutrientService.existsAllByIdIn(hiddenNutrients))
             throw new EntityNotFoundException("Not all nutrients found");
@@ -112,6 +122,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldSettings.getCreatedById());
+        ensureNotLockedBySpecialist(oldSettings.getDiaryProfileId());
 
         if(!nutrientService.existsAllByIdIn(hiddenNutrients))
             throw new EntityNotFoundException("Not all nutrients found");
@@ -161,6 +172,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, profileFeatureSettings.getCreatedById());
+        ensureNotLockedBySpecialist(profileFeatureSettings.getDiaryProfileId());
 
         profileFeatureSettings.setExpiredDate();
 
