@@ -21,7 +21,7 @@ public interface RecipeComponentRepository extends JpaRepository<RecipeComponent
             ), 0)
             from RecipeComponentEntity recipe_component
             join FoodServingEntity food_serving on food_serving.id = recipe_component.productServingId
-            where recipe_component.recipeId =: recipeId
+            where recipe_component.recipeId = :recipeId
             and food_serving.amount > 0
             """)
     Float sumWeightGramsByRecipeId(@Param("recipeId") Long recipeId);
