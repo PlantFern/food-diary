@@ -2,6 +2,7 @@ package com.github.plantfern.foodDiary.diaryProfiles.domain.repositories;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.domain.entities.ProfileFeatureSettingsEntity;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,9 +15,14 @@ import java.util.Optional;
 @Repository
 public interface ProfileFeatureSettingsRepository extends JpaRepository<ProfileFeatureSettingsEntity, Long> {
 
+    @EntityGraph(attributePaths = "profileHiddenNutrientSet")
     Optional<ProfileFeatureSettingsEntity> findFirstByDiaryProfileIdOrderByCreatedAtDesc(Long diaryProfileId);
 
+    @EntityGraph(attributePaths = "profileHiddenNutrientSet")
     List<ProfileFeatureSettingsEntity> findAllByDiaryProfileId(Long diaryProfileId);
+
+    @EntityGraph(attributePaths = "profileHiddenNutrientSet")
+    Optional<ProfileFeatureSettingsEntity> findById(Long id);
 
     @Query("""
         select profile_feature_settings.diaryProfileId
@@ -27,6 +33,7 @@ public interface ProfileFeatureSettingsRepository extends JpaRepository<ProfileF
 
     List<ProfileFeatureSettingsEntity> findAllByCreatedById(Long userId);
 
+    @EntityGraph(attributePaths = "profileHiddenNutrientSet")
     List<ProfileFeatureSettingsEntity> findAllByCreatedByIdAndDiaryProfileId(Long userId, Long diaryProfileId);
 
     List<ProfileFeatureSettingsEntity> findAllByExpiredAtGreaterThanEqualOrCreatedAtLessThanAndDiaryProfileId(
