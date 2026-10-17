@@ -266,5 +266,17 @@ public class UserRelationService implements UserRelationApi {
         return userRelationRepository
                 .existsByDiaryProfileIdAndSpecialistId(diaryProfileId, specialistId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean hasActiveSpecialistControlInternal(Long diaryProfileId) {
+        if (diaryProfileId == null) return false;
+        var activeStatus = userRelationStatusRepository.getByCode(UserRelationStatus.ACTIVE.name());
+        return userRelationRepository.existsByDiaryProfileIdAndRelationTypeAndUserRelationStatusEntity(
+                diaryProfileId,
+                RelationType.SPECIALIST,
+                activeStatus
+        );
+    }
     //endregion
 }
