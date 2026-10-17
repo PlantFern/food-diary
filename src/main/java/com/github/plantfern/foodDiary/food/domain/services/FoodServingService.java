@@ -69,6 +69,12 @@ public class FoodServingService implements FoodServingApi {
     }
 
     @Transactional(readOnly = true)
+    public List<FoodServingEntity> getByRecipeId(Long recipeId) {
+        return foodServingRepository.findAllByItemIdAndItemType(recipeId, ItemType.RECIPE);
+    }
+
+
+    @Transactional(readOnly = true)
     public boolean existsById(Long foodServingId) {
         return foodServingRepository.existsById(foodServingId);
     }
@@ -82,20 +88,18 @@ public class FoodServingService implements FoodServingApi {
         return foodServingRepository
                 .findById(foodServingId)
                 .map(foodServingMapper::toDto)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Serving with such id not found")
-                );
+                .orElseThrow(() -> new EntityNotFoundException("Food serving not found"));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Map<Long, ProductServingDto> getInfoByServingIds(
             Collection<Long> servingIds,
             Long acceptedNutrientId
     ) {
-
-        if( servingIds == null || servingIds.isEmpty())
+        if (servingIds == null || servingIds.isEmpty()) {
             return Map.of();
+        }
 
         var servings = vFoodServingRepository.findAllByServingIdIn(servingIds);
         if (servings.isEmpty())
@@ -106,28 +110,26 @@ public class FoodServingService implements FoodServingApi {
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> e.getValue().getOrDefault(acceptedNutrientId, null)
+                        e -> e.getValue().getOrDefault(acceptedNutrientId, 0f)
                 ));
 
         Map<Long, ProductServingDto> result = new HashMap<>();
         for(var serving : servings) {
-            String key = itemKey(serving.getItemType(), serving.getItemId());
-
+            String key = serving.getItemType() + ":" + serving.getItemId();
             result.put(
                     serving.getServingId(),
                     new ProductServingDto(
                             serving.getServingId(),
                             serving.getItemId(),
-                            serving.getItemName(),
+                            serving.getItemType() != null ? serving.getItemType().name() : null,
+                            serving.getProductDescription(),
                             serving.getServingAmount(),
                             serving.getGramWeight(),
                             serving.getServingUnitCode(),
-                            nutrientByItem.get(key),
-                            normalizePhotoPath(serving.getItemPhotoPath())
+                            nutrientByItem.get(key)
                     )
             );
         }
-
         return result;
     }
 
@@ -137,82 +139,62 @@ public class FoodServingService implements FoodServingApi {
             Collection<Long> servingIds,
             Collection<Long> nutrientIds
     ) {
-
-        if(servingIds == null || servingIds.isEmpty())
+        if (servingIds == null || servingIds.isEmpty() || nutrientIds == null || nutrientIds.isEmpty()) {
             return Map.of();
+        }
 
         var servings = vFoodServingRepository.findAllByServingIdIn(servingIds);
         Map<String, Map<Long, Float>> byItem = loadNutrientPer100g(servings, nutrientIds);
 
         Map<Long, Map<Long, Float>> result = new HashMap<>();
         for(var serving : servings){
-            result.put(
-                    serving.getServingId(),
-                    byItem.getOrDefault(itemKey(serving.getItemType(), serving.getItemId()), Map.of())
-            );
+            String key = serving.getItemType() + ":" + serving.getItemId();
+            Map<Long, Float> per100 = byItem.getOrDefault(key, Map.of());
+            float factor = 1f;
+            if (serving.getGramWeight() != null && serving.getServingAmount() != null) {
+                factor = serving.getGramWeight() * serving.getServingAmount() / 100f;
+            } else if (serving.getGramWeight() != null) {
+                factor = serving.getGramWeight() / 100f;
+            }
+            Map<Long, Float> scaled = new HashMap<>();
+            for (var e : per100.entrySet()) {
+                scaled.put(e.getKey(), e.getValue() * factor);
+            }
+            result.put(serving.getServingId(), scaled);
         }
-
         return result;
-    }
-    // endregion
-
-    // region Private methods
-
-    private static String itemKey(String itemType, Long itemId) {
-        return itemType + ":" + itemId;
-    }
-
-    /**
-     * Normalize stored photo value:
-     * - absolute http(s) URL kept as-is (seed/CDN)
-     * - protocol-relative //host/... -> https://host/...
-     * - /api/files/... kept as-is
-     * - pure numeric id -> /api/files/{id}
-     * - bare filename / relative path -> /api/files/{value}
-     */
-    static String normalizePhotoPath(String value) {
-        if (value == null || value.isBlank()) return null;
-        String v = value.trim();
-        if (v.startsWith("http://") || v.startsWith("https://")) return v;
-        if (v.startsWith("//")) return "https:" + v;
-        if (v.startsWith("/api/files/")) return v;
-        if (v.matches("\\d+")) return "/api/files/" + v;
-        if (v.startsWith("/")) v = v.substring(1);
-        return "/api/files/" + v;
     }
 
     private Map<String, Map<Long, Float>> loadNutrientPer100g(
             List<VFoodServingEntity> servings,
             Collection<Long> nutrientIds
     ) {
-
-        Map<String, Set<Long>> idsByType = new HashMap<>();
+        Map<String, Map<Long, Float>> result = new HashMap<>();
+        if (servings.isEmpty() || nutrientIds == null || nutrientIds.isEmpty()) {
+            return result;
+        }
 
         for(var serving : servings) {
-            idsByType.computeIfAbsent(
-                    serving.getItemType(), t -> new HashSet<>()).add(serving.getItemId()
-            );
+            String key = serving.getItemType() + ":" + serving.getItemId();
+            result.putIfAbsent(key, new HashMap<>());
         }
 
-        Map<String, Map<Long, Float>> result = new HashMap<>();
-
-        for (var entry : idsByType.entrySet()) {
-            var rows = vItemNutrientRepository.findAllByItemTypeAndItemIdInAndNutrientIdIn(
-                    entry.getKey(),
-                    entry.getValue(),
-                    nutrientIds
+        // Batch by item keys from view nutrients
+        for (var serving : servings) {
+            var rows = vItemNutrientRepository.findByItemTypeAndItemId(
+                    serving.getItemType(),
+                    serving.getItemId()
             );
-            for (var nutrient: rows) {
-                result
-                        .computeIfAbsent(
-                                itemKey(nutrient.getItemType(), nutrient.getItemId()),
-                                key -> new HashMap<>()
-                        )
-                        .put(nutrient.getNutrientId(), nutrient.getAmountPer100g());
+            String key = serving.getItemType() + ":" + serving.getItemId();
+            Map<Long, Float> map = result.get(key);
+            for (var row : rows) {
+                if (nutrientIds.contains(row.getNutrientId())) {
+                    map.put(row.getNutrientId(), row.getAmount() != null ? row.getAmount() : 0f);
+                }
             }
         }
-
         return result;
     }
+
     // endregion
 }
