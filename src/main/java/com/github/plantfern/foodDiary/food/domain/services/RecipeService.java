@@ -69,7 +69,7 @@ public class RecipeService {
 
         var foundRecipe = getById(recipeId);
 
-        if (foundRecipe.getEntityStatus().getCode().equals(EntityStatus.ACTIVE.name())) {
+        if (isActive(foundRecipe)) {
             foodPolicy.ensureModeration(currentUser);
         } else {
             foodPolicy.ensureIsOwnerOrModeration(currentUser, foundRecipe.getCreatedById());
@@ -89,7 +89,7 @@ public class RecipeService {
     public void softDelete(Long recipeId) {
         var foundRecipe = getById(recipeId);
 
-        if (foundRecipe.getEntityStatus().getCode().equals(EntityStatus.ACTIVE.name())) {
+        if (isActive(foundRecipe)) {
             foodPolicy.ensureModeration(currentUser);
         } else {
             foodPolicy.ensureIsOwnerOrModeration(currentUser, foundRecipe.getCreatedById());
@@ -133,5 +133,11 @@ public class RecipeService {
         return recipeRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Recipe with such id not found"));
+    }
+
+    private boolean isActive(RecipeEntity recipe) {
+        var status = entityStatusRepository.findById(recipe.getEntityStatusId())
+                .orElseThrow(() -> new EntityNotFoundException("Recipe status not found"));
+        return status.getCode().equals(EntityStatus.ACTIVE.name());
     }
 }
