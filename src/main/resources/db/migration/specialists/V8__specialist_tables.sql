@@ -62,3 +62,10 @@ ALTER TABLE user_visibility
 
 ALTER TABLE user_visibility
     ADD CONSTRAINT FK_USER_VISIBILITY_ON_TARGET_USER FOREIGN KEY (target_user_id) REFERENCES users (id);
+
+
+-- Canonical specialist relation statuses. Keep these IDs stable for seed data.
+INSERT INTO user_relation_statuses (code) VALUES ('PENDING');
+INSERT INTO user_relation_statuses (code) VALUES ('ACTIVE');
+INSERT INTO user_relation_statuses (code) VALUES ('CANCELED');
+INSERT INTO user_relation_statuses (code) VALUES ('ENDED');
