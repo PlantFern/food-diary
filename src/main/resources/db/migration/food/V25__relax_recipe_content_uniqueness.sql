@@ -5,4 +5,5 @@ ALTER TABLE recipes
     DROP INDEX uc_recipes_description,
     DROP INDEX uc_recipes_name,
     DROP INDEX uc_recipes_photo_path,
-    DROP INDEX uc_recipes_recipe;
+    DROP INDEX uc_recipes_recipe,
+    MODIFY COLUMN photo_path VARCHAR(255) NULL;
