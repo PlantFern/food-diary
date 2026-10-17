@@ -36,7 +36,7 @@ public class RecipeEntity {
     @Column(name = "recipe", columnDefinition = "TEXT", nullable = false)
     private String recipe;
 
-    @Column(name = "photo_path", nullable = false)
+    @Column(name = "photo_path")
     private String photoPath;
 
     @Column(name = "total_weight_grams")
