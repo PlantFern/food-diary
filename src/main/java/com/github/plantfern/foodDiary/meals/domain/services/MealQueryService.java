@@ -34,6 +34,15 @@ public class MealQueryService {
 
     private static final int HEADER_TARGET_LIMIT = 4;
 
+    /** Fixed diary UI order — ignore extra rows in meal_types. */
+    private static final List<String> CANONICAL_MEAL_TYPE_CODES = List.of(
+            "BREAKFAST",
+            "LUNCH",
+            "SNACK",
+            "DINNER",
+            "OTHERS"
+    );
+
     private final VMealDayRecordRepository vMealDayRecordRepository;
     private final MealTemplateRepository mealTemplateRepository;
     private final MealTypeRepository mealTypeRepository;
@@ -148,19 +157,32 @@ public class MealQueryService {
                 )
                 .toList();
 
-        var byMealType = meals.stream()
-                .collect(Collectors.groupingBy(
-                        VMealDayRecordEntity::getMealTypeId,
-                        LinkedHashMap::new,
-                        Collectors.toList()
+        // Canonical types only (BREAKFAST → OTHERS), ordered
+        Map<String, MealTypeEntity> typeByCode = mealTypeRepository
+                .findAllByCodeIn(CANONICAL_MEAL_TYPE_CODES)
+                .stream()
+                .collect(Collectors.toMap(
+                        t -> t.getCode().toUpperCase(Locale.ROOT),
+                        t -> t,
+                        (a, b) -> a
                 ));
 
-        // Always expose every meal type so empty placeholders stay on the diary home
-        List<MealTypeEntity> allTypes = mealTypeRepository.findAll().stream()
-                .sorted(Comparator.comparing(MealTypeEntity::getId))
+        List<MealTypeEntity> orderedTypes = CANONICAL_MEAL_TYPE_CODES.stream()
+                .map(typeByCode::get)
+                .filter(Objects::nonNull)
                 .toList();
 
-        List<MealSectionDto> sections = allTypes.stream()
+        // Map non-canonical snack variants into SNACK / OTHERS so records are not lost
+        Map<Long, Long> typeIdRemap = buildTypeIdRemap(typeByCode);
+
+        var byMealType = new LinkedHashMap<Long, List<VMealDayRecordEntity>>();
+        for (var row : meals) {
+            Long rawTypeId = row.getMealTypeId();
+            Long mappedId = typeIdRemap.getOrDefault(rawTypeId, rawTypeId);
+            byMealType.computeIfAbsent(mappedId, k -> new ArrayList<>()).add(row);
+        }
+
+        List<MealSectionDto> sections = orderedTypes.stream()
                 .map(type -> {
                     var mealRows = byMealType.getOrDefault(type.getId(), List.of());
                     if (mealRows.isEmpty()) {
@@ -174,11 +196,11 @@ public class MealQueryService {
                                 null
                         );
                     }
+                    // One physical meal per type per day: prefer first non-null mealId group
                     var first = mealRows.getFirst();
                     var items = mealRows.stream()
                             .map(r -> toItemDto(r, productServingMap.get(r.getServingId())))
                             .toList();
-                    // meal photo is the same on every row of the meal
                     String mealPhoto = mealRows.stream()
                             .map(VMealDayRecordEntity::getMealPhotoPath)
                             .filter(p -> p != null && !p.isBlank())
@@ -186,8 +208,8 @@ public class MealQueryService {
                             .orElse(null);
                     return new MealSectionDto(
                             first.getMealId(),
-                            first.getMealTypeId(),
-                            first.getMealTypeCode() != null ? first.getMealTypeCode() : type.getCode(),
+                            type.getId(),
+                            type.getCode(),
                             first.getGeneratedFromTemplateId(),
                             items,
                             sumNutrient(items),
@@ -286,6 +308,35 @@ public class MealQueryService {
                 .filter(e -> !e.getValue().isEmpty())
                 .map(e -> new RecentDayFoodGroupDto(e.getKey(), e.getValue()))
                 .toList();
+    }
+
+    /**
+     * Extra DB meal types (MORNING_SNACK, LATE_SNACK, OTHER, …) collapse into SNACK / OTHERS
+     * so the home screen never shows duplicate placeholder cards.
+     */
+    private Map<Long, Long> buildTypeIdRemap(Map<String, MealTypeEntity> canonicalByCode) {
+        Map<Long, Long> remap = new HashMap<>();
+        Long snackId = optionalTypeId(canonicalByCode, "SNACK");
+        Long othersId = optionalTypeId(canonicalByCode, "OTHERS");
+
+        for (MealTypeEntity t : mealTypeRepository.findAll()) {
+            String code = t.getCode() != null ? t.getCode().toUpperCase(Locale.ROOT) : "";
+            if (CANONICAL_MEAL_TYPE_CODES.contains(code)) {
+                remap.put(t.getId(), t.getId());
+                continue;
+            }
+            if (code.contains("SNACK") || code.equals("BRUNCH")) {
+                if (snackId != null) remap.put(t.getId(), snackId);
+            } else if (othersId != null) {
+                remap.put(t.getId(), othersId);
+            }
+        }
+        return remap;
+    }
+
+    private static Long optionalTypeId(Map<String, MealTypeEntity> byCode, String code) {
+        MealTypeEntity t = byCode.get(code);
+        return t != null ? t.getId() : null;
     }
 
     private Map<Long, Float> loadVisibleGoalTargets(Long diaryProfileId, Set<Long> hidden) {
