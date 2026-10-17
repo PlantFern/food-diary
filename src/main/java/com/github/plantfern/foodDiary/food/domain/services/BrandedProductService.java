@@ -27,20 +27,25 @@ public class BrandedProductService {
             Long baseServingId
     ) {
 
-        if(barcode.isEmpty())
+        if (barcode == null || barcode.isBlank())
             throw new IllegalArgumentException("Barcode cannot be empty");
 
-        if(!productRepository.existsById(productId))
+        String normalized = barcode.trim();
+
+        if (brandedProductRepository.existsByBarcodeAndDeletedAtIsNull(normalized))
+            throw new IllegalArgumentException("Product with this barcode already exists");
+
+        if (!productRepository.existsById(productId))
             throw new EntityNotFoundException("Product not found");
 
-        if(!foodServingService.existsById(baseServingId))
+        if (!foodServingService.existsById(baseServingId))
             throw new EntityNotFoundException("Product serving not found");
 
         return brandedProductMapper.toDto(
                 brandedProductRepository.save(
                         new BrandedProductEntity(
                                 productId,
-                                barcode,
+                                normalized,
                                 baseServingId
                         )
                 )
