@@ -39,3 +39,10 @@ ALTER TABLE user_roles
 
 ALTER TABLE user_roles
     ADD CONSTRAINT FK_USER_ROLES_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+
+
+-- Canonical application roles. Keep these IDs stable for development seed data.
+INSERT INTO roles (code) VALUES ('USER');
+INSERT INTO roles (code) VALUES ('DIARY_PROFILE');
+INSERT INTO roles (code) VALUES ('SPECIALIST');
+INSERT INTO roles (code) VALUES ('ADMIN');
