@@ -5,6 +5,8 @@ import com.github.plantfern.foodDiary.diaryProfiles.api.apis.DiaryProfileApi;
 import com.github.plantfern.foodDiary.food.api.ItemType;
 import com.github.plantfern.foodDiary.food.api.apis.FoodServingApi;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeDetailDto;
+import com.github.plantfern.foodDiary.food.domain.mappers.FoodServingMapper;
+import com.github.plantfern.foodDiary.food.api.dto.FoodServingDto;
 import com.github.plantfern.foodDiary.food.api.dto.PersonalizedRecipeListItemDto;
 import com.github.plantfern.foodDiary.food.api.dto.ProductServingDto;
 import com.github.plantfern.foodDiary.food.api.dto.RecipeComponentDto;
@@ -36,6 +38,8 @@ public class RecipeQueryService {
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
     private final FoodServingApi foodServingApi;
+    private final FoodServingService foodServingService;
+    private final FoodServingMapper foodServingMapper;
 
 
     @Transactional(readOnly = true)
@@ -62,7 +66,9 @@ public class RecipeQueryService {
         var diaryProfile = diaryProfileApi.getByIdInternal(diaryProfileId);
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
-        var basic = vRecipeBasicRepository.findAccessibleByRecipeId(
+        var basic = vRecipeBasicRepository
+                .findByRecipeIdPersonalized(
+                        diaryProfileId,
                         recipeId,
                         currentUser.requireId()
                 )
@@ -106,6 +112,12 @@ public class RecipeQueryService {
                 })
                 .toList();
 
+        var recipeServings = foodServingService
+                .getByRecipeId(recipeId)
+                .stream()
+                .map(foodServingMapper::toDto)
+                .toList();
+
         return new PersonalizedRecipeDetailDto(
                 basic.getRecipeId(),
                 basic.getRecipeName(),
@@ -116,7 +128,8 @@ public class RecipeQueryService {
                 basic.getEntityStatusCode(),
                 basic.getIsPublic(),
                 isFavorite,
-                components
+                components,
+                recipeServings
         );
     }
 }
