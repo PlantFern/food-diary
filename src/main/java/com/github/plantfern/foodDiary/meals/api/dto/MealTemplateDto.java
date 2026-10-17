@@ -1,15 +1,16 @@
 package com.github.plantfern.foodDiary.meals.api.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public record MealTemplateDto(
         Long id,
         Long diaryProfileId,
         String name,
-        LocalDate scheduledTime,
+        LocalTime scheduledTime,
         Long frequency,
-        Long startedAt,
+        LocalDate startedAt,
         List<MealTemplateFoodRecordItemDto> records
 ) {
 }
