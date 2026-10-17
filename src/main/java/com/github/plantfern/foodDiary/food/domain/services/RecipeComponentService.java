@@ -4,6 +4,7 @@ package com.github.plantfern.foodDiary.food.domain.services;
 import com.github.plantfern.foodDiary.food.api.EntityStatus;
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeComponentEntity;
 import com.github.plantfern.foodDiary.food.domain.entities.RecipeEntity;
+import com.github.plantfern.foodDiary.food.domain.repositories.EntityStatusRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.FoodServingRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.RecipeComponentRepository;
 import com.github.plantfern.foodDiary.food.domain.repositories.RecipeRepository;
@@ -11,7 +12,6 @@ import com.github.plantfern.foodDiary.food.domain.security.FoodPolicy;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +27,7 @@ public class RecipeComponentService {
     private final FoodPolicy foodPolicy;
     private final CurrentUser currentUser;
     private final RecipeRepository recipeRepository;
+    private final EntityStatusRepository entityStatusRepository;
 
 
     @Transactional
@@ -91,7 +92,10 @@ public class RecipeComponentService {
     }
 
     private void ensureCanEditRecipe(RecipeEntity recipe) {
-        if (recipe.getEntityStatus().getCode().equals(EntityStatus.ACTIVE.name())) {
+        var status = entityStatusRepository.findById(recipe.getEntityStatusId())
+                .orElseThrow(() -> new EntityNotFoundException("Recipe status not found"));
+
+        if (status.getCode().equals(EntityStatus.ACTIVE.name())) {
             foodPolicy.ensureModeration(currentUser);
         } else {
             foodPolicy.ensureIsOwnerOrModeration(currentUser, recipe.getCreatedById());
