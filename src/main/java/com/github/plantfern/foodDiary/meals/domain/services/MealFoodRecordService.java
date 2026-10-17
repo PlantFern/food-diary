@@ -6,6 +6,7 @@ import com.github.plantfern.foodDiary.food.api.apis.ProductApi;
 import com.github.plantfern.foodDiary.meals.domain.MealPolicy;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealEntity;
 import com.github.plantfern.foodDiary.meals.domain.entities.MealFoodRecordEntity;
+import com.github.plantfern.foodDiary.meals.api.dto.MealFoodRecordDto;
 import com.github.plantfern.foodDiary.meals.domain.repositories.MealFoodRecordRepository;
 import com.github.plantfern.foodDiary.meals.domain.repositories.MealRepository;
 import com.github.plantfern.foodDiary.meals.domain.repositories.MealTypeRepository;
@@ -169,7 +170,7 @@ public class MealFoodRecordService {
     }
 
     @Transactional(readOnly = true)
-    public MealFoodRecordEntity getById(Long recordId) {
+    public MealFoodRecordDto getById(Long recordId) {
         var record = mealFoodRecordRepository.findById(recordId)
                 .orElseThrow(() -> new EntityNotFoundException("Food record not found"));
 
@@ -179,6 +180,12 @@ public class MealFoodRecordService {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
-        return record;
+        return new MealFoodRecordDto(
+                record.getId(),
+                record.getMealId(),
+                record.getServingId(),
+                record.getAmount(),
+                record.getEatenAt()
+        );
     }
 }
