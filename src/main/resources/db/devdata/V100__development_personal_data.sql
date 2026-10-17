@@ -21,11 +21,11 @@ INSERT INTO `recipes` (`id`, `code`, `name`, `description`, `recipe`, `photo_pat
 
 -- 5 rows
 INSERT INTO `food_servings` (`id`, `item_type`, `item_id`, `amount`, `gram_weight`, `serving_unit_id`, `description`, `created_at`, `updated_at`) VALUES
-  (34269, 'RECIPE', 1, 1, 828,7, NULL, '2026-08-22 14:24:32', NULL),
-  (34270, 'RECIPE', 2, 1, 450,7, NULL, '2026-08-22 14:24:32', NULL),
-  (34271, 'RECIPE', 3, 1, 2396,7, NULL, '2026-08-22 14:24:32', NULL),
-  (34272, 'RECIPE', 4, 1, 1368,7, NULL, '2026-08-22 14:24:32', NULL),
-  (34276, 'PRODUCT', 1285, 1, 0.103,7, 'таблетка', '2026-08-27 19:18:18', NULL);
+  (34269, 'RECIPE', 1, 1, 828,6, NULL, '2026-08-22 14:24:32', NULL),
+  (34270, 'RECIPE', 2, 1, 450,6, NULL, '2026-08-22 14:24:32', NULL),
+  (34271, 'RECIPE', 3, 1, 2396,6, NULL, '2026-08-22 14:24:32', NULL),
+  (34272, 'RECIPE', 4, 1, 1368,6, NULL, '2026-08-22 14:24:32', NULL),
+  (34276, 'PRODUCT', 1285, 1, 0.103,6, 'таблетка', '2026-08-27 19:18:18', NULL);
 
 -- 1 rows
 INSERT INTO `product_nutrients` (`id`, `product_id`, `nutrient_id`, `amount`) VALUES
@@ -197,7 +197,7 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role_id`) VALUES
   (150, 86,5),
   (151, 87,5),
   (152, 88,5),
-  (168, 89,6),
+  (168, 89,4),
   (180, 55,3),
   (181, 55,3),
   (182, 89,3),
