@@ -59,8 +59,10 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
         ensureNotLockedBySpecialist(diaryProfileId);
 
-        if(!nutrientService.existsAllByIdIn(hiddenNutrients))
+        if (hiddenNutrients != null && !hiddenNutrients.isEmpty()
+                && !nutrientService.existsAllByIdIn(hiddenNutrients)) {
             throw new EntityNotFoundException("Not all nutrients found");
+        }
 
         profileFeatureSettingsRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
@@ -84,19 +86,16 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         )
                 );
 
-        if(hiddenNutrients == null || hiddenNutrients.isEmpty())
-            return profileFeatureSettingsMapper.toDto(profileFeatureSettings);
-
-        var profileFeatureSettingsId = profileFeatureSettings.getId();
-        for(Long nutrientId : hiddenNutrients) {
-            profileFeatureSettings.getProfileHiddenNutrientSet().add(
-                    new ProfileHiddenNutrientEntity(profileFeatureSettingsId, nutrientId)
-            );
+        if (hiddenNutrients != null) {
+            for (Long nutrientId : hiddenNutrients) {
+                profileFeatureSettings.getProfileHiddenNutrientSet().add(
+                        new ProfileHiddenNutrientEntity(profileFeatureSettings.getId(), nutrientId)
+                );
+            }
+            profileFeatureSettingsRepository.save(profileFeatureSettings);
         }
 
-        return profileFeatureSettingsMapper.toDto(
-                profileFeatureSettingsRepository.save(profileFeatureSettings)
-        );
+        return profileFeatureSettingsMapper.toDto(profileFeatureSettings);
     }
 
     @Transactional
@@ -124,10 +123,13 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldSettings.getCreatedById());
         ensureNotLockedBySpecialist(oldSettings.getDiaryProfileId());
 
-        if(!nutrientService.existsAllByIdIn(hiddenNutrients))
+        if (hiddenNutrients != null && !hiddenNutrients.isEmpty()
+                && !nutrientService.existsAllByIdIn(hiddenNutrients)) {
             throw new EntityNotFoundException("Not all nutrients found");
+        }
 
         oldSettings.setExpiredDate();
+        profileFeatureSettingsRepository.save(oldSettings);
 
         var newSettings = profileFeatureSettingsRepository.save(
                 new ProfileFeatureSettingsEntity(
@@ -140,21 +142,17 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         currentUser.requireId()
                 )
         );
-        profileFeatureSettingsRepository.save(oldSettings);
 
-        if(hiddenNutrients == null || hiddenNutrients.isEmpty())
-            return profileFeatureSettingsMapper.toDto(newSettings);
-
-        for(Long nutrientId : hiddenNutrients) {
-            newSettings.getProfileHiddenNutrientSet().add(
-                    new ProfileHiddenNutrientEntity(newSettings.getId(), nutrientId)
-            );
+        if (hiddenNutrients != null) {
+            for (Long nutrientId : hiddenNutrients) {
+                newSettings.getProfileHiddenNutrientSet().add(
+                        new ProfileHiddenNutrientEntity(newSettings.getId(), nutrientId)
+                );
+            }
+            profileFeatureSettingsRepository.save(newSettings);
         }
 
-        return profileFeatureSettingsMapper.toDto(
-            profileFeatureSettingsRepository
-                    .save(newSettings)
-        );
+        return profileFeatureSettingsMapper.toDto(newSettings);
     }
 
     @Transactional
@@ -177,15 +175,13 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         profileFeatureSettings.setExpiredDate();
 
         return profileFeatureSettingsMapper.toDto(
-                profileFeatureSettingsRepository.save(
-                    profileFeatureSettings
-            )
+                profileFeatureSettingsRepository.save(profileFeatureSettings)
         );
     }
 
 
     @Transactional(readOnly = true)
-    public ProfileFeatureSettingsEntity getById(Long id) {
+    public ProfileFeatureSettingsDto getByIdDto(Long id) {
 
         var settings = profileFeatureSettingsRepository
                 .findById(id)
@@ -197,13 +193,11 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         diaryProfilePolicy.ensureCanGet(currentUser, diaryProfileUserId);
 
-        return settings;
+        return profileFeatureSettingsMapper.toDto(settings);
     }
 
     @Transactional(readOnly = true)
-    public ProfileFeatureSettingsEntity getFirstByDiaryProfileIdOrderByCreatedAtDesc(
-            Long diaryProfileId
-    ) {
+    public ProfileFeatureSettingsDto getLatestByDiaryProfileIdDto(Long diaryProfileId) {
 
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
@@ -211,15 +205,12 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
 
         return profileFeatureSettingsRepository
                 .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("No profile feature settings for such diaryProfile")
-                );
+                .map(profileFeatureSettingsMapper::toDto)
+                .orElseGet(() -> defaultSettings(diaryProfileId));
     }
 
     @Transactional(readOnly = true)
-    public List<ProfileFeatureSettingsEntity> getAllByDiaryProfileId(
-            Long diaryProfileId
-    ) {
+    public List<ProfileFeatureSettingsDto> getAllByDiaryProfileIdDto(Long diaryProfileId) {
 
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
@@ -228,16 +219,17 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         return profileFeatureSettingsRepository
                 .findAllByDiaryProfileId(diaryProfileId)
                 .stream()
+                .map(profileFeatureSettingsMapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ProfileFeatureSettingsEntity> getAllByCreatedByIdAndDiaryProfileId(
+    public List<ProfileFeatureSettingsDto> getAllByCreatedByIdAndDiaryProfileIdDto(
             Long userId,
             Long diaryProfileId
     ) {
 
-        if(!userApi.existsByIdInternal(userId))
+        if (!userApi.existsByIdInternal(userId))
             throw new EntityNotFoundException("No user with such id");
 
         var settings = profileFeatureSettingsRepository.findAllByCreatedByIdAndDiaryProfileId(userId, diaryProfileId);
@@ -255,11 +247,11 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                 diaryProfileService.getOwnerUserIdList(diaryProfileIds)
         );
 
-        return settings;
+        return settings.stream().map(profileFeatureSettingsMapper::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ProfileFeatureSettingsEntity> getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileId(
+    public List<ProfileFeatureSettingsDto> getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileIdDto(
             LocalDateTime lowerBound,
             LocalDateTime upperBound,
             Long diaryProfileId
@@ -280,6 +272,7 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
                         diaryProfileId
                 )
                 .stream()
+                .map(profileFeatureSettingsMapper::toDto)
                 .toList();
     }
 
@@ -306,15 +299,16 @@ public class ProfileFeatureSettingsService implements ProfileFeatureSettingsApi 
         return profileFeatureSettingsMapper.toDto(settings);
     }
 
+    /** Defaults when user has never saved settings: everything visible/enabled. */
     private static ProfileFeatureSettingsDto defaultSettings(Long diaryProfileId) {
         return new ProfileFeatureSettingsDto(
                 null,
                 diaryProfileId,
-                false,
-                false,
-                false,
-                false,
-                false,
+                true,
+                true,
+                true,
+                true,
+                true,
                 null,
                 null,
                 null,
