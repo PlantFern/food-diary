@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ public class MealFoodRecordService {
     private final CurrentUser currentUser;
     private final MealTypeRepository mealTypeRepository;
     private final ProductApi productApi;
-    // ProductService / FoodApi — для quick nutrient product
 
     @Transactional
     public Long add(
@@ -46,15 +44,15 @@ public class MealFoodRecordService {
             LocalTime eatenAt
     ) {
 
-        if(amount == null || amount <= 0)
+        if (amount == null || amount <= 0)
             throw new IllegalArgumentException("Amount must be greater than 0");
 
-        var ownerId = diaryProfileApi.getOwnerUserIdInternal(
-                diaryProfileId
-        );
+        var ownerId = diaryProfileApi.getOwnerUserIdInternal(diaryProfileId);
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
         foodServingApi.getById(servingId);
+
+        LocalTime time = eatenAt != null ? eatenAt : LocalTime.now();
 
         MealEntity meal;
         if (mealId != null) {
@@ -64,12 +62,11 @@ public class MealFoodRecordService {
                             () -> new EntityNotFoundException("Meal not found")
                     );
 
-            if(!meal.getDiaryProfileId().equals(diaryProfileId))
+            if (!meal.getDiaryProfileId().equals(diaryProfileId))
                 throw new AccessDeniedException("Meal belongs to another profile");
-        }
-        else {
+        } else {
 
-            if(mealTypeId == null || date == null)
+            if (mealTypeId == null || date == null)
                 throw new IllegalArgumentException("mealTypeId and date required when mealId is null");
 
             mealTypeRepository
@@ -97,7 +94,7 @@ public class MealFoodRecordService {
                                 servingId,
                                 meal.getId(),
                                 amount,
-                                eatenAt
+                                time
                         )
                 ).getId();
     }
