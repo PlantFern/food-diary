@@ -62,6 +62,10 @@ public class MealService {
             throw new EntityNotFoundException("Template belongs to another profile");
         }
 
+        LocalTime time = eatenAt != null
+                ? eatenAt
+                : (template.getScheduledTime() != null ? template.getScheduledTime() : LocalTime.of(12, 0));
+
         var meal = mealRepository
                 .findAllByDiaryProfileIdAndMealTypeIdAndDate(diaryProfileId, mealTypeId, mealDate)
                 .orElseGet(() -> mealRepository.save(new MealEntity(diaryProfileId, mealTypeId, null, mealDate)));
@@ -75,7 +79,7 @@ public class MealService {
                             tr.getServingId(),
                             meal.getId(),
                             tr.getAmount(),
-                            eatenAt
+                            time
                     )
             );
         }
