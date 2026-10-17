@@ -14,4 +14,10 @@ public interface UserRelationApi {
     boolean existsByDiaryProfileIdAndSpecialistIdInternal
             (Long diaryProfileId,
              Long specialistId);
+
+    /**
+     * True when the diary profile has an ACTIVE relation of type SPECIALIST
+     * (specialist controls goals / feature settings).
+     */
+    boolean hasActiveSpecialistControlInternal(Long diaryProfileId);
 }
