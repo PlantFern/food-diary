@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 
 
 import com.github.plantfern.foodDiary.diaryProfiles.api.dto.ProfileFeatureSettingsDto;
-import com.github.plantfern.foodDiary.diaryProfiles.domain.mappers.ProfileFeatureSettingsMapper;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.services.ProfileFeatureSettingsService;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.DateTimePeriodRequest;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.ProfileFeatureSettingsRequest;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -24,14 +22,11 @@ import java.util.List;
 public class ProfileFeatureSettingsController {
 
     private final ProfileFeatureSettingsService profileFeatureSettingsService;
-    private final ProfileFeatureSettingsMapper mapper;
 
     @Autowired
     public ProfileFeatureSettingsController(
-            ProfileFeatureSettingsService profileFeatureSettingsService,
-            ProfileFeatureSettingsMapper mapper) {
+            ProfileFeatureSettingsService profileFeatureSettingsService) {
         this.profileFeatureSettingsService = profileFeatureSettingsService;
-        this.mapper = mapper;
     }
 
 
@@ -88,10 +83,7 @@ public class ProfileFeatureSettingsController {
             @PathVariable Long diaryProfileId
     ) {
         return ResponseEntity.ok(
-                mapper.toDto(
-                        profileFeatureSettingsService
-                                .getFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
-                )
+                profileFeatureSettingsService.getLatestByDiaryProfileIdDto(diaryProfileId)
         );
     }
 
@@ -100,10 +92,7 @@ public class ProfileFeatureSettingsController {
             @PathVariable Long diaryProfileId
     ) {
         return ResponseEntity.ok(
-                profileFeatureSettingsService.getAllByDiaryProfileId(diaryProfileId)
-                        .stream()
-                        .map(mapper::toDto)
-                        .toList()
+                profileFeatureSettingsService.getAllByDiaryProfileIdDto(diaryProfileId)
         );
     }
 
@@ -114,14 +103,11 @@ public class ProfileFeatureSettingsController {
     ) {
         return ResponseEntity.ok(
                 profileFeatureSettingsService
-                        .getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileId(
+                        .getAllByExpiredAtBetweenOrCreatedAtLessThanAndDiaryProfileIdDto(
                                 request.startPeriod(),
                                 request.endPeriod(),
                                 diaryProfileId
                         )
-                        .stream()
-                        .map(mapper::toDto)
-                        .toList()
         );
     }
 
@@ -131,13 +117,10 @@ public class ProfileFeatureSettingsController {
             @RequestParam Long diaryProfileId
     ) {
         return ResponseEntity.ok(
-                profileFeatureSettingsService.getAllByCreatedByIdAndDiaryProfileId(
-                                createdById,
-                                diaryProfileId
-                        )
-                        .stream()
-                        .map(mapper::toDto)
-                        .toList()
+                profileFeatureSettingsService.getAllByCreatedByIdAndDiaryProfileIdDto(
+                        createdById,
+                        diaryProfileId
+                )
         );
     }
 
@@ -145,11 +128,8 @@ public class ProfileFeatureSettingsController {
     public ResponseEntity<ProfileFeatureSettingsDto> getById(
             @RequestParam Long profileFeatureSettings
     ) {
-        return ResponseEntity.ok(mapper.toDto(
-                        profileFeatureSettingsService.getById(
-                                profileFeatureSettings
-                                )
-                )
+        return ResponseEntity.ok(
+                profileFeatureSettingsService.getByIdDto(profileFeatureSettings)
         );
     }
 }
