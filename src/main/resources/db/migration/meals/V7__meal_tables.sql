@@ -81,3 +81,11 @@ ALTER TABLE food_records
 
 ALTER TABLE food_records
     ADD CONSTRAINT FK_FOOD_RECORDS_ON_SERVING FOREIGN KEY (serving_id) REFERENCES food_servings (id);
+
+
+-- Canonical meal types used by the diary UI. Keep these IDs stable for seed data.
+INSERT INTO meal_types (code) VALUES ('BREAKFAST');
+INSERT INTO meal_types (code) VALUES ('LUNCH');
+INSERT INTO meal_types (code) VALUES ('SNACK');
+INSERT INTO meal_types (code) VALUES ('DINNER');
+INSERT INTO meal_types (code) VALUES ('OTHERS');
