@@ -104,7 +104,8 @@ public class MealTemplateService {
                 serving != null ? serving.servingAmount() : null,
                 serving != null ? serving.gramWeight() : null,
                 serving != null ? serving.servingUnitCode() : null,
-                nutrient
+                nutrient,
+                serving != null ? serving.photoPath() : null
         );
     }
 
