@@ -18,5 +18,6 @@ public interface UserVisibilityRepository extends JpaRepository<UserVisibilityEn
             Long actorUserId,
             Long targetUserId);
 
-    boolean findByIsExtendedTrueAndTargetUserId(Long targetUserId);
+    /** Returns false when no row — never null (avoids NPE on primitive boolean). */
+    boolean existsByIsExtendedTrueAndTargetUserId(Long targetUserId);
 }
