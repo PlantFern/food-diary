@@ -117,7 +117,7 @@ public class RecipeService {
         return path;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void countTotalWeight(Long recipeId) {
 
         var recipe = recipeRepository
@@ -125,12 +125,6 @@ public class RecipeService {
                 .orElseThrow(() -> new EntityNotFoundException("Recipe not found"));
 
         recipe.setTotalWeightGrams(recipeComponentService.countWeightByRecipeId(recipeId));
-    }
-
-    @Transactional(readOnly = true)
-    RecipeEntity getById(Long id) {
-        return recipeRepository
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Recipe with such id not found"));
+        recipeRepository.save(recipe);
     }
 }
