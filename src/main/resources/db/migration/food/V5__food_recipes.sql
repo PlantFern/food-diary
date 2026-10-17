@@ -3,9 +3,9 @@ CREATE TABLE recipes
     id                 BIGINT AUTO_INCREMENT NOT NULL,
     code               VARCHAR(40)           NOT NULL,
     name               VARCHAR(100)          NOT NULL,
-    `description`      VARCHAR(255)          NOT NULL,
-    recipe             VARCHAR(255)          NOT NULL,
-    photo_path         VARCHAR(255)          NOT NULL,
+    `description`      VARCHAR(500)          NOT NULL,
+    recipe             TEXT                  NOT NULL,
+    photo_path         VARCHAR(255)          NULL,
     total_weight_grams FLOAT                 NULL,
     is_public          BIT(1)                NOT NULL,
     entity_status_id   BIGINT                NOT NULL,
@@ -27,18 +27,6 @@ CREATE TABLE recipe_components
 
 ALTER TABLE recipes
     ADD CONSTRAINT uc_recipes_code UNIQUE (code);
-
-ALTER TABLE recipes
-    ADD CONSTRAINT uc_recipes_description UNIQUE (`description`);
-
-ALTER TABLE recipes
-    ADD CONSTRAINT uc_recipes_name UNIQUE (name);
-
-ALTER TABLE recipes
-    ADD CONSTRAINT uc_recipes_photo_path UNIQUE (photo_path);
-
-ALTER TABLE recipes
-    ADD CONSTRAINT uc_recipes_recipe UNIQUE (recipe);
 
 ALTER TABLE recipes
     ADD CONSTRAINT FK_RECIPES_ON_ENTITY_STATUS FOREIGN KEY (entity_status_id) REFERENCES entity_statuses (id);
