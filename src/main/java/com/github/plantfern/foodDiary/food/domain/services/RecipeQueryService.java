@@ -67,8 +67,7 @@ public class RecipeQueryService {
         foodPolicy.ensureIsOwner(currentUser, diaryProfile.userId());
 
         var basic = vRecipeBasicRepository
-                .findByRecipeIdPersonalized(
-                        diaryProfileId,
+                .findAccessibleByRecipeId(
                         recipeId,
                         currentUser.requireId()
                 )
