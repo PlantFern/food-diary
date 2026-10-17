@@ -7,6 +7,7 @@ public record ProductServingDto (
         Float servingAmount,
         Float gramWeight,
         String servingUnitCode,
-        Float nutrientPer100g
+        Float nutrientPer100g,
+        String photoPath
 ) {
 }
