@@ -17,7 +17,7 @@ CREATE TABLE products
 CREATE TABLE food_servings
 (
     id              BIGINT AUTO_INCREMENT NOT NULL,
-    item_type       VARCHAR(255)          NOT NULL,
+    item_type       VARCHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     item_id         BIGINT                NOT NULL,
     amount          FLOAT                 NOT NULL,
     gram_weight     FLOAT                 NOT NULL,
