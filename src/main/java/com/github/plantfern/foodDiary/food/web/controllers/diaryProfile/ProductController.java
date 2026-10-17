@@ -3,7 +3,6 @@ package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
 import org.springframework.validation.annotation.Validated;
 
-import com.github.plantfern.foodDiary.common.storage.StorageFolder;
 import com.github.plantfern.foodDiary.food.api.DataSource;
 import com.github.plantfern.foodDiary.food.domain.services.*;
 import com.github.plantfern.foodDiary.food.web.requests.ProductCreateByBarcodeRequest;
@@ -20,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/food/products")
 public class ProductController {
+
+    private static final long SERVING_UNIT_GRAMS = 1L;
 
     private final ProductService productService;
     private final BrandedProductService brandedProductService;
@@ -40,13 +41,33 @@ public class ProductController {
                 request.barcode()
         );
 
+        // Default servings: 1 g and 100 g (base = 100 g or user gramWeight)
+        foodServingService.createForProduct(
+                productId,
+                1F,
+                1F,
+                SERVING_UNIT_GRAMS,
+                "1 г"
+        );
+
+        float baseGrams = request.gramWeight() != null ? request.gramWeight() : 100F;
         var baseServing = foodServingService.createForProduct(
                 productId,
                 1F,
-                request.gramWeight(),
-                2L,
-                null
+                baseGrams,
+                SERVING_UNIT_GRAMS,
+                baseGrams == 100F ? "100 г" : baseGrams + " г"
         );
+
+        if (baseGrams != 100F) {
+            foodServingService.createForProduct(
+                    productId,
+                    1F,
+                    100F,
+                    SERVING_UNIT_GRAMS,
+                    "100 г"
+            );
+        }
 
         brandedProductService.create(productId, request.barcode(), baseServing.id());
 
@@ -54,13 +75,21 @@ public class ProductController {
             productNutrientService.addToProduct(productId, n.nutrientId(), n.amount());
         }
 
-        productRequestService.create(
-                productId,
-                request.frontPhotoPathId(),
-                request.productCompositionPhotoPathId(),
-                request.productNutritionPhotoPathId(),
-                request.barcodePhotoPathId()
-        );
+        boolean anyRequestPhoto =
+                request.frontPhotoPathId() != null
+                        || request.productCompositionPhotoPathId() != null
+                        || request.productNutritionPhotoPathId() != null
+                        || request.barcodePhotoPathId() != null;
+
+        if (anyRequestPhoto) {
+            productRequestService.create(
+                    productId,
+                    request.frontPhotoPathId(),
+                    request.productCompositionPhotoPathId(),
+                    request.productNutritionPhotoPathId(),
+                    request.barcodePhotoPathId()
+            );
+        }
 
         return ResponseEntity.ok(productId);
     }
