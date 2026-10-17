@@ -166,7 +166,9 @@ public class MealFoodRecordService {
         var ownerId = diaryProfileApi.getOwnerUserIdInternal(meal.getDiaryProfileId());
         mealPolicy.ensureIsOwner(currentUser, ownerId);
 
-        mealFoodRecordRepository.delete(record);
+        // Execute DELETE immediately. Concurrent duplicate requests are harmless:
+        // the request that removes an already-removed row simply affects zero rows.
+        mealFoodRecordRepository.deleteRecordRowById(recordId);
     }
 
     @Transactional(readOnly = true)
