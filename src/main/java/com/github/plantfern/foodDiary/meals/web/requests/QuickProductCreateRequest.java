@@ -9,10 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
-import java.util.Set;
 
 public record QuickProductCreateRequest(
-        @NotNull @Positive Long mealId,
+        Long mealId,
         @NotNull @Positive Long mealTypeId,
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime eatenAt,
