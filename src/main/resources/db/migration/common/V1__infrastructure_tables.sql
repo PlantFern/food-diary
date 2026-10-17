@@ -1,13 +1,13 @@
 CREATE TABLE event_publication
 (
     id                     BINARY(16)   NOT NULL,
-    publication_date       datetime     NOT NULL,
-    listener_id            VARCHAR(512) NOT NULL,
-    serialized_event       TEXT         NOT NULL,
-    event_type             VARCHAR(512) NOT NULL,
-    completion_date        datetime     NULL,
-    last_resubmission_date datetime     NULL,
-    completion_attempts    INT          NOT NULL,
+    publicationDate       datetime     NOT NULL,
+    listenerId            VARCHAR(512) NOT NULL,
+    serializedEvent       TEXT         NOT NULL,
+    eventType             VARCHAR(512) NOT NULL,
+    completionDate        datetime     NULL,
+    lastResubmissionDate datetime     NULL,
+    completionAttempts    INT          NOT NULL,
     status                 VARCHAR(255) NULL,
     CONSTRAINT pk_event_publication PRIMARY KEY (id)
 );
@@ -15,13 +15,13 @@ CREATE TABLE event_publication
 CREATE TABLE event_publication_archive
 (
     id                     BINARY(16)   NOT NULL,
-    publication_date       datetime     NOT NULL,
-    listener_id            VARCHAR(512) NOT NULL,
-    serialized_event       TEXT         NOT NULL,
-    event_type             VARCHAR(512) NOT NULL,
-    completion_date        datetime     NULL,
-    last_resubmission_date datetime     NULL,
-    completion_attempts    INT          NOT NULL,
+    publicationDate       datetime     NOT NULL,
+    listenerId            VARCHAR(512) NOT NULL,
+    serializedEvent       TEXT         NOT NULL,
+    eventType             VARCHAR(512) NOT NULL,
+    completionDate        datetime     NULL,
+    lastResubmissionDate datetime     NULL,
+    completionAttempts    INT          NOT NULL,
     status                 VARCHAR(255) NULL,
     CONSTRAINT pk_event_publication_archive PRIMARY KEY (id)
 );
