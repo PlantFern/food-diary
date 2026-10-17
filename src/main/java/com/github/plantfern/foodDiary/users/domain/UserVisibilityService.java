@@ -30,7 +30,7 @@ class UserVisibilityService implements VisibilityApi {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean hasExtended(Long targetUserId){
-        return repository.findByIsExtendedTrueAndTargetUserId(targetUserId);
+    public boolean hasExtended(Long targetUserId) {
+        return repository.existsByIsExtendedTrueAndTargetUserId(targetUserId);
     }
 }
