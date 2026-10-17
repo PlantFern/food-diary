@@ -163,8 +163,9 @@ public class FoodServingService implements FoodServingApi {
     }
 
     /**
-     * Normalize stored photo value to a stable API path:
-     * - absolute URL kept as-is
+     * Normalize stored photo value:
+     * - absolute http(s) URL kept as-is (seed/CDN)
+     * - protocol-relative //host/... -> https://host/...
      * - /api/files/... kept as-is
      * - pure numeric id -> /api/files/{id}
      * - bare filename / relative path -> /api/files/{value}
@@ -173,9 +174,9 @@ public class FoodServingService implements FoodServingApi {
         if (value == null || value.isBlank()) return null;
         String v = value.trim();
         if (v.startsWith("http://") || v.startsWith("https://")) return v;
+        if (v.startsWith("//")) return "https:" + v;
         if (v.startsWith("/api/files/")) return v;
         if (v.matches("\\d+")) return "/api/files/" + v;
-        // strip leading slash so FileController can treat the rest as stored name
         if (v.startsWith("/")) v = v.substring(1);
         return "/api/files/" + v;
     }
