@@ -11,6 +11,7 @@ import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.GoalRepo
 import com.github.plantfern.foodDiary.diaryProfiles.domain.repositories.WeightLogRepository;
 import com.github.plantfern.foodDiary.diaryProfiles.domain.security.DiaryProfilePolicy;
 import com.github.plantfern.foodDiary.diaryProfiles.web.requests.GoalNutrientRequest;
+import com.github.plantfern.foodDiary.specialists.api.apis.UserRelationApi;
 import com.github.plantfern.foodDiary.users.api.CurrentUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,15 @@ public class GoalService implements GoalApi {
     private final CurrentUser currentUser;
     private final NutrientService nutrientService;
     private final WeightLogRepository weightLogRepository;
+    private final UserRelationApi userRelationApi;
 
+    private void ensureNotLockedBySpecialist(Long diaryProfileId) {
+        if (userRelationApi.hasActiveSpecialistControlInternal(diaryProfileId)) {
+            throw new IllegalStateException(
+                    "Goals are managed by your specialist and cannot be changed"
+            );
+        }
+    }
 
     @Transactional
     public GoalDto create(
@@ -54,6 +63,7 @@ public class GoalService implements GoalApi {
         var diaryProfile = diaryProfileService.getByIdInternal(diaryProfileId);
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfile.userId());
+        ensureNotLockedBySpecialist(diaryProfileId);
 
         if (goalNutrientList == null) {
             goalNutrientList = List.of();
@@ -136,6 +146,7 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, oldGoal.getCreatedById());
+        ensureNotLockedBySpecialist(oldGoal.getDiaryProfileId());
 
         if (goalNutrientList == null) {
             goalNutrientList = List.of();
@@ -239,6 +250,7 @@ public class GoalService implements GoalApi {
 
         diaryProfilePolicy.ensureCanWrite(currentUser, diaryProfileUserId);
         diaryProfilePolicy.ensureCreatedBy(currentUser, goal.getCreatedById());
+        ensureNotLockedBySpecialist(goal.getDiaryProfileId());
 
         goal.setDeletedDate();
 
