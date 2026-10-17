@@ -170,20 +170,28 @@ public class MealQueryService {
                                 type.getCode(),
                                 null,
                                 List.of(),
-                                0f
+                                0f,
+                                null
                         );
                     }
                     var first = mealRows.getFirst();
                     var items = mealRows.stream()
                             .map(r -> toItemDto(r, productServingMap.get(r.getServingId())))
                             .toList();
+                    // meal photo is the same on every row of the meal
+                    String mealPhoto = mealRows.stream()
+                            .map(VMealDayRecordEntity::getMealPhotoPath)
+                            .filter(p -> p != null && !p.isBlank())
+                            .findFirst()
+                            .orElse(null);
                     return new MealSectionDto(
                             first.getMealId(),
                             first.getMealTypeId(),
                             first.getMealTypeCode() != null ? first.getMealTypeCode() : type.getCode(),
                             first.getGeneratedFromTemplateId(),
                             items,
-                            sumNutrient(items)
+                            sumNutrient(items),
+                            mealPhoto
                     );
                 })
                 .toList();
