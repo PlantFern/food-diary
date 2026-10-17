@@ -29,6 +29,7 @@ public class RecipeController {
 
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Long> create(@Valid @RequestBody RecipeCreateRequest request) {
         Long recipeId = recipeService.create(
                 request.name(),
