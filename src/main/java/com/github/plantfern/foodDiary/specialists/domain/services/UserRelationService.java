@@ -6,6 +6,7 @@ import com.github.plantfern.foodDiary.specialists.api.RelationType;
 import com.github.plantfern.foodDiary.specialists.api.apis.UserRelationApi;
 import com.github.plantfern.foodDiary.specialists.api.dto.UserRelationDto;
 import com.github.plantfern.foodDiary.specialists.api.events.UserRelationActivated;
+import com.github.plantfern.foodDiary.specialists.api.events.UserRelationInactivated;
 import com.github.plantfern.foodDiary.specialists.domain.mappers.UserRelationMapper;
 import com.github.plantfern.foodDiary.specialists.api.UserRelationStatus;
 import com.github.plantfern.foodDiary.specialists.domain.entities.UserRelationEntity;
@@ -149,12 +150,14 @@ public class UserRelationService implements UserRelationApi {
 
         userRelationRepository.save(userRelation);
 
+        // UserRelationActivated(diaryProfileUserId, specialistUserId, isExtended)
+        // isExtended = true only for SPECIALIST type (can set goals/settings);
+        // OBSERVER still gets visibility via canSee (row with isExtended=false)
+        boolean isExtended = userRelation.getRelationType() == RelationType.SPECIALIST;
         events.publishEvent(new UserRelationActivated(
-                specialist.userId(),
                 diaryProfileOwnerId,
-                userRelation
-                        .getRelationType()
-                        .equals(RelationType.SPECIALIST)
+                specialist.userId(),
+                isExtended
         ));
     }
 
@@ -188,12 +191,12 @@ public class UserRelationService implements UserRelationApi {
                 .orElseThrow(
                         () -> new EntityExistsException("user relation not found")
                 );
-        var specialistId = specialistService.getById(userRelation.getSpecialistId());
+        var specialist = specialistService.getById(userRelation.getSpecialistId());
 
         userRelationPolicy.ensureCanEnd(
                 currentUser,
                 userRelation.getUserRelationStatusEntity().getCode(),
-                specialistId.userId(),
+                specialist.userId(),
                 userRelation.getDiaryProfileId());
 
         userRelation.setUserRelationStatusEntity(
@@ -202,6 +205,13 @@ public class UserRelationService implements UserRelationApi {
         );
 
         userRelationRepository.save(userRelation);
+
+        var diaryProfileOwnerId = diaryProfileApi.getOwnerUserIdInternal(userRelation.getDiaryProfileId());
+        events.publishEvent(new UserRelationInactivated(
+                userRelation.getId(),
+                diaryProfileOwnerId,
+                specialist.userId()
+        ));
     }
 
     @Transactional(readOnly = true)
