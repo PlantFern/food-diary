@@ -167,7 +167,7 @@ public class FoodServingService implements FoodServingApi {
                             serving.getGramWeight(),
                             serving.getServingUnitCode(),
                             nutrientByItem.get(key),
-                            normalizePhotoPath(serving.getPhotoPath())
+                            normalizePhotoPath(serving.getItemPhotoPath())
                     )
             );
         }
@@ -205,14 +205,6 @@ public class FoodServingService implements FoodServingApi {
         return itemType + ":" + itemId;
     }
 
-    /**
-     * Normalize stored photo value:
-     * - absolute http(s) URL kept as-is (seed/CDN)
-     * - protocol-relative //host/... -> https://host/...
-     * - /api/files/... kept as-is
-     * - pure numeric id -> /api/files/{id}
-     * - bare filename / relative path -> /api/files/{value}
-     */
     static String normalizePhotoPath(String value) {
         if (value == null || value.isBlank()) return null;
         String v = value.trim();
