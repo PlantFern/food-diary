@@ -17,27 +17,23 @@ class UserVisibilityProjection {
 
     @ApplicationModuleListener
     void onActivated(UserRelationActivated event) {
-        var existing = userVisibilityRepository
-                .findAll()
-                .stream()
-                .filter(v ->
-                        event.specialistUserId().equals(v.getActorUserId())
-                                && event.diaryProfileUserId().equals(v.getTargetUserId()))
-                .findFirst();
+        var existingOpt = userVisibilityRepository.findByActorUserIdAndTargetUserId(
+                event.specialistUserId(),
+                event.diaryProfileUserId()
+        );
 
-        if (existing.isPresent()) {
-            var visibility = existing.get();
+        if (existingOpt.isPresent()) {
+            var visibility = existingOpt.get();
             visibility.setIsExtended(Boolean.TRUE.equals(event.isExtended()));
             userVisibilityRepository.save(visibility);
             return;
         }
 
-        var visibility = new UserVisibilityEntity(
+        userVisibilityRepository.save(new UserVisibilityEntity(
                 event.specialistUserId(),
                 event.diaryProfileUserId(),
                 Boolean.TRUE.equals(event.isExtended())
-        );
-        userVisibilityRepository.save(visibility);
+        ));
     }
 
     @ApplicationModuleListener
