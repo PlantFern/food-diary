@@ -1,19 +1,18 @@
 package com.github.plantfern.foodDiary.food.web.controllers.diaryProfile;
 
 
-import org.springframework.validation.annotation.Validated;
-
-import com.github.plantfern.foodDiary.common.storage.StorageFolder;
+import com.github.plantfern.foodDiary.food.domain.services.FoodServingService;
 import com.github.plantfern.foodDiary.food.domain.services.RecipeComponentService;
 import com.github.plantfern.foodDiary.food.domain.services.RecipeService;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeComponentRequest;
 import com.github.plantfern.foodDiary.food.web.requests.RecipeCreateRequest;
-import lombok.AllArgsConstructor;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +25,7 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final RecipeComponentService recipeComponentService;
+    private final FoodServingService foodServingService;
 
 
     @PostMapping
@@ -45,6 +45,10 @@ public class RecipeController {
         }
 
         recipeService.countTotalWeight(recipeId);
+
+        // Recipes need a food_servings row (item_type=RECIPE) so they can be added to meals.
+        Float totalWeight = recipeService.getTotalWeightGrams(recipeId);
+        foodServingService.ensureDefaultForRecipe(recipeId, totalWeight);
 
         return ResponseEntity.ok(recipeId);
     }
@@ -72,9 +76,14 @@ public class RecipeController {
             @PathVariable Long recipeId,
             @Valid @RequestBody RecipeComponentRequest request
     ) {
-        return ResponseEntity.ok(
-                recipeComponentService.addToRecipe(recipeId, request.productServingId(), request.amount())
+        Long componentId = recipeComponentService.addToRecipe(
+                recipeId, request.productServingId(), request.amount()
         );
+        recipeService.countTotalWeight(recipeId);
+        foodServingService.ensureDefaultForRecipe(
+                recipeId, recipeService.getTotalWeightGrams(recipeId)
+        );
+        return ResponseEntity.ok(componentId);
     }
 
     @DeleteMapping("/components/{recipeComponentId}")

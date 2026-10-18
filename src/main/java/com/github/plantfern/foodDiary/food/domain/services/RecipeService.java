@@ -66,7 +66,6 @@ public class RecipeService {
             String recipeText,
             Long photoPathId
     ) {
-
         var foundRecipe = getById(recipeId);
 
         if (isActive(foundRecipe)) {
@@ -75,12 +74,13 @@ public class RecipeService {
             foodPolicy.ensureIsOwnerOrModeration(currentUser, foundRecipe.getCreatedById());
         }
 
-        String photoPath = photoPathResolver.fromFileId(photoPathId);
-
         foundRecipe.setName(name);
         foundRecipe.setDescription(description);
         foundRecipe.setRecipe(recipeText);
-        foundRecipe.setPhotoPath(photoPath);
+
+        if (photoPathId != null) {
+            foundRecipe.setPhotoPath(photoPathResolver.fromFileId(photoPathId));
+        }
 
         recipeRepository.save(foundRecipe);
     }
@@ -126,6 +126,13 @@ public class RecipeService {
 
         recipe.setTotalWeightGrams(recipeComponentService.countWeightByRecipeId(recipeId));
         recipeRepository.save(recipe);
+    }
+
+    @Transactional(readOnly = true)
+    public Float getTotalWeightGrams(Long recipeId) {
+        return recipeRepository.findById(recipeId)
+                .map(RecipeEntity::getTotalWeightGrams)
+                .orElse(null);
     }
 
     @Transactional(readOnly = true)
