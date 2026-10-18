@@ -119,22 +119,22 @@ public class SleepLogService implements SleepLogApi {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<SleepLogDto> getByDiaryProfileIdAndDate(Long diaryProfileId, LocalDate date) {
 
-        var localDateTimeEarlier = LocalDateTime.of(date, LocalTime.MIN);
-        var localDateTimeLater = localDateTimeEarlier.plusDays(1);
+        var ownerUserId = diaryProfileService.getOwnerUserIdInternal(diaryProfileId);
+        diaryProfilePolicy.ensureCanGet(currentUser, ownerUserId);
 
+        var dayStart = LocalDateTime.of(date, LocalTime.MIN);
+        var dayEnd = dayStart.plusDays(1);
+
+        // Sleep that overlaps the calendar day: beganAt <= dayEnd AND endedAt >= dayStart
         var foundSleepLogList = sleepLogRepository
-                .findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter(
+                .findAllByDiaryProfileIdAndBeganAtLessThanEqualAndEndedAtGreaterThanEqual(
                         diaryProfileId,
-                        localDateTimeLater,
-                        localDateTimeLater
-                )
-                .stream()
-                .toList();
-
-        diaryProfilePolicy.ensureCanGet(currentUser, foundSleepLogList.getFirst().getDiaryProfile().getUserId());
+                        dayEnd,
+                        dayStart
+                );
 
         return foundSleepLogList
                 .stream()
@@ -142,41 +142,35 @@ public class SleepLogService implements SleepLogApi {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<SleepLogDto> getByDiaryProfile(Long diaryProfileId) {
 
-        var foundSleepLog = sleepLogRepository
+        var ownerUserId = diaryProfileService.getOwnerUserIdInternal(diaryProfileId);
+        diaryProfilePolicy.ensureCanGet(currentUser, ownerUserId);
+
+        return sleepLogRepository
                 .findByDiaryProfileId(diaryProfileId)
-                .stream()
-                .toList();
-
-        diaryProfilePolicy.ensureCanGet(
-                currentUser,
-                foundSleepLog.getFirst().getDiaryProfile().getUserId()
-        );
-
-        return foundSleepLog
                 .stream()
                 .map(sleepLogMapper::toDto)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<SleepLogDto> getByDiaryProfileAndPeriod(
             Long diaryProfileId,
             LocalDateTime startPeriod,
             LocalDateTime endPeriod
     ) {
 
+        var ownerUserId = diaryProfileService.getOwnerUserIdInternal(diaryProfileId);
+        diaryProfilePolicy.ensureCanGet(currentUser, ownerUserId);
+
         var foundSleepLogList = sleepLogRepository
                 .findAllByDiaryProfileIdAndBeganAtLessThanEqualAndEndedAtGreaterThanEqual(
                         diaryProfileId,
-                        startPeriod,
-                        endPeriod
+                        endPeriod,
+                        startPeriod
                 );
-
-        diaryProfilePolicy.ensureCanGet(
-                currentUser
-                , foundSleepLogList.getFirst().getDiaryProfile().getUserId()
-        );
 
         return foundSleepLogList
                 .stream()
@@ -187,14 +181,14 @@ public class SleepLogService implements SleepLogApi {
     @Override
     public List<SleepLogDto> getByDiaryProfileIdAndDateInternal(Long diaryProfileId, LocalDate interval) {
 
-        var localDateTimeEarlier = LocalDateTime.of(interval, LocalTime.MIN);
-        var localDateTimeLater = localDateTimeEarlier.plusDays(1);
+        var dayStart = LocalDateTime.of(interval, LocalTime.MIN);
+        var dayEnd = dayStart.plusDays(1);
 
         return sleepLogRepository
-                .findAllByDiaryProfileIdAndBeganAtIsBeforeAndEndedAtIsAfter(
+                .findAllByDiaryProfileIdAndBeganAtLessThanEqualAndEndedAtGreaterThanEqual(
                         diaryProfileId,
-                        localDateTimeLater,
-                        localDateTimeLater
+                        dayEnd,
+                        dayStart
                 )
                 .stream()
                 .map(sleepLogMapper::toDto)
