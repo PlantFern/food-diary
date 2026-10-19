@@ -71,18 +71,24 @@ public class UserRelationPolicy {
 
         var currentId = currentUser.requireId();
 
-        if(currentId.equals(diaryProfileUserId) || currentId.equals(specialistUserId))
-            return;
-
-        if(!UserRelationStatus
-                .valueOf(relationStatus)
-                .equals(UserRelationStatus.ACTIVE)){
-            throw new IllegalStateException("User relation status must be active");
+        // Already ended/canceled — no further action required from either side.
+        var status = UserRelationStatus.valueOf(relationStatus);
+        if (status == UserRelationStatus.ENDED || status == UserRelationStatus.CANCELED) {
+            throw new IllegalStateException("User relation is already " + status.name().toLowerCase());
         }
 
-        if(currentUser.hasRole(RoleName.MODERATOR)
-                || currentUser.hasRole(RoleName.ADMINISTRATOR))
+        if (!status.equals(UserRelationStatus.ACTIVE)) {
+            throw new IllegalStateException("User relation status must be active to end");
+        }
+
+        if (currentId.equals(diaryProfileUserId) || currentId.equals(specialistUserId)) {
             return;
+        }
+
+        if (currentUser.hasRole(RoleName.MODERATOR)
+                || currentUser.hasRole(RoleName.ADMINISTRATOR)) {
+            return;
+        }
 
         throw new AccessDeniedException("Only users related to user relation can access");
     }
