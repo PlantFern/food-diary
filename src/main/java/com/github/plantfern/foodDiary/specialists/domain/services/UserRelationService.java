@@ -200,12 +200,14 @@ public class UserRelationService implements UserRelationApi {
                         () -> new EntityExistsException("user relation not found")
                 );
         var specialist = specialistService.getById(userRelation.getSpecialistId());
+        var diaryProfileOwnerId = diaryProfileApi.getOwnerUserIdInternal(userRelation.getDiaryProfileId());
 
+        // Pass owner userId (not diaryProfileId) so the diary user can end the relation too.
         userRelationPolicy.ensureCanEnd(
                 currentUser,
                 userRelation.getUserRelationStatusEntity().getCode(),
                 specialist.userId(),
-                userRelation.getDiaryProfileId());
+                diaryProfileOwnerId);
 
         userRelation.setUserRelationStatusEntity(
                 userRelationStatusRepository
@@ -214,7 +216,7 @@ public class UserRelationService implements UserRelationApi {
 
         userRelationRepository.save(userRelation);
 
-        var diaryProfileOwnerId = diaryProfileApi.getOwnerUserIdInternal(userRelation.getDiaryProfileId());
+        // Single-sided end is enough: status ENDED + visibility removed for both parties.
         events.publishEvent(new UserRelationInactivated(
                 userRelation.getId(),
                 diaryProfileOwnerId,
