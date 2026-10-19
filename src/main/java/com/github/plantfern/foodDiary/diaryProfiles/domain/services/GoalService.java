@@ -316,8 +316,8 @@ public class GoalService implements GoalApi {
         }
 
         Float currentWeight = weightLogRepository
-                .findFirstByDiaryProfileIdOrderByLoggedAtDesc(diaryProfileId)
-                .map(WeightLogEntity::getWeightKg)
+                .findFirstByDiaryProfileIdOrderByCreatedAtDesc(diaryProfileId)
+                .map(WeightLogEntity::getWeight)
                 .orElse(null);
 
         if (currentWeight == null) {
