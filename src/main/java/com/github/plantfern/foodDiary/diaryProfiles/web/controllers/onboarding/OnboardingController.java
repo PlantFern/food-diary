@@ -53,8 +53,7 @@ public class OnboardingController {
                 extendedProfileDataRequest.genderId(),
                 extendedProfileDataRequest.weight(),
                 extendedProfileDataRequest.plannedWeight(),
-                extendedProfileDataRequest.activityLevel(),
-                extendedProfileDataRequest.goalType()
+                extendedProfileDataRequest.activityLevel()
         ));
     }
 

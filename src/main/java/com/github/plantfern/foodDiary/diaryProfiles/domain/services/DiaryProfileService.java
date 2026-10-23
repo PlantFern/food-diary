@@ -38,12 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.lang.Math.max;
-
 
 @Service
 @Transactional
 public class DiaryProfileService implements DiaryProfileApi {
+
+    private static final float MAINTAIN_THRESHOLD_KG = 0.3f;
 
     private final DiaryProfilePolicy diaryProfilePolicy;
     private final CurrentUser currentUser;
@@ -130,8 +130,7 @@ public class DiaryProfileService implements DiaryProfileApi {
             @NotNull Long genderId,
             @NotNull Float weight,
             @NotNull Float plannedWeight,
-            @NotNull ActivityLevel activityLevel,
-            @NotNull GoalType goalType
+            @NotNull ActivityLevel activityLevel
     ){
 
         var diaryProfileDto = create(height, birthDate, genderId);
@@ -151,6 +150,7 @@ public class DiaryProfileService implements DiaryProfileApi {
 
         float tdee = bmr * activityLevel.getCoefficient();
 
+        GoalType goalType = resolveGoalType(weight, plannedWeight);
         float targetCalories = tdee * (1 + goalType.getCalorieAdjustment());
 
         // GoalType protein/fat/carb ratios are shares of target calories (sum = 1), not g/kg
@@ -185,6 +185,14 @@ public class DiaryProfileService implements DiaryProfileApi {
         );
 
         return diaryProfileDto;
+    }
+
+    private static GoalType resolveGoalType(float weight, float plannedWeight) {
+        float delta = plannedWeight - weight;
+        if (Math.abs(delta) <= MAINTAIN_THRESHOLD_KG) {
+            return GoalType.MAINTAIN;
+        }
+        return delta < 0 ? GoalType.LOSE_WEIGHT : GoalType.GAIN_WEIGHT;
     }
 
     @Transactional
