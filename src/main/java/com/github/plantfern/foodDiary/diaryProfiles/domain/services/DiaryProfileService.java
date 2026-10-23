@@ -153,13 +153,10 @@ public class DiaryProfileService implements DiaryProfileApi {
 
         float targetCalories = tdee * (1 + goalType.getCalorieAdjustment());
 
-        float proteinAmount = goalType.getProteinRatio() * weight;
-        float proteinKcal = proteinAmount * 4;
-
-        float fatAmount = goalType.getFatRation() * weight;
-        float fatKcal = fatAmount * 9;
-
-        float carbAmount = max(targetCalories - proteinKcal - fatKcal, 0) / 4;
+        // GoalType protein/fat/carb ratios are shares of target calories (sum = 1), not g/kg
+        float proteinAmount = targetCalories * goalType.getProteinRatio() / 4f;
+        float fatAmount = targetCalories * goalType.getFatRation() / 9f;
+        float carbAmount = targetCalories * goalType.getCarbRatio() / 4f;
 
         var goal = goalRepository.save(
                 new GoalEntity(
@@ -398,7 +395,7 @@ public class DiaryProfileService implements DiaryProfileApi {
         return diaryProfileRepository
                 .findUserIdById(diaryProfileId)
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Dairy profile with such id not found")
+                        () -> new EntityNotFoundException("Diary profile with such id not found")
                 );
     }
     //endregion
