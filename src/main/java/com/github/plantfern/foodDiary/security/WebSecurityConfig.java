@@ -31,8 +31,11 @@ public class WebSecurityConfig{
                     .requestMatchers("/login", "/registration").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/specialists", "/api/specialists/").authenticated()
+                    // Root onboarding path (POST create without goal) is not matched by onboarding/**
                     .requestMatchers(
                             "/api/users/my-profile",
+                            "/api/diary-profile/onboarding",
+                            "/api/diary-profile/onboarding/",
                             "/api/diary-profile/onboarding/**"
                     ).authenticated()
                     .requestMatchers("/api/diary-profile/**").hasRole("DIARY_PROFILE")
