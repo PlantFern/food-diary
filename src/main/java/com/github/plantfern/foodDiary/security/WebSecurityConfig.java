@@ -38,6 +38,10 @@ public class WebSecurityConfig{
                             "/api/diary-profile/onboarding/",
                             "/api/diary-profile/onboarding/**"
                     ).authenticated()
+                    // Client diary UI loads meals via GET /api/diary-profile/{id}/meals/day;
+                    // specialists must not need their own DIARY_PROFILE role. MealPolicy/Visibility still gate data.
+                    .requestMatchers(HttpMethod.GET, "/api/diary-profile/**")
+                            .hasAnyRole("DIARY_PROFILE", "SPECIALIST", "MODERATOR", "ADMINISTRATOR")
                     .requestMatchers("/api/diary-profile/**").hasRole("DIARY_PROFILE")
                     .requestMatchers("/api/specialist/**").hasAnyRole("SPECIALIST", "MODERATOR", "ADMINISTRATOR")
                     .requestMatchers("/moderator/**").hasAnyRole("MODERATOR", "ADMINISTRATOR")
